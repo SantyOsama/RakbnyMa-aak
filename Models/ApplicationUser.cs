@@ -17,7 +17,6 @@ namespace RakbnyMa_aak.Models
 
         // User can send/receive many messages
         public virtual ICollection<Message>? SentMessages { get; set; }
-        public virtual ICollection<Message>? ReceivedMessages { get; set; }
 
         public ApplicationUser()
         {
@@ -25,7 +24,6 @@ namespace RakbnyMa_aak.Models
             RatingsReceived = new HashSet<Rating>();
             Bookings = new HashSet<Booking>();
             SentMessages = new HashSet<Message>();
-            ReceivedMessages = new HashSet<Message>();
         }
 
     }

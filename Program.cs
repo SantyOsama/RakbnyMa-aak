@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RakbnyMa_aak.CQRS.Drivers.RegisterDriver.Commands;
+using RakbnyMa_aak.Data;
 using RakbnyMa_aak.Mapping;
 using RakbnyMa_aak.Models;
 using RakbnyMa_aak.Repositories.Implementations;

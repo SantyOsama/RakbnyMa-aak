@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using RakbnyMa_aak.Models;
 
-namespace RakbnyMa_aak.Models
+namespace RakbnyMa_aak.Data
 {
     public class AppDbContext : IdentityDbContext<ApplicationUser>
     {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using RakbnyMa_aak.Data;
 using RakbnyMa_aak.Models;
 using RakbnyMa_aak.Repositories.Implementations;
 using RakbnyMa_aak.Repositories.Interfaces;

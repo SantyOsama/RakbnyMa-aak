@@ -1,6 +1,11 @@
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using RakbnyMa_aak.CQRS.Drivers.RegisterDriver.Commands;
 using RakbnyMa_aak.Models;
+using RakbnyMa_aak.Repositories.Interfaces;
+using RakbnyMa_aak.Repositories.Implementations;
+using RakbnyMa_aak.Services;
 
 namespace RakbnyMa_aak
 {
@@ -13,6 +18,18 @@ namespace RakbnyMa_aak
             // 1. Add DbContext
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("SQLConnectionString")));
+
+
+            builder.Configuration.GetSection("Cloudinary");
+
+
+            builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
+            builder.Services.AddScoped<IDriverVerificationService, DriverVerificationService>();
+            builder.Services.AddHttpClient<IDriverVerificationService, DriverVerificationService>();
+            builder.Services.AddMediatR(typeof(RegisterDriverCommand).Assembly);
+
+            builder.Services.AddScoped<IDriverRepository, DriverRepository>();
+
 
             // 2. Configure Identity with ApplicationUser (NOT IdentityUser)
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>

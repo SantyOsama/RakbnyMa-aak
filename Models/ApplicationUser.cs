@@ -15,7 +15,7 @@ namespace RakbnyMa_aak.Models
 
         public virtual ICollection<Booking>? Bookings { get; set; }
 
-        // User can send/receive many messages
+        // User can send many messages
         public virtual ICollection<Message>? SentMessages { get; set; }
 
         public ApplicationUser()

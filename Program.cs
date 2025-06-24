@@ -2,9 +2,10 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RakbnyMa_aak.CQRS.Drivers.RegisterDriver.Commands;
+using RakbnyMa_aak.Mapping;
 using RakbnyMa_aak.Models;
-using RakbnyMa_aak.Repositories.Interfaces;
 using RakbnyMa_aak.Repositories.Implementations;
+using RakbnyMa_aak.Repositories.Interfaces;
 using RakbnyMa_aak.Services;
 
 namespace RakbnyMa_aak
@@ -29,6 +30,7 @@ namespace RakbnyMa_aak
             builder.Services.AddMediatR(typeof(RegisterDriverCommand).Assembly);
 
             builder.Services.AddScoped<IDriverRepository, DriverRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 
             // 2. Configure Identity with ApplicationUser (NOT IdentityUser)
@@ -59,6 +61,11 @@ namespace RakbnyMa_aak
                           .AllowAnyMethod();
                 });
             });
+
+
+            builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+
 
             var app = builder.Build();
 

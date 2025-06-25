@@ -4,6 +4,7 @@ using RakbnyMa_aak.DTOs.UserDTOs;
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.Models;
 using RakbnyMa_aak.Repositories.Interfaces;
+using RakbnyMa_aak.Services;
 
 namespace RakbnyMa_aak.Repositories.Implementations
 {
@@ -11,11 +12,13 @@ namespace RakbnyMa_aak.Repositories.Implementations
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
+        private readonly ICloudinaryService _cloudinary;
 
-        public UserRepository(UserManager<ApplicationUser> userManager, IMapper mapper)
+        public UserRepository(UserManager<ApplicationUser> userManager, IMapper mapper , ICloudinaryService cloudinaryService)
         {
             _userManager = userManager;
             _mapper = mapper;
+            _cloudinary = cloudinaryService;
         }
 
         public async Task<Response<string>> RegisterAsync(RegisterUserDto dto)
@@ -27,10 +30,19 @@ namespace RakbnyMa_aak.Repositories.Implementations
                 return Response<string>.Fail("Email or Username already exists");
             }
 
+            string pictureUrl = null;
+            if (dto.Picture != null)
+            {
+                pictureUrl = await _cloudinary.UploadImageAsync(dto.Picture, "users/profile");
+            }
+
             var user = _mapper.Map<ApplicationUser>(dto);
             user.UserName = dto.UserName;
             user.Email = dto.Email;
             user.PhoneNumber = dto.PhoneNumber;
+            user.UserType=Enums.Enums.UserType.User;
+            user.Picture = pictureUrl;
+
 
             var result = await _userManager.CreateAsync(user, dto.Password);
 

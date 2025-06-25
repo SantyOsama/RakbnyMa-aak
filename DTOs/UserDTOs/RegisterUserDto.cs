@@ -23,10 +23,15 @@ namespace RakbnyMa_aak.DTOs.UserDTOs
 
         [Required]
         [Compare(nameof(Password), ErrorMessage = "Password and Confirmation Passwoed don't match.!!")]
+        [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
 
         //[Required]
         //public string UserType { get; set; }
+
+        [Required(ErrorMessage = "Phone number is required.")]
+        [RegularExpression(@"^(010|011|012|015)[0-9]{8}$", ErrorMessage = "Phone number must be 11 digits and start with 010, 011, 012, or 015.")]
+
 
         public string PhoneNumber { get; set; }
 

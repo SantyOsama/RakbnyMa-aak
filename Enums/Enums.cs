@@ -5,7 +5,8 @@
         public enum UserType
         {
             Driver,
-            Passenger,
+            User,
+          //  Passenger,
             Both
         }
 

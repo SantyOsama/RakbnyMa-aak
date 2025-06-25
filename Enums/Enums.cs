@@ -6,8 +6,6 @@
         {
             Driver,
             User,
-          //  Passenger,
-            Both
         }
 
         public enum CarType

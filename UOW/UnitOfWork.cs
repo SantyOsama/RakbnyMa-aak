@@ -1,39 +1,44 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using RakbnyMa_aak.Data;
 using RakbnyMa_aak.Models;
 using RakbnyMa_aak.Repositories.Implementations;
 using RakbnyMa_aak.Repositories.Interfaces;
+using RakbnyMa_aak.Services;
 
 namespace RakbnyMa_aak.UOW
 {
-    public class UnitOfWork: IUnitOfWork
+    public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly AppDbContext _context;
+        public IDriverRepository DriverRepository { get; }
         public IUserRepository UserRepository { get; }
 
-        public IDriverRepository DriverRepository { get; }
-
-
-        public UnitOfWork(AppDbContext dBContext, UserManager<ApplicationUser> userManager)
+        public UnitOfWork(
+            AppDbContext context,
+            UserManager<ApplicationUser> userManager,
+            ICloudinaryService cloudinaryService,
+            IMapper mapper
+        )
         {
-            _context = dBContext;
+            _context = context;
             DriverRepository = new DriverRepository(_context);
-          //  UserRepository= new UserRepository(userManager);
-
+            UserRepository = new UserRepository(_context);
         }
+
         public async Task<int> CompleteAsync()
         {
             return await _context.SaveChangesAsync();
         }
 
-        public void Dispose()
-        {
-            _context.Dispose();
-        }
-
         public async Task RollbackAsync()
         {
             await _context.Database.RollbackTransactionAsync();
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
         }
     }
 }

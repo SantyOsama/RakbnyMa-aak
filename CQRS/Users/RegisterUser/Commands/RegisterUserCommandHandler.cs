@@ -1,21 +1,22 @@
 ﻿using MediatR;
 using RakbnyMa_aak.GeneralResponse;
-using RakbnyMa_aak.Repositories.Interfaces;
+using RakbnyMa_aak.Services;
+using RakbnyMa_aak.Services.Users;
 
 namespace RakbnyMa_aak.CQRS.Users.RegisterUser.Commands
 {
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, Response<string>>
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserRegistrationService _registrationService;
 
-        public RegisterUserCommandHandler(IUserRepository userRepository)
+        public RegisterUserCommandHandler(IUserRegistrationService registrationService)
         {
-            _userRepository = userRepository;
+            _registrationService = registrationService;
         }
 
         public async Task<Response<string>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
-            return await _userRepository.RegisterAsync(request.Dto);
+            return await _registrationService.RegisterUserAsync(request.Dto);
         }
     }
 }

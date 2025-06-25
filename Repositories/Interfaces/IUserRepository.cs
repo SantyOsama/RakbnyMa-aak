@@ -4,8 +4,9 @@ using RakbnyMa_aak.Models;
 
 namespace RakbnyMa_aak.Repositories.Interfaces
 {
-    public interface IUserRepository
+    public interface IUserRepository :IGenericRepository<ApplicationUser>
     {
-        Task<Response<string>> RegisterAsync(RegisterUserDto dto);
+        Task<ApplicationUser?> GetByEmailAsync(string email);
+        Task<ApplicationUser?> GetByUsernameAsync(string username);
     }
 }

@@ -8,6 +8,8 @@ using RakbnyMa_aak.Models;
 using RakbnyMa_aak.Repositories.Implementations;
 using RakbnyMa_aak.Repositories.Interfaces;
 using RakbnyMa_aak.Services;
+using RakbnyMa_aak.Services.Drivers;
+using RakbnyMa_aak.Services.Users;
 
 namespace RakbnyMa_aak
 {
@@ -29,12 +31,18 @@ namespace RakbnyMa_aak
             builder.Services.AddScoped<IDriverVerificationService, DriverVerificationService>();
             builder.Services.AddHttpClient<IDriverVerificationService, DriverVerificationService>();
             builder.Services.AddMediatR(typeof(RegisterDriverCommand).Assembly);
+            builder.Services.AddScoped<IDriverRegistrationService, DriverRegistrationService>();
+            builder.Services.AddScoped<IUserRegistrationService, UserRegistrationService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IJwtService, JwtService>();
+
 
             builder.Services.AddScoped<IDriverRepository, DriverRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 
             // 2. Configure Identity with ApplicationUser (NOT IdentityUser)
+            builder.Services.AddScoped<SignInManager<ApplicationUser>>();
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 // optional: password, lockout, etc.

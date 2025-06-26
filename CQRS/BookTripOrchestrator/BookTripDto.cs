@@ -2,7 +2,7 @@
 {
     public class BookTripDto
     {
-        public string PassengerUserId { get; set; }
+        public string UserId { get; set; }
         public int TripId { get; set; }
         public int NumberOfSeats { get; set; }
     }

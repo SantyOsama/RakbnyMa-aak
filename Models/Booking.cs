@@ -8,9 +8,9 @@ namespace RakbnyMa_aak.Models
         public string UserId { get; set; } // FK to ApplicationUser (the user who made the booking)
         public int TripId { get; set; } // FK to Trip (int, as Trip.Id is int)
 
-        public RequestStatus RequestStatus { get; set; }
+        public RequestStatus RequestStatus { get; set; } //= RequestStatus.Pending;
         public int NumberOfSeats { get; set; } // Renamed from NoOfSeat for clarity
-        public DateTime BookingDate { get; set; } = DateTime.UtcNow; // Added booking date
+        public DateTime BookingDate { get; set; } = DateTime.UtcNow; // Added booking date // المفروض يتمسح عشان عندنا كريتيد ات    
 
 
         //public bool IsPaid { get; set; } =false;

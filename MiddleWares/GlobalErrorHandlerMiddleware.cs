@@ -24,7 +24,7 @@ namespace RakbnyMa_aak.MiddleWares
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 context.Response.ContentType = "application/json";
 
-                var response = Response<string>.Fail("Unexpected Error", statusCode: 500);
+                var response = Response<string>.Fail($"Unexpected Error {ex.Message}", statusCode: 500);
 
                 await context.Response.WriteAsJsonAsync(response);
             }

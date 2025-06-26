@@ -22,8 +22,9 @@ namespace RakbnyMa_aak.CQRS.CreateBooking
         public async Task<Response<int>> Handle(CreateBookingCommand request, CancellationToken cancellationToken)
         {
             var booking = _mapper.Map<Booking>(request.BookingDto);
-            booking.BookingDate = DateTime.UtcNow;
+            booking.BookingDate = booking.CreatedAt= DateTime.UtcNow;
             booking.RequestStatus = RequestStatus.Pending;
+
 
             await _unitOfWork.BookingRepository.AddAsync(booking);
             await _unitOfWork.CompleteAsync();

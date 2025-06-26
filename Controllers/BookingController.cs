@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RakbnyMa_aak.CQRS.BookTripOrchestrator;
+using RakbnyMa_aak.GeneralResponse;
 using System.Security.Claims;
 
 namespace RakbnyMa_aak.Controllers
@@ -34,19 +35,24 @@ namespace RakbnyMa_aak.Controllers
 
         //    return Ok(result);
         //}
+        [Authorize]
         [HttpPost("book")]
         public async Task<IActionResult> BookTrip([FromBody] BookTripDto dto)
         {
-            dto.PassengerUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            // Extract user ID from JWT claims
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrWhiteSpace(userId))
+                return Unauthorized(Response<string>.Fail("User not authorized."));
 
-            var command = _mapper.Map<BookTripCommand>(dto);
+            // Inject user ID into DTO
+            dto.UserId = userId;
+
+            // Directly create command (no AutoMapper needed)
+            var command = new BookTripCommand(dto);
 
             var result = await _mediator.Send(command);
 
-            if (!result.IsSucceeded)
-                return BadRequest(result);
-
-            return Ok(result);
+            return result.IsSucceeded ? Ok(result) : BadRequest(result);
         }
 
 

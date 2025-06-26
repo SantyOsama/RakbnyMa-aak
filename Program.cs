@@ -49,6 +49,8 @@ namespace RakbnyMa_aak
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             builder.Services.AddScoped<ITripRepository, TripRepository>();
+            builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+
 
 
             // 2. Configure Identity with ApplicationUser (NOT IdentityUser)

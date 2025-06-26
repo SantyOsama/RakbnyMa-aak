@@ -26,7 +26,7 @@ namespace RakbnyMa_aak.CQRS.BookTripOrchestrator
                 new CheckUserAlreadyBookedDto
                 {
                     TripId = trip.TripId,
-                    UserId = trip.PassengerUserId
+                    UserId = trip.UserId
                 }));
 
             if (!isAlreadyBooked.IsSucceeded)

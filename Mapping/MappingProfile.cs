@@ -24,7 +24,7 @@ namespace RakbnyMa_aak.Mapping
               .ForMember(dest => dest.BookingDate, opt => opt.Ignore())
               .ForMember(dest => dest.RequestStatus, opt => opt.Ignore());
 
-
+            CreateMap<BookTripDto, CreateBookingDto>();
         }
     }
 }

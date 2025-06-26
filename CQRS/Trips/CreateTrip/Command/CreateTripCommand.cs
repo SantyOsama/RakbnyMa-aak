@@ -4,7 +4,7 @@ using RakbnyMa_aak.GeneralResponse;
 
 namespace RakbnyMa_aak.CQRS.Trips.CreateTrip.Command
 {
-    public class CreateTripCommand : IRequest<Response<string>>
+    public class CreateTripCommand : IRequest<Response<int>>
     {
         public TripDto TripDto { get; set; }
 

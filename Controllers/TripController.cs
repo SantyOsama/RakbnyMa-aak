@@ -10,12 +10,12 @@ namespace RakbnyMa_aak.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TripsController : ControllerBase
+    public class TripController : ControllerBase
     {
 
         private readonly IMediator _mediator;
 
-        public TripsController(IMediator mediator)
+        public TripController(IMediator mediator)
         {
             _mediator = mediator;
         }
@@ -24,20 +24,13 @@ namespace RakbnyMa_aak.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateTrip([FromBody] TripDto dto)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (userId == null)
-                return Unauthorized("You must be logged in first.");
-
-            dto.DriverId = userId;
-
             var command = new CreateTripCommand(dto);
             var result = await _mediator.Send(command);
 
             if (!result.IsSucceeded)
                 return BadRequest(result.Message);
 
-            return Ok(result.Message);
+            return Ok(result);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace RakbnyMa_aak.Services
             if (!result.Succeeded)
                 return Response<AuthResponseDto>.Fail("Invalid credentials");
 
-            var token = _jwtService.GenerateToken(user);
+            var token = await _jwtService.GenerateToken(user); 
 
             return Response<AuthResponseDto>.Success(new AuthResponseDto
             {

@@ -5,7 +5,7 @@ using RakbnyMa_aak.Models;
 using RakbnyMa_aak.UOW;
 using static RakbnyMa_aak.Enums.Enums;
 
-namespace RakbnyMa_aak.CQRS.Trips.CreateTrip.Command
+namespace RakbnyMa_aak.CQRS.Trips.CreateTrip
 {
     public class CreateTripCommandHandler : IRequestHandler<CreateTripCommand, Response<int>>
     {

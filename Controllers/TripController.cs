@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using RakbnyMa_aak.CQRS.Trips.CreateTrip.Command;
+using RakbnyMa_aak.CQRS.Trips.CreateTrip;
 using RakbnyMa_aak.DTOs.TripDTOs;
 using System.Security.Claims;
 

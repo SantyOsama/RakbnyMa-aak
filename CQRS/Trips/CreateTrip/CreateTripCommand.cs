@@ -2,7 +2,7 @@
 using RakbnyMa_aak.DTOs.TripDTOs;
 using RakbnyMa_aak.GeneralResponse;
 
-namespace RakbnyMa_aak.CQRS.Trips.CreateTrip.Command
+namespace RakbnyMa_aak.CQRS.Trips.CreateTrip
 {
     public class CreateTripCommand : IRequest<Response<int>>
     {

@@ -15,8 +15,15 @@ namespace RakbnyMa_aak.CQRS.CheckUserAlreadyBooked
 
         public async Task<Response<bool>> Handle(CheckUserAlreadyBookedCommand request, CancellationToken cancellationToken)
         {
-            var isBooked = await _unitOfWork.BookingRepository.IsUserAlreadyBookedAsync(request.UserId, request.TripId);
+            var dto = request.checkUserAlreadyBookedDto;
+
+            if (string.IsNullOrWhiteSpace(dto.UserId) || dto.TripId <= 0)
+                return Response<bool>.Fail("Invalid request data.");
+
+            var isBooked = await _unitOfWork.BookingRepository.IsUserAlreadyBookedAsync(dto.UserId, dto.TripId);
+
             return Response<bool>.Success(isBooked);
         }
+
     }
 }

@@ -5,8 +5,11 @@ namespace RakbnyMa_aak.CQRS.CheckUserAlreadyBooked
 {
     public class CheckUserAlreadyBookedCommand : IRequest<Response<bool>>
     {
-        public int TripId { get; set; }
-        public string UserId { get; set; }
+       public CheckUserAlreadyBookedDto checkUserAlreadyBookedDto {  get; set; }
+        public CheckUserAlreadyBookedCommand(CheckUserAlreadyBookedDto checkUserAlreadyBookedDto)
+        {
+            this.checkUserAlreadyBookedDto = checkUserAlreadyBookedDto;
+        }
     }
 
 }

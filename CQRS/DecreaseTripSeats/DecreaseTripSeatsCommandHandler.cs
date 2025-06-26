@@ -16,15 +16,17 @@ namespace RakbnyMa_aak.CQRS.DecreaseTripSeats
 
         public async Task<Response<string>> Handle(DecreaseTripSeatsCommand request, CancellationToken cancellationToken)
         {
-            var trip = await _unitOfWork.TripRepository.GetByIdAsync(request.TripId);
+            var dto = request.SeatsDto;
+
+            var trip = await _unitOfWork.TripRepository.GetByIdAsync(dto.TripId);
 
             if (trip == null || trip.IsDeleted || trip.TripStatus != TripStatus.Scheduled)
                 return Response<string>.Fail("Trip is not valid.");
 
-            if (trip.AvailableSeats < request.NumberOfSeats)
+            if (trip.AvailableSeats < dto.NumberOfSeats)
                 return Response<string>.Fail("Not enough seats available.");
 
-            trip.AvailableSeats -= request.NumberOfSeats;
+            trip.AvailableSeats -= dto.NumberOfSeats;
             _unitOfWork.TripRepository.Update(trip);
             await _unitOfWork.CompleteAsync();
 

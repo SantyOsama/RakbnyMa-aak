@@ -1,9 +1,6 @@
-﻿using MediatR;
-using RakbnyMa_aak.GeneralResponse;
-
-namespace RakbnyMa_aak.CQRS.Bookings.Commands
+﻿namespace RakbnyMa_aak.CQRS.Users.BookingTrip
 {
-    public class BookTripCommand : IRequest<Response<int>>
+    public class BookTripDto
     {
         public int TripId { get; set; }
         public int NumberOfSeats { get; set; }

@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using RakbnyMa_aak.CQRS.PersistTrip;
-using RakbnyMa_aak.CQRS.Trips.CreateTrip.Command;
+using RakbnyMa_aak.CQRS.Trips.CreateTrip;
 using RakbnyMa_aak.CQRS.ValidateDriver;
 using RakbnyMa_aak.CQRS.ValidateTripBusinessRules;
 using RakbnyMa_aak.GeneralResponse;

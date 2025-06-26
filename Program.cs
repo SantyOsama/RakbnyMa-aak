@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using RakbnyMa_aak.CQRS.Drivers.RegisterDriver.Commands;
 using RakbnyMa_aak.Data;
 using RakbnyMa_aak.Mapping;
+using RakbnyMa_aak.MiddleWares;
 using RakbnyMa_aak.Models;
 using RakbnyMa_aak.Repositories.Implementations;
 using RakbnyMa_aak.Repositories.Interfaces;
@@ -74,7 +75,8 @@ namespace RakbnyMa_aak
 
             builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-
+            builder.Services.AddScoped<GlobalErrorHandlerMiddleware>();
+            builder.Services.AddScoped<TransactionMiddleware>();
 
             var app = builder.Build();
 
@@ -89,6 +91,12 @@ namespace RakbnyMa_aak
 
             // 6. Use CORS
             app.UseCors("AllowAll");
+
+
+            //Add custom middlewares
+
+            app.UseMiddleware<GlobalErrorHandlerMiddleware>();
+            app.UseMiddleware<TransactionMiddleware>();
 
             // 7. Use Authentication and Authorization
             app.UseAuthentication(); // important for Identity

@@ -12,6 +12,13 @@ namespace RakbnyMa_aak.Models
         public int NumberOfSeats { get; set; } // Renamed from NoOfSeat for clarity
         public DateTime BookingDate { get; set; } = DateTime.UtcNow; // Added booking date
 
+
+        //public bool IsPaid { get; set; } =false;
+        //public string PaymentMethod { get; set; }
+        //public decimal TotalPrice { get; set; }
+
+
+
         // Navigation properties
         [ForeignKey("UserId")]
         public virtual ApplicationUser User { get; set; }

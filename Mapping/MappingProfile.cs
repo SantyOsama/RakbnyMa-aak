@@ -12,7 +12,7 @@ namespace RakbnyMa_aak.Mapping
         {
 
             CreateMap<RegisterUserDto, ApplicationUser>().ReverseMap();
-            CreateMap<TripDto, Trip>();
+            CreateMap<TripDto, Trip>().ReverseMap(); ;
 
 
         }

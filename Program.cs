@@ -1,6 +1,8 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RakbnyMa_aak.CQRS.Drivers.RegisterDriver.Commands;
 using RakbnyMa_aak.Data;
@@ -13,6 +15,7 @@ using RakbnyMa_aak.Services;
 using RakbnyMa_aak.Services.Drivers;
 using RakbnyMa_aak.Services.Users;
 using RakbnyMa_aak.UOW;
+using System.Text;
 
 namespace RakbnyMa_aak
 {
@@ -88,37 +91,60 @@ namespace RakbnyMa_aak
                     Description = "Enter 'Bearer' [space] and then your valid token in the text input below.\r\n\r\nExample: \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"",
                 });
                 swagger.AddSecurityRequirement(new OpenApiSecurityRequirement
-     {
-         {
-         new OpenApiSecurityScheme
-         {
-         Reference = new OpenApiReference
-         {
-         Type = ReferenceType.SecurityScheme,
-         Id = "Bearer"
-         }
-         },
-         new string[] {}
-         }
-         });
-            }); // to support JWT
+                 {
+                     {
+                     new OpenApiSecurityScheme
+                     {
+                     Reference = new OpenApiReference
+                     {
+                     Type = ReferenceType.SecurityScheme,
+                     Id = "Bearer"
+                     }
+                     },
+                     new string[] {}
+                     }
+                     });
+                        }); // to support JWT
 
-            // 4. Optional: Enable CORS (if frontend will call the API)
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAll", policy =>
-                {
-                    policy.AllowAnyOrigin()
-                          .AllowAnyHeader()
-                          .AllowAnyMethod();
-                });
-            });
+                        // 4. Optional: Enable CORS (if frontend will call the API)
+                        builder.Services.AddCors(options =>
+                        {
+                            options.AddPolicy("AllowAll", policy =>
+                            {
+                                policy.AllowAnyOrigin()
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod();
+                            });
+                        });
 
 
             builder.Services.AddAutoMapper(typeof(MappingProfile));
 
             builder.Services.AddScoped<GlobalErrorHandlerMiddleware>();
             builder.Services.AddScoped<TransactionMiddleware>();
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                 .AddJwtBearer(options =>
+                 {
+                     options.TokenValidationParameters = new TokenValidationParameters
+                     {
+                         ValidateIssuer = true,
+                         ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                         ValidateAudience = true,
+                         ValidAudience = builder.Configuration["Jwt:Audience"],
+                         ValidateIssuerSigningKey = true,
+                         IssuerSigningKey = new SymmetricSecurityKey(
+                             Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])
+                         ),
+                         ValidateLifetime = true
+                     };
+                 });
+
+            builder.Services.AddAuthorization();
 
             var app = builder.Build();
 

@@ -6,7 +6,7 @@ using static RakbnyMa_aak.Enums.Enums;
 
 namespace RakbnyMa_aak.CQRS.Trips.CreateTrip.Command
 {
-    public class CreateTripCommandHandler : IRequestHandler<CreateTripCommand, Response<string>>
+    public class CreateTripCommandHandler : IRequestHandler<CreateTripCommand, Response<int>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -15,21 +15,21 @@ namespace RakbnyMa_aak.CQRS.Trips.CreateTrip.Command
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Response<string>> Handle(CreateTripCommand request, CancellationToken cancellationToken)
+        public async Task<Response<int>> Handle(CreateTripCommand request, CancellationToken cancellationToken)
         {
             var dto = request.TripDto;
 
           
             var driver = await _unitOfWork.DriverRepository.GetByUserIdAsync(dto.DriverId);
             if (driver == null)
-                return Response<string>.Fail("You are not registered as a driver.");
+                return Response<int>.Fail("You are not registered as a driver.");
 
            
             if (dto.FromCityId == dto.ToCityId)
-                return Response<string>.Fail("Departure city cannot be the same as destination city.");
+                return Response<int>.Fail("Departure city cannot be the same as destination city.");
 
             if (dto.AvailableSeats <= 1)
-                return Response<string>.Fail("Available seats must be greater than 1.");
+                return Response<int>.Fail("Available seats must be greater than 1.");
 
 
             var trip = new Trip
@@ -56,7 +56,7 @@ namespace RakbnyMa_aak.CQRS.Trips.CreateTrip.Command
             await _unitOfWork.TripRepository.AddAsync(trip);
             await _unitOfWork.CompleteAsync();
 
-            return Response<string>.Success("Trip has been created successfully.");
+            return Response<int>.Success(trip.Id,"Trip has been created successfully.");
         }
     }
 }

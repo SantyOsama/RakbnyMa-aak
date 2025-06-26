@@ -25,6 +25,7 @@ namespace RakbnyMa_aak
             // 1. Add DbContext
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("SQLConnectionString")));
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
             builder.Configuration.GetSection("Cloudinary");

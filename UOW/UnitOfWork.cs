@@ -13,6 +13,8 @@ namespace RakbnyMa_aak.UOW
         private readonly AppDbContext _context;
         public IDriverRepository DriverRepository { get; }
         public IUserRepository UserRepository { get; }
+        public IBookingRepository BookingRepository { get; }
+
 
         public ITripRepository TripRepository { get; }
 
@@ -27,6 +29,7 @@ namespace RakbnyMa_aak.UOW
             _context = context;
             DriverRepository = new DriverRepository(_context);
             UserRepository = new UserRepository(_context);
+            BookingRepository = new BookingRepository(_context);
 
             TripRepository = new TripRepository(_context);
         }

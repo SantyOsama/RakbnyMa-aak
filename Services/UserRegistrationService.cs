@@ -51,6 +51,12 @@ namespace RakbnyMa_aak.Services.Users
                 var errors = string.Join(", ", result.Errors.Select(e => e.Description));
                 return Response<string>.Fail(errors);
             }
+            var roleResult = await _userManager.AddToRoleAsync(user, "User");
+            if (!roleResult.Succeeded)
+            {
+                var errors = string.Join(", ", roleResult.Errors.Select(e => e.Description));
+                return Response<string>.Fail("User created but role assignment failed: " + errors);
+            }
 
             return Response<string>.Success(user.Id, "User registered successfully");
         }

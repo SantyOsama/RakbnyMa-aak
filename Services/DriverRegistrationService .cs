@@ -58,6 +58,9 @@ namespace RakbnyMa_aak.Services.Drivers
             if (!result.Succeeded)
                 return Response<string>.Fail(string.Join(", ", result.Errors.Select(e => e.Description)));
 
+            var roleResult = await _userManager.AddToRoleAsync(user, "Driver");
+            if (!roleResult.Succeeded)
+                return Response<string>.Fail("User created, but failed to assign role: " + string.Join(", ", roleResult.Errors.Select(e => e.Description)));
             // Create Driver entity
             var driver = new Driver
             {

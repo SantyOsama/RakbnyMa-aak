@@ -6,6 +6,8 @@ namespace RakbnyMa_aak.UOW
     {
         IDriverRepository DriverRepository {  get; }
         IUserRepository UserRepository { get; }
+
+        ITripRepository TripRepository { get; }
         Task<int> CompleteAsync(); // SaveChanges
         Task RollbackAsync(); // Rollback 
 

@@ -14,16 +14,21 @@ namespace RakbnyMa_aak.UOW
         public IDriverRepository DriverRepository { get; }
         public IUserRepository UserRepository { get; }
 
+        public ITripRepository TripRepository { get; }
+
         public UnitOfWork(
             AppDbContext context,
             UserManager<ApplicationUser> userManager,
             ICloudinaryService cloudinaryService,
+            ITripRepository tripRepository,
             IMapper mapper
         )
         {
             _context = context;
             DriverRepository = new DriverRepository(_context);
             UserRepository = new UserRepository(_context);
+
+            TripRepository = new TripRepository(_context);
         }
 
         public async Task<int> CompleteAsync()

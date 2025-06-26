@@ -58,7 +58,6 @@ namespace RakbnyMa_aak.Services.Users
                 return Response<string>.Fail("User created but role assignment failed: " + errors);
             }
 
-
             return Response<string>.Success(user.Id, "User registered successfully");
         }
     }

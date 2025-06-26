@@ -8,6 +8,7 @@ namespace RakbnyMa_aak.UOW
         IUserRepository UserRepository { get; }
         IBookingRepository BookingRepository { get; }
 
+        ITripRepository TripRepository { get; }
         Task<int> CompleteAsync(); // SaveChanges
         Task RollbackAsync(); // Rollback 
 

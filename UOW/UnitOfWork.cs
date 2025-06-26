@@ -16,10 +16,13 @@ namespace RakbnyMa_aak.UOW
         public IBookingRepository BookingRepository { get; }
 
 
+        public ITripRepository TripRepository { get; }
+
         public UnitOfWork(
             AppDbContext context,
             UserManager<ApplicationUser> userManager,
             ICloudinaryService cloudinaryService,
+            ITripRepository tripRepository,
             IMapper mapper
         )
         {
@@ -28,6 +31,7 @@ namespace RakbnyMa_aak.UOW
             UserRepository = new UserRepository(_context);
             BookingRepository = new BookingRepository(_context);
 
+            TripRepository = new TripRepository(_context);
         }
 
         public async Task<int> CompleteAsync()

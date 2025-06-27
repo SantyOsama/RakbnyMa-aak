@@ -2,6 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RakbnyMa_aak.CQRS.EndTripByDriver;
+using RakbnyMa_aak.CQRS.EndTripByPassenger;
+using RakbnyMa_aak.CQRS.StartTripByDriver;
+using RakbnyMa_aak.CQRS.StartTripByPassenger;
 using RakbnyMa_aak.CQRS.Trips.CreateTrip;
 using RakbnyMa_aak.CQRS.Trips.Delete_Trip;
 using RakbnyMa_aak.CQRS.Trips.UpdateTrip;
@@ -61,6 +65,61 @@ namespace RakbnyMa_aak.Controllers
                 return BadRequest(result.Message);
 
             return Ok(result);
+        }
+
+
+        [Authorize(Roles = "Driver")]
+        [HttpPost("start-by-driver")]
+        public async Task<IActionResult> StartTripByDriver([FromQuery] int tripId)
+        {
+            var driverId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var command = new StartTripByDriverCommand(tripId, driverId);
+
+            var result = await _mediator.Send(command);
+
+            return result.IsSucceeded ? Ok(result) : BadRequest(result);
+        }
+
+
+        [Authorize(Roles = "Driver")]
+        [HttpPost("end-by-driver")]
+        public async Task<IActionResult> EndTripByDriver([FromQuery] int tripId)
+        {
+            var driverId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var command = new EndTripByDriverCommand(tripId, driverId);
+
+            var result = await _mediator.Send(command);
+
+            return result.IsSucceeded ? Ok(result) : BadRequest(result);
+        }
+
+
+        [Authorize(Roles = "User")]
+        [HttpPost("start-by-passenger")]
+        public async Task<IActionResult> StartTripByPassenger([FromQuery] int bookingId)
+        {
+            var passengerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var command = new StartTripByPassengerCommand(bookingId, passengerId);
+
+            var result = await _mediator.Send(command);
+
+            return result.IsSucceeded ? Ok(result) : BadRequest(result);
+        }
+
+        [Authorize(Roles = "User")]
+        [HttpPost("end-by-passenger")]
+        public async Task<IActionResult> EndTripByPassenger([FromQuery] int bookingId)
+        {
+            var passengerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var command = new EndTripByPassengerCommand(bookingId, passengerId);
+
+            var result = await _mediator.Send(command);
+
+            return result.IsSucceeded ? Ok(result) : BadRequest(result);
         }
 
 

@@ -17,7 +17,8 @@ namespace RakbnyMa_aak.Models
         //public string PaymentMethod { get; set; }
         //public decimal TotalPrice { get; set; }
 
-
+        public bool HasStarted { get; set; } = false;
+        public bool HasEnded { get; set; } = false;
 
         // Navigation properties
         [ForeignKey("UserId")]

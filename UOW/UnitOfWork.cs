@@ -14,6 +14,8 @@ namespace RakbnyMa_aak.UOW
         public IDriverRepository DriverRepository { get; }
         public IUserRepository UserRepository { get; }
         public IBookingRepository BookingRepository { get; }
+        public INotificationRepository NotificationRepository { get; }
+
 
 
         public ITripRepository TripRepository { get; }
@@ -30,8 +32,8 @@ namespace RakbnyMa_aak.UOW
             DriverRepository = new DriverRepository(_context);
             UserRepository = new UserRepository(_context);
             BookingRepository = new BookingRepository(_context);
-
             TripRepository = new TripRepository(_context);
+            NotificationRepository= new NotificationRepository(_context);
         }
 
         public async Task<int> CompleteAsync()

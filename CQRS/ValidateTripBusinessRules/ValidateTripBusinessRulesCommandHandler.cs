@@ -17,7 +17,7 @@ namespace RakbnyMa_aak.CQRS.ValidateTripBusinessRules
             if (dto.AvailableSeats <= 0)
                 return Task.FromResult(Response<bool>.Fail("Available seats must be greater than 0."));
 
-            if (dto.TripDate < DateTime.UtcNow)
+            if (dto.TripDate < DateTime.UtcNow.Date)
                 return Task.FromResult(Response<bool>.Fail("Trip date must be in the future."));
 
             return Task.FromResult(Response<bool>.Success(true));

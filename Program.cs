@@ -14,6 +14,7 @@ using RakbnyMa_aak.Repositories.Interfaces;
 using RakbnyMa_aak.Services;
 using RakbnyMa_aak.Services.Drivers;
 using RakbnyMa_aak.Services.Users;
+using RakbnyMa_aak.SignalR;
 using RakbnyMa_aak.UOW;
 using System.Text;
 
@@ -42,6 +43,8 @@ namespace RakbnyMa_aak
             builder.Services.AddScoped<IUserRegistrationService, UserRegistrationService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IJwtService, JwtService>();
+            builder.Services.AddScoped<INotificationService, NotificationService>();
+
 
 
             builder.Services.AddScoped<IDriverRepository, DriverRepository>();
@@ -145,6 +148,9 @@ namespace RakbnyMa_aak
                          ValidateLifetime = true
                      };
                  });
+            /// .. AddSignalR;
+
+            builder.Services.AddSignalR();
 
             builder.Services.AddAuthorization();
 
@@ -172,6 +178,9 @@ namespace RakbnyMa_aak
             app.UseAuthentication(); // important for Identity
             app.UseAuthorization();
 
+
+
+            app.MapHub<NotificationHub>("/notificationHub");
             // 8. Map Controllers
             app.MapControllers();
 

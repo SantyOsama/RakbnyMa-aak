@@ -1,0 +1,16 @@
+﻿using MediatR;
+using RakbnyMa_aak.GeneralResponse;
+
+namespace RakbnyMa_aak.CQRS.BookingOrchestrators
+{
+    public class ApproveBookingRequestCommand : IRequest<Response<bool>>
+    {
+        public int BookingId { get; set; }
+        public string CurrentUserId { get; set; }
+        public ApproveBookingRequestCommand(int bookingId, string currentUserId)
+        {
+            BookingId = bookingId;
+            CurrentUserId = currentUserId;
+        }
+    }
+}

@@ -7,8 +7,8 @@ namespace RakbnyMa_aak.UOW
         IDriverRepository DriverRepository {  get; }
         IUserRepository UserRepository { get; }
         IBookingRepository BookingRepository { get; }
-
         ITripRepository TripRepository { get; }
+        INotificationRepository NotificationRepository { get; }
         Task<int> CompleteAsync(); // SaveChanges
         Task RollbackAsync(); // Rollback 
 

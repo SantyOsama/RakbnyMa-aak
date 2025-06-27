@@ -8,5 +8,6 @@ namespace RakbnyMa_aak.Repositories.Interfaces
     {
         Task<ApplicationUser?> GetByEmailAsync(string email);
         Task<ApplicationUser?> GetByUsernameAsync(string username);
+        IQueryable<ApplicationUser> GetUsersQueryable();
     }
 }

@@ -44,6 +44,10 @@ namespace RakbnyMa_aak.Repositories.Implementations
         {
             await _context.SaveChangesAsync();
         }
+        public IQueryable<T> GetAllQueryable()
+        {
+            return _dbSet.AsNoTracking(); 
+        }
     }
 
 }

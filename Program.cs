@@ -67,6 +67,8 @@ namespace RakbnyMa_aak
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
 
+            builder.Services.AddHttpContextAccessor();
+
             // 3. Add controllers and Swagger
             builder.Services.AddControllers();
            

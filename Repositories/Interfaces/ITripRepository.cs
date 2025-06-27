@@ -4,6 +4,6 @@ namespace RakbnyMa_aak.Repositories.Interfaces
 {
     public interface ITripRepository : IGenericRepository<Trip>
     {
-
+    
     }
 }

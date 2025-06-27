@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using MediatR;
+using Microsoft.AspNetCore.Identity;
 using static RakbnyMa_aak.Enums.Enums;
 
 namespace RakbnyMa_aak.Models
@@ -17,6 +18,8 @@ namespace RakbnyMa_aak.Models
 
         // User can send many messages
         public virtual ICollection<Message>? SentMessages { get; set; }
+        public virtual ICollection<Notification>? Notifications { get; set; }
+
 
         public ApplicationUser()
         {
@@ -24,6 +27,7 @@ namespace RakbnyMa_aak.Models
             RatingsReceived = new HashSet<Rating>();
             Bookings = new HashSet<Booking>();
             SentMessages = new HashSet<Message>();
+            Notifications = new HashSet<Notification>();
         }
 
     }

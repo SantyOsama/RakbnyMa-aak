@@ -16,6 +16,8 @@ namespace RakbnyMa_aak.Data
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<Trip> Trips { get; set; }
         public DbSet<TripTracking> TripTrackings { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

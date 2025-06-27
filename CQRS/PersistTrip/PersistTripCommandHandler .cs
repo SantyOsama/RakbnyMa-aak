@@ -21,14 +21,11 @@ namespace RakbnyMa_aak.CQRS.PersistTrip
         public async Task<Response<int>> Handle(PersistTripCommand request, CancellationToken cancellationToken)
         {
             var trip = _mapper.Map<Trip>(request.TripDto);
-            trip.CreatedAt = DateTime.UtcNow;
             trip.TripStatus = TripStatus.Scheduled;
-            trip.IsDeleted = false;
-
             await _unitOfWork.TripRepository.AddAsync(trip);
             await _unitOfWork.CompleteAsync();
 
-            return Response<int>.Success(trip.Id, "Trip created successfully.");
+            return Response<int>.Success(trip.Id, $"Trip from {trip.FromCityId} to {trip.ToCityId} created successfully.");
         }
     }
 }

@@ -5,7 +5,7 @@ namespace RakbnyMa_aak.Repositories.Interfaces
     public interface IDriverRepository : IGenericRepository<Driver>
     {
         Task<Driver?> GetByUserIdAsync(string userId);
-        Task<IEnumerable<Driver>> GetPendingApprovalDriversAsync();
+        IQueryable<Driver> GetPendingApprovalDriversQueryable();
     }
 
 }

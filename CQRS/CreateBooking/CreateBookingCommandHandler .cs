@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.SignalR;
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.Models;
+using RakbnyMa_aak.SignalR;
 using RakbnyMa_aak.UOW;
 using static RakbnyMa_aak.Enums.Enums;
 
@@ -11,12 +13,16 @@ namespace RakbnyMa_aak.CQRS.CreateBooking
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
 
-        public CreateBookingCommandHandler(IUnitOfWork unitOfWork , IMapper mapper)
+        public CreateBookingCommandHandler(IUnitOfWork unitOfWork , IMapper mapper,
+            IHubContext<NotificationHub> hubContext)
+
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _hubContext = hubContext;
         }
 
         public async Task<Response<int>> Handle(CreateBookingCommand request, CancellationToken cancellationToken)
@@ -29,7 +35,10 @@ namespace RakbnyMa_aak.CQRS.CreateBooking
             await _unitOfWork.BookingRepository.AddAsync(booking);
             await _unitOfWork.CompleteAsync();
 
-            return Response<int>.Success(booking.Id, "Trip has been created successfully.");
+
+            //Notification but i will do orchestrator
+
+            return Response<int>.Success(booking.Id, "Booking request sent to driver.");
         }
 
     }

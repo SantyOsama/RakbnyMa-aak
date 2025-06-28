@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using RakbnyMa_aak.CQRS.Commands.CreateBooking;
 using RakbnyMa_aak.CQRS.Features.BookTripRequest;
-using RakbnyMa_aak.CQRS.BookTripOrchestrator;
 using RakbnyMa_aak.CQRS.Cities;
-using RakbnyMa_aak.CQRS.CreateBooking;
 using RakbnyMa_aak.CQRS.Governorates;
 using RakbnyMa_aak.CQRS.Trips.UpdateTrip;
 using RakbnyMa_aak.DTOs.TripDTOs;

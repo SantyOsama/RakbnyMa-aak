@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using RakbnyMa_aak.Models;
+using System.Reflection.Emit;
 
 namespace RakbnyMa_aak.Data
 {
@@ -28,6 +29,9 @@ namespace RakbnyMa_aak.Data
             builder.Entity<Booking>().HasQueryFilter(t => !t.IsDeleted);
             builder.Entity<Rating>().HasQueryFilter(t => !t.IsDeleted);
             builder.Entity<Message>().HasQueryFilter(t => !t.IsDeleted);
+            builder.Entity<Governorate>().HasQueryFilter(g => !g.IsDeleted);
+            builder.Entity<City>().HasQueryFilter(c => !c.IsDeleted);
+
 
             // 🟢 UNIQUE CONSTRAINTS
 
@@ -41,7 +45,7 @@ namespace RakbnyMa_aak.Data
                 .HasIndex(d => d.NationalId)
                 .IsUnique();
 
-            // 3. City name must be unique inside a Governorate
+            //3.City name must be unique inside a Governorate
             builder.Entity<City>()
                 .HasIndex(c => new { c.Name, c.GovernorateId })
                 .IsUnique();

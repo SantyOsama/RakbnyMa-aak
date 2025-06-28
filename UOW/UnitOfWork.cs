@@ -20,11 +20,17 @@ namespace RakbnyMa_aak.UOW
 
         public ITripRepository TripRepository { get; }
 
+        public IGovernorateRepository Governorates { get; }
+
+        public ICityRepository Cities { get; }
+
         public UnitOfWork(
             AppDbContext context,
             UserManager<ApplicationUser> userManager,
             ICloudinaryService cloudinaryService,
             ITripRepository tripRepository,
+            IGovernorateRepository governorateRepository,
+            ICityRepository cityRepository,
             IMapper mapper
         )
         {
@@ -34,6 +40,8 @@ namespace RakbnyMa_aak.UOW
             BookingRepository = new BookingRepository(_context);
             TripRepository = new TripRepository(_context);
             NotificationRepository= new NotificationRepository(_context);
+            Governorates= new GovernorateRepository(_context);
+            Cities= new CityRepository(_context);
         }
 
         public async Task<int> CompleteAsync()

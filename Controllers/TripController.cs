@@ -8,6 +8,7 @@ using RakbnyMa_aak.CQRS.Features.StartTripByDriver;
 using RakbnyMa_aak.CQRS.Features.StartTripByPassenger;
 using RakbnyMa_aak.CQRS.Trips.CreateTrip;
 using RakbnyMa_aak.CQRS.Trips.Delete_Trip;
+using RakbnyMa_aak.CQRS.Trips.GetDriverTripBookings;
 using RakbnyMa_aak.CQRS.Trips.UpdateTrip;
 using RakbnyMa_aak.DTOs.TripDTOs;
 using System.Security.Claims;
@@ -66,6 +67,21 @@ namespace RakbnyMa_aak.Controllers
 
             return Ok(result);
         }
+        [Authorize(Roles = "Driver")]
+        [HttpGet("bookings")]
+        public async Task<IActionResult> GetBookingsForDriver()
+        {
+            var driverUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var query = new GetDriverTripBookingsQuery(driverUserId);
+
+            var result = await _mediator.Send(query);
+
+            if (!result.IsSucceeded)
+                return BadRequest(result.Message);
+
+            return Ok(result);
+        }
+
 
 
         [Authorize(Roles = "Driver")]

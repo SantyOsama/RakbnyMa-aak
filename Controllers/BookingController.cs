@@ -2,9 +2,10 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RakbnyMa_aak.CQRS.BookingOrchestrator;
-using RakbnyMa_aak.CQRS.BookTripOrchestrator;
-using RakbnyMa_aak.CQRS.CreateBooking;
+using RakbnyMa_aak.CQRS.Commands.CreateBooking;
+using RakbnyMa_aak.CQRS.Features.BookTripRequest;
+using RakbnyMa_aak.CQRS.Features.CancelBookingByPassenger;
+using System.Security.Claims;
 namespace RakbnyMa_aak.Controllers
 {
     [Route("api/[controller]")]
@@ -25,9 +26,20 @@ namespace RakbnyMa_aak.Controllers
         public async Task<IActionResult> BookTrip([FromBody] BookTripDto dto)
         {
             var bookingDto = _mapper.Map<CreateBookingDto>(dto);
-            var result = await _mediator.Send(new BookTripRequestCommand(bookingDto));
+            var result = await _mediator.Send(new BookTripRequestOrchestrator(bookingDto));
             return result.IsSucceeded ? Ok(result) : BadRequest(result);
         }
 
+        [Authorize(Roles = "User")]
+        [HttpPost("cancel")]
+        public async Task<IActionResult> CancelBooking([FromQuery] int bookingId)
+        {
+            var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrWhiteSpace(currentUserId))
+                return Unauthorized("User ID not found in token.");
+
+            var result = await _mediator.Send(new CancelBookingByPassengerCommand(bookingId, currentUserId));
+            return result.IsSucceeded ? Ok(result) : BadRequest(result);
+        }
     }
 }

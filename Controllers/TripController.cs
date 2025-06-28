@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using RakbnyMa_aak.CQRS.EndTripByDriver;
-using RakbnyMa_aak.CQRS.EndTripByPassenger;
-using RakbnyMa_aak.CQRS.StartTripByDriver;
-using RakbnyMa_aak.CQRS.StartTripByPassenger;
+using RakbnyMa_aak.CQRS.Features.EndTripByDriver;
+using RakbnyMa_aak.CQRS.Features.EndTripByPassenger;
+using RakbnyMa_aak.CQRS.Features.StartTripByDriver;
+using RakbnyMa_aak.CQRS.Features.StartTripByPassenger;
 using RakbnyMa_aak.CQRS.Trips.CreateTrip;
 using RakbnyMa_aak.CQRS.Trips.Delete_Trip;
 using RakbnyMa_aak.CQRS.Trips.UpdateTrip;

@@ -46,7 +46,7 @@ namespace RakbnyMa_aak.Repositories.Implementations
         }
         public IQueryable<T> GetAllQueryable()
         {
-            return _dbSet.AsNoTracking(); 
+            return _dbSet.AsNoTracking();
         }
     }
 

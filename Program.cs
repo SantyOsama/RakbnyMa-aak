@@ -52,7 +52,9 @@ namespace RakbnyMa_aak
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             builder.Services.AddScoped<ITripRepository, TripRepository>();
-            builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+            builder.Services.AddScoped<IBookingRepository, BookingRepository>(); 
+            builder.Services.AddScoped<IGovernorateRepository, GovernorateRepository>();
+            builder.Services.AddScoped<ICityRepository, CityRepository>();
 
 
 

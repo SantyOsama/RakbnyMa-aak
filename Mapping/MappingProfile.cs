@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using RakbnyMa_aak.CQRS.BookTripOrchestrator;
+using RakbnyMa_aak.CQRS.Cities;
 using RakbnyMa_aak.CQRS.CreateBooking;
+using RakbnyMa_aak.CQRS.Governorates;
 using RakbnyMa_aak.CQRS.Trips.UpdateTrip;
 using RakbnyMa_aak.DTOs.TripDTOs;
 using RakbnyMa_aak.DTOs.UserDTOs;
@@ -21,6 +23,11 @@ namespace RakbnyMa_aak.Mapping
             CreateMap<CreateBookingDto, Booking>().ReverseMap();
             CreateMap<BookTripDto, Booking>().ReverseMap();
             CreateMap<BookTripDto, CreateBookingDto>().ReverseMap();
+            CreateMap<GovernorateDto, Governorate>().ReverseMap();
+            CreateMap<City, CityDto>()
+                .ForMember(dest => dest.GovernorateName,
+                opt => opt.MapFrom(src => src.Governorate.Name));
+
 
 
         }

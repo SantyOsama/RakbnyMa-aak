@@ -1,0 +1,29 @@
+﻿using AutoMapper;
+using MediatR;
+using RakbnyMa_aak.GeneralResponse;
+using RakbnyMa_aak.Models;
+using RakbnyMa_aak.UOW;
+
+namespace RakbnyMa_aak.CQRS.Governorates.CreateGovernorate
+{
+    public class CreateGovernorateHandler : IRequestHandler<CreateGovernorateCommand, Response<string>>
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+
+        public CreateGovernorateHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+
+        public async Task<Response<string>> Handle(CreateGovernorateCommand request, CancellationToken cancellationToken)
+        {
+            var entity = _mapper.Map<Governorate>(request.Dto);
+            entity.CreatedAt = DateTime.UtcNow;
+            _unitOfWork.Governorates.AddAsync(entity);
+            await _unitOfWork.CompleteAsync();
+            return Response<string>.Success("Governorate created");
+        }
+    }
+}

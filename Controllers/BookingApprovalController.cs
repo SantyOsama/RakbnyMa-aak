@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
-using RakbnyMa_aak.CQRS.BookingOrchestrators;
-
+using RakbnyMa_aak.CQRS.Features.ApproveBookingRequest;
+using RakbnyMa_aak.CQRS.Features.RejectBookingRequest;
 namespace RakbnyMa_aak.Controllers
 {
     [Route("api/[controller]")]
@@ -22,7 +22,7 @@ namespace RakbnyMa_aak.Controllers
         public async Task<IActionResult> ApproveBooking([FromQuery] int bookingId)
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = await _mediator.Send(new ApproveBookingRequestCommand(bookingId,currentUserId));
+            var result = await _mediator.Send(new ApproveBookingOrchestrator(bookingId,currentUserId));
             return result.IsSucceeded ? Ok(result) : BadRequest(result);
         }
 
@@ -30,7 +30,7 @@ namespace RakbnyMa_aak.Controllers
         public async Task<IActionResult> RejectBooking([FromQuery] int bookingId)
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = await _mediator.Send(new RejectBookingRequestCommand(bookingId,currentUserId));
+            var result = await _mediator.Send(new RejectBookingOrchestrator(bookingId,currentUserId));
             return result.IsSucceeded ? Ok(result) : BadRequest(result);
         }
     }

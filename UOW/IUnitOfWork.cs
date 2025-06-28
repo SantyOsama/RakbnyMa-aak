@@ -9,6 +9,8 @@ namespace RakbnyMa_aak.UOW
         IBookingRepository BookingRepository { get; }
         ITripRepository TripRepository { get; }
         INotificationRepository NotificationRepository { get; }
+        IGovernorateRepository Governorates { get; }
+        ICityRepository Cities { get; }
         Task<int> CompleteAsync(); // SaveChanges
         Task RollbackAsync(); // Rollback 
 

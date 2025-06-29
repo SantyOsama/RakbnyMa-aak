@@ -18,7 +18,7 @@ namespace RakbnyMa_aak.CQRS.Features.StartTripByDriver
         {
             var trip = await _unitOfWork.TripRepository.GetByIdAsync(request.TripId);
 
-            if (trip == null || trip.IsDeleted || trip.DriverId != request.DriverId ||trip.TripStatus != TripStatus.Cancelled)
+            if (trip == null || trip.IsDeleted || trip.DriverId != request.DriverId ||trip.TripStatus == TripStatus.Cancelled)
                 return Response<bool>.Fail("Unauthorized or trip not found.");
 
             if (trip.TripStatus != TripStatus.Scheduled)

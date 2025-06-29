@@ -11,9 +11,6 @@ namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripBusinessRules
         {
             var dto = request.Trip;
 
-            if (dto.FromCityId == dto.ToCityId)
-                return Task.FromResult(Response<bool>.Fail("Departure city cannot be the same as destination city."));
-
             if (dto.AvailableSeats <= 0)
                 return Task.FromResult(Response<bool>.Fail("Available seats must be greater than 0."));
 

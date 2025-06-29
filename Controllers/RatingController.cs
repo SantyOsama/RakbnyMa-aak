@@ -7,6 +7,9 @@ using RakbnyMa_aak.GeneralResponse;
 using Microsoft.AspNetCore.Authorization;
 using RakbnyMa_aak.CQRS.Ratings.DriverGetRatings;
 using RakbnyMa_aak.CQRS.Queries.GetUserRatings;
+using RakbnyMa_aak.CQRS.Ratings.DriverAddRating;
+using RakbnyMa_aak.CQRS.Ratings.DriverUpdateRating;
+using RakbnyMa_aak.CQRS.Ratings.DriverDeleteRating;
 
 namespace RakbnyMa_aak.Controllers
 {
@@ -62,5 +65,43 @@ namespace RakbnyMa_aak.Controllers
             var result = await _mediator.Send(new UserDeleteRatingCommand(ratingId, raterId));
             return StatusCode(result.StatusCode, result);
         }
+        [Authorize(Roles = "Driver")]
+        [HttpPost("driver")]
+        public async Task<IActionResult> RatePassenger([FromBody] DriverAddRatingDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _mediator.Send(new DriverAddRatingCommand(dto));
+
+            if (!result.IsSucceeded)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
+        [Authorize(Roles = "Driver")]
+        [HttpPut("driver")]
+        public async Task<IActionResult> UpdateDriverRating([FromBody] DriverUpdateRatingDto dto)
+        {
+            var result = await _mediator.Send(new DriverUpdateRatingCommand(dto));
+
+            if (!result.IsSucceeded)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
+
+        [Authorize(Roles = "Driver")]
+        [HttpDelete("driver")]
+        public async Task<IActionResult> DeleteDriverRating([FromQuery] int ratingId, [FromQuery] string raterId)
+        {
+            var result = await _mediator.Send(new DriverDeleteRatingCommand(ratingId, raterId));
+
+            if (!result.IsSucceeded)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
+
     }
 }

@@ -16,6 +16,7 @@ namespace RakbnyMa_aak.UOW
         public IBookingRepository BookingRepository { get; }
         public INotificationRepository NotificationRepository { get; }
 
+        public IRatingRepository RatingRepository { get; }
 
 
         public ITripRepository TripRepository { get; }
@@ -31,6 +32,7 @@ namespace RakbnyMa_aak.UOW
             ITripRepository tripRepository,
             IGovernorateRepository governorateRepository,
             ICityRepository cityRepository,
+            IRatingRepository ratingRepository,
             IMapper mapper
         )
         {
@@ -42,6 +44,7 @@ namespace RakbnyMa_aak.UOW
             NotificationRepository= new NotificationRepository(_context);
             Governorates= new GovernorateRepository(_context);
             Cities= new CityRepository(_context);
+            RatingRepository= new RatingRepository(_context);
         }
 
         public async Task<int> CompleteAsync()

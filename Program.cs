@@ -55,6 +55,7 @@ namespace RakbnyMa_aak
             builder.Services.AddScoped<IBookingRepository, BookingRepository>(); 
             builder.Services.AddScoped<IGovernorateRepository, GovernorateRepository>();
             builder.Services.AddScoped<ICityRepository, CityRepository>();
+            builder.Services.AddScoped<IRatingRepository, RatingRepository>();
 
 
 

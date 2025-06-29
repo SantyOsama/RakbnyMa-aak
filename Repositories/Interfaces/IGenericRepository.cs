@@ -1,4 +1,6 @@
-﻿namespace RakbnyMa_aak.Repositories.Interfaces
+﻿using System.Linq.Expressions;
+
+namespace RakbnyMa_aak.Repositories.Interfaces
 {
     public interface IGenericRepository<T> where T : class
     {
@@ -9,5 +11,7 @@
         void Update(T entity);
         void Delete(T entity);
         Task SaveAsync();
+        Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
+
     }
 }

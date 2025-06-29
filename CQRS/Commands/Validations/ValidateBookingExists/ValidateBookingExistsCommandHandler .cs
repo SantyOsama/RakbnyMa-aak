@@ -18,8 +18,14 @@ namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateBookingExists
         public async Task<Response<Booking>> Handle(ValidateBookingExistsCommand request, CancellationToken cancellationToken)
         {
             var booking = await _unitOfWork.BookingRepository.GetByIdAsync(request.BookingId);
-            if (booking == null || booking.IsDeleted || booking.RequestStatus == RequestStatus.Cancelled)
-                  return Response<Booking>.Fail("Booking not found or already canceled.");
+            if (booking == null)
+                return Response<Booking>.Fail("Booking not found.");
+
+            if (booking.IsDeleted)
+                return Response<Booking>.Fail("Booking has been deleted.");
+
+            if (booking.RequestStatus == RequestStatus.Cancelled)
+                return Response<Booking>.Fail("Booking has been canceled.");
 
             return Response<Booking>.Success(booking);
         }

@@ -11,6 +11,7 @@ namespace RakbnyMa_aak.UOW
         INotificationRepository NotificationRepository { get; }
         IGovernorateRepository Governorates { get; }
         ICityRepository Cities { get; }
+        IRatingRepository RatingRepository { get; }
         Task<int> CompleteAsync(); // SaveChanges
         Task RollbackAsync(); // Rollback 
 

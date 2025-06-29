@@ -2,14 +2,15 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RakbnyMa_aak.CQRS.Features.CreateTripOrchestrator;
 using RakbnyMa_aak.CQRS.Features.EndTripByDriver;
 using RakbnyMa_aak.CQRS.Features.EndTripByPassenger;
 using RakbnyMa_aak.CQRS.Features.StartTripByDriver;
 using RakbnyMa_aak.CQRS.Features.StartTripByPassenger;
-using RakbnyMa_aak.CQRS.Trips.CreateTrip;
+using RakbnyMa_aak.CQRS.Features.UpdateTrip;
+using RakbnyMa_aak.CQRS.Queries.GetAllTrips;
 using RakbnyMa_aak.CQRS.Trips.Delete_Trip;
 using RakbnyMa_aak.CQRS.Trips.GetDriverTripBookings;
-using RakbnyMa_aak.CQRS.Trips.UpdateTrip;
 using RakbnyMa_aak.DTOs.TripDTOs;
 using System.Security.Claims;
 
@@ -27,46 +28,66 @@ namespace RakbnyMa_aak.Controllers
             _mediator = mediator;
         }
         [Authorize(Roles = "Driver")]
-
-        [HttpPost("create")]
+        [HttpPost]
         public async Task<IActionResult> CreateTrip([FromBody] TripDto dto)
         {
-            var command = new CreateTripCommand(dto);
+            var command = new CreateTripOrchestrator(dto);
             var result = await _mediator.Send(command);
 
             if (!result.IsSucceeded)
-                return BadRequest(result.Message);
+                return BadRequest(result);
 
             return Ok(result);
         }
-        [Authorize(Roles = "Driver")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTrip(int id, [FromBody] UpdateTripDto dto)
+        [Authorize(Roles = "Driver")]
+        public async Task<IActionResult> UpdateTrip(int id, [FromBody] TripDto dto)
         {
-            if (id != dto.Id)
-                return BadRequest("ID mismatch");
+          
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var command = new UpdateTripCommand { TripDto = dto };
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(new UpdateTripOrchestrator
+            {
+                TripId = id,
+                CurrentUserId = currentUserId,
+                TripDto = dto
+            });
 
             if (!result.IsSucceeded)
-                return BadRequest(result.Message);
+                return BadRequest(result);
 
             return Ok(result);
         }
 
-        [Authorize(Roles = "Driver")]
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Driver")]
         public async Task<IActionResult> DeleteTrip(int id)
         {
-            var command = new DeleteTripCommand(id);
-            var result = await _mediator.Send(command);
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var result = await _mediator.Send(new DeleteTripCommand
+            {
+                TripId = id,
+                CurrentUserId = currentUserId
+            });
 
             if (!result.IsSucceeded)
-                return BadRequest(result.Message);
+                return BadRequest(result);
 
             return Ok(result);
         }
+        [HttpGet]
+        public async Task<IActionResult> GetAllTrips()
+        {
+            var result = await _mediator.Send(new GetAllTripsQuery());
+
+            if (!result.IsSucceeded)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
+
+
         [Authorize(Roles = "Driver")]
         [HttpGet("bookings")]
         public async Task<IActionResult> GetBookingsForDriver()

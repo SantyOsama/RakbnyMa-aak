@@ -1,0 +1,43 @@
+﻿using MediatR;
+using RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripExists;
+using RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripIsUpdatable;
+using RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripOwner;
+using RakbnyMa_aak.GeneralResponse;
+using RakbnyMa_aak.UOW;
+using System.Security.Claims;
+
+namespace RakbnyMa_aak.CQRS.Trips.Delete_Trip
+{
+    public class DeleteTripCommandHandler : IRequestHandler<DeleteTripCommand, Response<string>>
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMediator _mediator;
+
+        public DeleteTripCommandHandler(IUnitOfWork unitOfWork, IMediator mediator)
+        {
+            _unitOfWork = unitOfWork;
+            _mediator = mediator;
+        }
+
+        public async Task<Response<string>> Handle(DeleteTripCommand request, CancellationToken cancellationToken)
+        {
+          
+            var tripResult = await _mediator.Send(new ValidateTripExistsCommand(request.TripId));
+            if (!tripResult.IsSucceeded)
+                return Response<string>.Fail(tripResult.Message);
+
+            var trip = tripResult.Data;
+
+            
+            var isOwner = await _mediator.Send(new ValidateTripOwnerCommand(request.CurrentUserId, trip.DriverId));
+            if (!isOwner.IsSucceeded)
+                return Response<string>.Fail(isOwner.Message);
+
+            
+            trip.IsDeleted = true;
+            await _unitOfWork.CompleteAsync();
+
+            return Response<string>.Success($"Trip with ID {trip.Id} has been deleted successfully.");
+        }
+    }
+}

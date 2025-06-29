@@ -4,6 +4,9 @@ using RakbnyMa_aak.CQRS.Ratings.UserAddRating;
 using RakbnyMa_aak.CQRS.Ratings.UserUpdateRating;
 using RakbnyMa_aak.CQRS.Ratings.UserDeleteRating;
 using RakbnyMa_aak.GeneralResponse;
+using Microsoft.AspNetCore.Authorization;
+using RakbnyMa_aak.CQRS.Ratings.DriverGetRatings;
+using RakbnyMa_aak.CQRS.Queries.GetUserRatings;
 
 namespace RakbnyMa_aak.Controllers
 {
@@ -17,24 +20,43 @@ namespace RakbnyMa_aak.Controllers
         {
             _mediator = mediator;
         }
-        /// Add rating by passenger after trip ends
-        [HttpPost("add")]
+        [Authorize(Roles = "Driver")]
+        [HttpGet("driver/{driverId}")]
+        public async Task<IActionResult> GetDriverRatings([FromRoute] string driverId, [FromQuery] int page , [FromQuery] int pageSize)
+        {
+            var result = await _mediator.Send(new GetDriverRatingsQuery(driverId, page, pageSize));
+            return Ok(result);
+        }
+
+        [Authorize(Roles = "Usrr")]
+        [HttpGet("user/{driverId}")]
+        public async Task<IActionResult> GetDUserRatings([FromBody] GetUserRatingDto Filter)
+        {
+            var result = await _mediator.Send(new GetUserRatingsQuery(Filter));
+            return Ok(result);
+        }
+
+        /// Add rating by passenger after trip ends 
+
+        [HttpPost("add-user")]
         public async Task<IActionResult> AddRating([FromBody] UserAddRatingDto dto)
         {
             var result = await _mediator.Send(new UserAddRatingCommand(dto));
             return StatusCode(result.StatusCode, result);
         }
 
-        /// Update existing rating by rater
-        [HttpPut("update")]
+        /// Update existing rating by rater <summary>
+        [Authorize(Roles = "User")]
+        [HttpPut("update-user")]
         public async Task<IActionResult> UpdateRating([FromBody] UserUpdateRatingDto dto)
         {
             var result = await _mediator.Send(new UserUpdateRatingCommand(dto));
             return StatusCode(result.StatusCode, result);
         }
 
-        /// Delete existing rating
-        [HttpDelete("delete/{ratingId}")]
+        /// Delete existing rating <summary>
+        [Authorize(Roles = "User")]
+        [HttpDelete("delete-user/{ratingId}")]
         public async Task<IActionResult> DeleteRating([FromRoute] int ratingId, [FromQuery] string raterId)
         {
             var result = await _mediator.Send(new UserDeleteRatingCommand(ratingId, raterId));

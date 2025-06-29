@@ -23,13 +23,15 @@ namespace RakbnyMa_aak.CQRS.Features.CancelBookingByPassenger
         {
             // Step 1: Validate ownership & get booking
             var ownershipResult = await _mediator.Send(new ValidateOwnershipAndGetBookingCommand(request.BookingId, request.CurrentUserId));
-            if (!ownershipResult.IsSucceeded) return Response<bool>.Fail(ownershipResult.Message);
+            if (!ownershipResult.IsSucceeded)
+                return Response<bool>.Fail(ownershipResult.Message);
 
             var booking = ownershipResult.Data!;
 
             // Step 2: Validate Trip
             var tripResult = await _mediator.Send(new ValidateTripExistsCommand(booking.TripId));
-            if (!tripResult.IsSucceeded) return Response<bool>.Fail(tripResult.Message);
+            if (!tripResult.IsSucceeded)
+                return Response<bool>.Fail(tripResult.Message);
 
             var trip = tripResult.Data;
 
@@ -38,18 +40,24 @@ namespace RakbnyMa_aak.CQRS.Features.CancelBookingByPassenger
             if (trip.TripDate <= now.AddHours(3))
                 return Response<bool>.Fail("You can only cancel a booking at least 3 hours before the trip starts.");
 
-            // Step 4: Mark booking as cancelled
+            // Step 4: Save old status BEFORE modifying
+            bool wasConfirmed = booking.RequestStatus == RequestStatus.Confirmed;
+
+            // Step 5: Mark booking as cancelled
             booking.RequestStatus = RequestStatus.Cancelled;
             booking.HasEnded = true;
-            booking.UpdatedAt= now;
+            booking.UpdatedAt = now;
             _unitOfWork.BookingRepository.Update(booking);
 
-            // Step 5: Restore seats
-            await _mediator.Send(new RestoreTripSeatsCommand
+            // Step 6: If the booking was confirmed, restore seats
+            if (wasConfirmed)
             {
-                Trip = trip,
-                SeatsToRestore = booking.NumberOfSeats
-            });
+                await _mediator.Send(new RestoreTripSeatsCommand
+                {
+                    Trip = trip,
+                    SeatsToRestore = booking.NumberOfSeats
+                });
+            }
 
             await _unitOfWork.CompleteAsync();
 

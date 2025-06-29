@@ -31,7 +31,7 @@ namespace RakbnyMa_aak.Controllers
         }
 
         [Authorize(Roles = "User")]
-        [HttpPost("cancel")]
+        [HttpDelete("cancel/{bookingId}")]
         public async Task<IActionResult> CancelBooking([FromQuery] int bookingId)
         {
             var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

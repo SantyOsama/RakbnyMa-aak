@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RakbnyMa_aak.Data;
 using RakbnyMa_aak.Repositories.Interfaces;
+using System.Linq.Expressions;
 
 namespace RakbnyMa_aak.Repositories.Implementations
 {
@@ -48,6 +49,11 @@ namespace RakbnyMa_aak.Repositories.Implementations
         {
             return _dbSet.AsNoTracking();
         }
+        public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _context.Set<T>().AnyAsync(predicate);
+        }
+
     }
 
 }

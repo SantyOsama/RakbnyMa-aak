@@ -2,6 +2,7 @@
 using RakbnyMa_aak.Data;
 using RakbnyMa_aak.Models;
 using RakbnyMa_aak.Repositories.Interfaces;
+using static RakbnyMa_aak.Enums.Enums;
 
 namespace RakbnyMa_aak.Repositories.Implementations
 {
@@ -51,6 +52,16 @@ namespace RakbnyMa_aak.Repositories.Implementations
                 .AsNoTracking()
                 .Where(b => b.TripId == tripId && !b.IsDeleted)
                 .SumAsync(b => b.NumberOfSeats);
+        }
+        public IQueryable<Booking> GetConfirmedFinishedBookingQueryable(int tripId, string userId)
+        {
+            return _context.Bookings
+                .AsNoTracking()
+                .Where(b => b.TripId == tripId &&
+                            b.UserId == userId &&
+                            b.HasEnded &&
+                            b.RequestStatus == RequestStatus.Confirmed &&
+                            !b.IsDeleted);
         }
     }
 }

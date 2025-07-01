@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using RakbnyMa_aak.Behaviors;
 using RakbnyMa_aak.CQRS.Drivers.RegisterDriver.Commands;
 using RakbnyMa_aak.Data;
+using RakbnyMa_aak.Filters;
 using RakbnyMa_aak.Mapping;
 using RakbnyMa_aak.MiddleWares;
 using RakbnyMa_aak.Models;
@@ -76,8 +78,13 @@ namespace RakbnyMa_aak
             builder.Services.AddHttpContextAccessor();
 
             // 3. Add controllers and Swagger
-            builder.Services.AddControllers();
-           
+            builder.Services.AddControllers(options =>
+            {
+                options.Filters.Add<ValidateModelAttribute>();
+            });
+
+            builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+
             /****** Swagger & sOpenAPI  ******/
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

@@ -69,9 +69,6 @@ namespace RakbnyMa_aak.Controllers
         [HttpPost("driver")]
         public async Task<IActionResult> RatePassenger([FromBody] DriverAddRatingDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             var result = await _mediator.Send(new DriverAddRatingCommand(dto));
 
             if (!result.IsSucceeded)

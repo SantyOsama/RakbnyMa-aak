@@ -63,5 +63,11 @@ namespace RakbnyMa_aak.Repositories.Implementations
                             b.RequestStatus == RequestStatus.Confirmed &&
                             !b.IsDeleted);
         }
+        public async Task<Booking?> GetBookingByUserAndTripAsync(string userId, int tripId)
+        {
+            return await _context.Bookings
+                .FirstOrDefaultAsync(b => b.UserId == userId && b.TripId == tripId && !b.IsDeleted);
+        }
+
     }
 }

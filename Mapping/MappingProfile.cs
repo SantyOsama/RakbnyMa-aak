@@ -18,15 +18,15 @@ namespace RakbnyMa_aak.Mapping
 
             CreateMap<RegisterUserDto, ApplicationUser>().ReverseMap();
             CreateMap<TripDto, Trip>().ReverseMap();
-            //CreateMap<UpdateTripDto, Trip>().ReverseMap();
+           
 
             CreateMap<CreateBookingDto, Booking>().ReverseMap();
             CreateMap<BookTripDto, Booking>().ReverseMap();
             CreateMap<BookTripDto, CreateBookingDto>().ReverseMap();
             CreateMap<GovernorateDto, Governorate>().ReverseMap();
-            CreateMap<City, CityDto>()
-                .ForMember(dest => dest.GovernorateName,
-                opt => opt.MapFrom(src => src.Governorate.Name));
+            CreateMap<CityDto, City>()
+             .ForMember(dest => dest.Governorate, opt => opt.Ignore());
+
 
 
 

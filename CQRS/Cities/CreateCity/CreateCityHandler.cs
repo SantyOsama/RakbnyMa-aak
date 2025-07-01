@@ -20,8 +20,8 @@ namespace RakbnyMa_aak.CQRS.Cities.CreateCity
         public async Task<Response<string>> Handle(CreateCityCommand request, CancellationToken cancellationToken)
         {
             var entity = _mapper.Map<City>(request.Dto);
-            entity.CreatedAt = DateTime.UtcNow;
-            _unitOfWork.Cities.AddAsync(entity);
+           entity.CreatedAt = DateTime.UtcNow;
+           await _unitOfWork.Cities.AddAsync(entity);
             await _unitOfWork.CompleteAsync();
             return Response<string>.Success("City created");
         }

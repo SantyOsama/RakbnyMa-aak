@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using MediatR;
 using RakbnyMa_aak.CQRS.Commands.CreateBooking;
 using RakbnyMa_aak.CQRS.Commands.IncreaseBookingSeats;
@@ -25,18 +25,21 @@ namespace RakbnyMa_aak.CQRS.Features.BookTripRequest
         public async Task<Response<int>> Handle(BookTripRequestOrchestrator request, CancellationToken cancellationToken)
         {
             var bookingDto = request.BookingDto;
+
+            // Step 1: Validate Trip Exists
             var validateTripResponse = await _mediator.Send(new ValidateTripExistsCommand(bookingDto.TripId));
             if (!validateTripResponse.IsSucceeded)
                 return Response<int>.Fail(validateTripResponse.Message);
 
-
+            // Step 2: Check if user already booked the same trip
             var checkBookingResponse = await _mediator.Send(
-               new CheckUserAlreadyBookedCommand(
-                   new CheckUserAlreadyBookedDto
-                   {
-                       UserId = bookingDto.UserId,
-                       TripId = bookingDto.TripId
-                   }));
+                new CheckUserAlreadyBookedCommand(
+                    new CheckUserAlreadyBookedDto
+                    {
+                        UserId = bookingDto.UserId,
+                        TripId = bookingDto.TripId
+                    }));
+
             if (!checkBookingResponse.IsSucceeded)
                 return Response<int>.Fail(checkBookingResponse.Message);
 
@@ -58,11 +61,11 @@ namespace RakbnyMa_aak.CQRS.Features.BookTripRequest
             {
                 bookingResponse = await _mediator.Send(new CreateBookingCommand(bookingDto));
             }
+
             if (!bookingResponse.IsSucceeded)
                 return bookingResponse;
 
-
-            // Step 2: Get DriverId
+            // Step 2: Get DriverId by TripId
             var driverIdResponse = await _mediator.Send(new GetDriverIdByTripIdQuery(bookingDto.TripId));
             if (!driverIdResponse.IsSucceeded || string.IsNullOrEmpty(driverIdResponse.Data))
                 return Response<int>.Fail("Driver not found for this trip.");

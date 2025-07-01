@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using RakbnyMa_aak.CQRS.Commands.MarkBookingAsEnded;
+using RakbnyMa_aak.CQRS.Commands.Validations.ValidateBookingForEnding;
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.UOW;
 
@@ -6,28 +8,27 @@ namespace RakbnyMa_aak.CQRS.Features.EndTripByPassenger
 {
     public class EndTripByPassengerCommandHandler : IRequestHandler<EndTripByPassengerCommand, Response<bool>>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMediator _mediator;
 
-        public EndTripByPassengerCommandHandler(IUnitOfWork unitOfWork)
+        public EndTripByPassengerCommandHandler(IMediator mediator)
         {
-            _unitOfWork = unitOfWork;
+            _mediator = mediator;
         }
 
         public async Task<Response<bool>> Handle(EndTripByPassengerCommand request, CancellationToken cancellationToken)
         {
-            var booking = await _unitOfWork.BookingRepository.GetByIdAsync(request.BookingId);
-            if (booking == null || booking.IsDeleted || booking.UserId != request.CurrentUserId)
-                return Response<bool>.Fail("Unauthorized or booking not found.");
+            // 1. Validate booking
+            var validationResponse = await _mediator.Send(
+                new ValidateBookingForEndingCommand(request.BookingId, request.CurrentUserId)
+            );
 
-            if (!booking.HasStarted)
-                return Response<bool>.Fail("Trip must be started first.");
+            if (!validationResponse.IsSucceeded)
+                return Response<bool>.Fail(validationResponse.Message);
 
-            booking.HasEnded = true;
-            _unitOfWork.BookingRepository.Update(booking);
-            await _unitOfWork.CompleteAsync();
-
-            return Response<bool>.Success(true, "Trip ended successfully.");
+            // 2. Mark booking as ended
+            return await _mediator.Send(
+                new MarkBookingAsEndedCommand(validationResponse.Data)
+            );
         }
     }
-
 }

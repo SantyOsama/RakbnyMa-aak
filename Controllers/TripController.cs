@@ -125,7 +125,7 @@ namespace RakbnyMa_aak.Controllers
         {
             var driverId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var command = new EndTripByDriverCommand(tripId, driverId);
+            var command = new EndTripByDriverOrchestrator(tripId, driverId);
 
             var result = await _mediator.Send(command);
 

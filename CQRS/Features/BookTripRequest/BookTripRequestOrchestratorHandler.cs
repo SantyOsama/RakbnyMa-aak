@@ -2,6 +2,7 @@
 using MediatR;
 using RakbnyMa_aak.CQRS.Commands.CreateBooking;
 using RakbnyMa_aak.CQRS.Commands.SendNotification;
+using RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripExists;
 using RakbnyMa_aak.CQRS.Trips.Queries;
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.UOW;
@@ -22,6 +23,10 @@ namespace RakbnyMa_aak.CQRS.Features.BookTripRequest
         public async Task<Response<int>> Handle(BookTripRequestOrchestrator request, CancellationToken cancellationToken)
         {
             var bookingDto = request.BookingDto;
+
+            var validateTripResponse = await _mediator.Send(new ValidateTripExistsCommand(bookingDto.TripId));
+            if (!validateTripResponse.IsSucceeded)
+                return Response<int>.Fail(validateTripResponse.Message);
 
             // Step 1: Create Booking
             var bookingResponse = await _mediator.Send(new CreateBookingCommand(bookingDto));

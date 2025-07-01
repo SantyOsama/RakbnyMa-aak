@@ -10,6 +10,8 @@ namespace RakbnyMa_aak.Repositories.Interfaces
         Task<bool> IsUserAlreadyBookedAsync(string userId, int tripId);
         Task<int> GetTotalSeatsBookedAsync(int tripId);
         IQueryable<Booking> GetConfirmedFinishedBookingQueryable(int tripId, string userId);
+        Task<Booking?> GetBookingByUserAndTripAsync(string userId, int tripId);
+
 
     }
 }

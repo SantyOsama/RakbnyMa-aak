@@ -1,8 +1,6 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
 using RakbnyMa_aak.CQRS.Commands.Validations.ValidateBookingExists;
 using RakbnyMa_aak.GeneralResponse;
-using RakbnyMa_aak.Models;
 using RakbnyMa_aak.UOW;
 using static RakbnyMa_aak.Enums.Enums;
 

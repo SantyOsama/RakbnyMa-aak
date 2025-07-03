@@ -4,9 +4,6 @@ using RakbnyMa_aak.Models;
 
 namespace RakbnyMa_aak.CQRS.Commands.RestoreTripSeats
 {
-    public class RestoreTripSeatsCommand : IRequest<Response<bool>>
-    {
-        public Trip Trip { get; set; }
-        public int SeatsToRestore { get; set; }
-    }
+    public record RestoreTripSeatsCommand(int TripId, int SeatsToRestore) : IRequest<Response<bool>>;
+
 }

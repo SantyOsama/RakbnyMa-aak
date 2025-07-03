@@ -3,10 +3,5 @@ using RakbnyMa_aak.GeneralResponse;
 
 namespace RakbnyMa_aak.CQRS.Commands.Validations.CheckTimeBeforeTrip
 {
-    public class CheckTimeBeforeTripCommand : IRequest<Response<bool>>
-    {
-        public DateTime StartDateTime { get; set; }
-        public int MinimumHours { get; set; } = 3;
-    }
-
+    public record CheckTimeBeforeTripCommand(DateTime StartDateTime, int MinimumHours=3) : IRequest<Response<bool>>;
 }

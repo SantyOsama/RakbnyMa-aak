@@ -2,11 +2,10 @@
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.Models;
 using RakbnyMa_aak.UOW;
-using static RakbnyMa_aak.Enums.Enums;
 
 namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripExists
 {
-    public class ValidateTripExistsCommandHandler : IRequestHandler<ValidateTripExistsCommand, Response<Trip>>
+    public class ValidateTripExistsCommandHandler : IRequestHandler<ValidateTripExistsCommand, Response<TripValidationResultDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -15,21 +14,16 @@ namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripExists
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Response<Trip>> Handle(ValidateTripExistsCommand request, CancellationToken cancellationToken)
+        public async Task<Response<TripValidationResultDto>> Handle(ValidateTripExistsCommand request, CancellationToken cancellationToken)
         {
-            var trip = await _unitOfWork.TripRepository.GetByIdAsync(request.TripId);
+            var tripDto = await _unitOfWork.TripRepository.GetTripValidationDtoAsync(request.TripId);
+            if (tripDto == null)
+                return Response<TripValidationResultDto>.Fail("Trip not found.");
 
-            if (trip == null)
-                return Response<Trip>.Fail("Trip not found.");
+            if (tripDto.IsDeleted)
+                return Response<TripValidationResultDto>.Fail("Trip is deleted.");
 
-            if (trip.IsDeleted)
-                return Response<Trip>.Fail("Trip is deleted.");
-
-            if (trip.TripStatus == TripStatus.Cancelled)
-                return Response<Trip>.Fail("Trip is canceled.");
-
-            return Response<Trip>.Success(trip);
+            return Response<TripValidationResultDto>.Success(tripDto);
         }
     }
-
 }

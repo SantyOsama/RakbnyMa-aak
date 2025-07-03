@@ -5,17 +5,6 @@ using static RakbnyMa_aak.Enums.Enums;
 
 namespace RakbnyMa_aak.CQRS.Commands.UpdateBookingStatus
 {
-    public class UpdateBookingStatusCommand : IRequest<Response<bool>>
-    {
-        public int BookingId { get; set; }
-        public int TripId { get; set; }
-        public RequestStatus NewStatus { get; set; }
+    public record UpdateBookingStatusCommand(int BookingId, int TripId, RequestStatus NewStatus) : IRequest<Response<bool>>;
 
-        public UpdateBookingStatusCommand(int bookingId, int tripId, RequestStatus newStatus)
-        {
-            BookingId = bookingId;
-            TripId=tripId;
-            NewStatus = newStatus;
-        }
-    }
 }

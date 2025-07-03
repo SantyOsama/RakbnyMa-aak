@@ -2,8 +2,6 @@
 using RakbnyMa_aak.CQRS.Commands.MarkBookingAsEnded;
 using RakbnyMa_aak.CQRS.Commands.Validations.ValidateBookingForEnding;
 using RakbnyMa_aak.GeneralResponse;
-using RakbnyMa_aak.UOW;
-
 namespace RakbnyMa_aak.CQRS.Features.EndTripByPassenger
 {
     public class EndTripByPassengerCommandHandler : IRequestHandler<EndTripByPassengerCommand, Response<bool>>
@@ -27,7 +25,7 @@ namespace RakbnyMa_aak.CQRS.Features.EndTripByPassenger
 
             // 2. Mark booking as ended
             return await _mediator.Send(
-                new MarkBookingAsEndedCommand(validationResponse.Data)
+                new MarkBookingAsEndedCommand(validationResponse.Data.Id)
             );
         }
     }

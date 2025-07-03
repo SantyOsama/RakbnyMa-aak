@@ -1,11 +1,12 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.Models;
 using RakbnyMa_aak.UOW;
 
 namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateBookingForEnding
 {
-    public class ValidateBookingForEndingCommandHandler : IRequestHandler<ValidateBookingForEndingCommand, Response<Booking>>
+    public class ValidateBookingForEndingCommandHandler : IRequestHandler<ValidateBookingForEndingCommand, Response<ValidateBookingDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -14,17 +15,26 @@ namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateBookingForEnding
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Response<Booking>> Handle(ValidateBookingForEndingCommand request, CancellationToken cancellationToken)
+        public async Task<Response<ValidateBookingDto>> Handle(ValidateBookingForEndingCommand request, CancellationToken cancellationToken)
         {
-            var booking = await _unitOfWork.BookingRepository.GetByIdAsync(request.BookingId);
+            var booking = await _unitOfWork.BookingRepository.GetAllQueryable()
+                 .Where(b => b.Id == request.BookingId)
+                .Select(b => new ValidateBookingDto
+                {
+                    Id = b.Id,
+                    HasStarted = b.HasStarted,
+                    UserId = b.UserId,
+                    IsDeleted = b.IsDeleted
+                })
+                 .FirstOrDefaultAsync(cancellationToken);
 
             if (booking == null || booking.IsDeleted || booking.UserId != request.CurrentUserId)
-                return Response<Booking>.Fail("Unauthorized or booking not found.");
+                return Response<ValidateBookingDto>.Fail("Unauthorized or booking not found.");
 
             if (!booking.HasStarted)
-                return Response<Booking>.Fail("Trip must be started first.");
+                return Response<ValidateBookingDto>.Fail("Trip must be started first.");
 
-            return Response<Booking>.Success(booking, "Valid booking for ending");
+            return Response<ValidateBookingDto>.Success(booking, "Valid booking for ending");
         }
     }
 }

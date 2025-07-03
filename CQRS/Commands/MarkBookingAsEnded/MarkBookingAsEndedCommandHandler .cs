@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.UOW;
+using static RakbnyMa_aak.Enums.Enums;
 
 namespace RakbnyMa_aak.CQRS.Commands.MarkBookingAsEnded
 {
@@ -15,8 +16,13 @@ namespace RakbnyMa_aak.CQRS.Commands.MarkBookingAsEnded
 
         public async Task<Response<bool>> Handle(MarkBookingAsEndedCommand request, CancellationToken cancellationToken)
         {
-            request.Booking.HasEnded = true;
-            _unitOfWork.BookingRepository.Update(request.Booking);
+            var booking = await _unitOfWork.BookingRepository.GetByIdAsync(request.BookingId);
+            if (booking == null || booking.IsDeleted || booking.RequestStatus == RequestStatus.Cancelled)
+                return Response<bool>.Fail("Booking not found or it has been cancelled or deleted.");
+
+            booking.HasEnded = true;
+
+            _unitOfWork.BookingRepository.Update(booking);
             await _unitOfWork.CompleteAsync();
 
             return Response<bool>.Success(true, "Booking marked as ended");

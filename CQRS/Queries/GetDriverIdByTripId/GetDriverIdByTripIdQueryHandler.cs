@@ -17,7 +17,6 @@ namespace RakbnyMa_aak.CQRS.Queries.GetDriverIdByTripId
         public async Task<Response<string?>> Handle(GetDriverIdByTripIdQuery request, CancellationToken cancellationToken)
         {
             var driverId = await _unitOfWork.TripRepository.GetDriverIdByTripIdAsync(request.TripId);
-
             if (driverId == null)
                 return Response<string?>.Fail("Driver not found for this trip.");
 

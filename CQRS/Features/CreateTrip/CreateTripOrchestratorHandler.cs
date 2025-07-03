@@ -1,8 +1,6 @@
 ﻿using MediatR;
 using RakbnyMa_aak.CQRS.Commands.PersistTrip;
-using RakbnyMa_aak.CQRS.Commands.Validations.ValidateCityInGovernorate;
-using RakbnyMa_aak.CQRS.Commands.Validations.ValidateDriver;
-using RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripBusinessRules;
+using RakbnyMa_aak.CQRS.Features.ValidationOrchestrators.ValidateTripCommon;
 using RakbnyMa_aak.GeneralResponse;
 
 namespace RakbnyMa_aak.CQRS.Features.CreateTripOrchestrator
@@ -20,31 +18,13 @@ namespace RakbnyMa_aak.CQRS.Features.CreateTripOrchestrator
         {
             var dto = request.TripDto;
 
-            var isDriver = await _mediator.Send(new ValidateDriverCommand { UserId = dto.DriverId });
-            if (!isDriver.IsSucceeded) return Response<int>.Fail(isDriver.Message);
+            // Step 1: Validate common validations for the trip DTO
+            var commonValidation = await _mediator.Send(new ValidateTripBusinessLogicOrchestrator(request.TripDto));
+            if (!commonValidation.IsSucceeded)
+                return Response<int>.Fail(commonValidation.Message);
 
-            var validation = await _mediator.Send(new ValidateTripBusinessRulesCommand { Trip = dto });
-            if (!validation.IsSucceeded) return Response<int>.Fail(validation.Message);
-            var fromCityValidation = await _mediator.Send(new ValidateCityInGovernorateCommand
-            {
-                CityId = dto.FromCityId,
-                GovernorateId = dto.FromGovernorateId
-            });
-
-            if (!fromCityValidation.IsSucceeded)
-                return Response<int>.Fail(fromCityValidation.Message);
-
-            var toCityValidation = await _mediator.Send(new ValidateCityInGovernorateCommand
-            {
-                CityId = dto.ToCityId,
-                GovernorateId = dto.ToGovernorateId
-            });
-
-            if (!toCityValidation.IsSucceeded)
-                return Response<int>.Fail(toCityValidation.Message);
-
-
-            var createResult = await _mediator.Send(new PersistTripCommand { TripDto = dto });
+            // Step 2: All validations passed, persist the trip to the database
+            var createResult = await _mediator.Send(new PersistTripCommand(dto));
             return createResult;
         }
     }

@@ -4,6 +4,6 @@ using RakbnyMa_aak.Models;
 
 namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateBookingForEnding
 {
-    public record ValidateBookingForEndingCommand(int BookingId, string CurrentUserId) : IRequest<Response<Booking>>;
+    public record ValidateBookingForEndingCommand(int BookingId, string CurrentUserId) : IRequest<Response<ValidateBookingDto>>;
 
 }

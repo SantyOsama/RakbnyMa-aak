@@ -10,8 +10,8 @@ namespace RakbnyMa_aak.Repositories.Interfaces
         Task AddAsync(T entity);
         void Update(T entity);
         void Delete(T entity);
-        Task SaveAsync();
+        Task<int> CompleteAsync();
+        IQueryable<T> GetByIdQueryable(object id);
         Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
-
     }
 }

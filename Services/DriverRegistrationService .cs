@@ -30,11 +30,28 @@ namespace RakbnyMa_aak.Services.Drivers
 
         public async Task<Response<string>> RegisterDriverAsync(RegisterDriverDto dto)
         {
+            if (await _userManager.FindByEmailAsync(dto.Email) != null ||
+                await _userManager.FindByNameAsync(dto.FullName) != null)
+            {
+                return Response<string>.Fail("Email or Username already exists.");
+            }
+            var uploadTasks = new[]
+                {
+                    _cloudinary.UploadImageAsync(dto.NationalIdImage, "drivers/nationalId"),
+                    _cloudinary.UploadImageAsync(dto.DriverLicenseImage, "drivers/license"),
+                    _cloudinary.UploadImageAsync(dto.CarLicenseImage, "drivers/carlicense"),
+                    _cloudinary.UploadImageAsync(dto.SelfieImage, "drivers/selfie")
+                };
+
+            var uploadResults = await Task.WhenAll(uploadTasks);
+            if (uploadResults.Any(url => string.IsNullOrEmpty(url)))
+                return Response<string>.Fail("Failed to upload one or more images.");
+
             // Upload images
-            var nationalIdImgUrl = await _cloudinary.UploadImageAsync(dto.NationalIdImage, "drivers/nationalId");
-            var licenseImgUrl = await _cloudinary.UploadImageAsync(dto.DriverLicenseImage, "drivers/license");
-            var carLicenseImgUrl = await _cloudinary.UploadImageAsync(dto.CarLicenseImage, "drivers/carlicense");
-            var selfieImgUrl = await _cloudinary.UploadImageAsync(dto.SelfieImage, "drivers/selfie");
+            //var nationalIdImgUrl = await _cloudinary.UploadImageAsync(dto.NationalIdImage, "drivers/nationalId");
+            //var licenseImgUrl = await _cloudinary.UploadImageAsync(dto.DriverLicenseImage, "drivers/license");
+            //var carLicenseImgUrl = await _cloudinary.UploadImageAsync(dto.CarLicenseImage, "drivers/carlicense");
+            //var selfieImgUrl = await _cloudinary.UploadImageAsync(dto.SelfieImage, "drivers/selfie");
 
             // Optional: Face verification
             /*
@@ -43,6 +60,10 @@ namespace RakbnyMa_aak.Services.Drivers
                 return Response<string>.Fail("Face verification failed.");
             */
 
+            var nationalIdImgUrl = uploadResults[0];
+            var licenseImgUrl = uploadResults[1];
+            var carLicenseImgUrl = uploadResults[2];
+            var selfieImgUrl = uploadResults[3];
             // Create Identity User
             var user = new ApplicationUser
             {
@@ -78,7 +99,7 @@ namespace RakbnyMa_aak.Services.Drivers
             };
 
             await _repo.AddAsync(driver);
-            await _repo.SaveAsync();
+            await _repo.CompleteAsync();
 
             return Response<string>.Success("Driver registered successfully");
         }

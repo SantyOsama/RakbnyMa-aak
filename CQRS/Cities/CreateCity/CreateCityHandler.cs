@@ -21,7 +21,7 @@ namespace RakbnyMa_aak.CQRS.Cities.CreateCity
         {
             var entity = _mapper.Map<City>(request.Dto);
            entity.CreatedAt = DateTime.UtcNow;
-           await _unitOfWork.Cities.AddAsync(entity);
+           await _unitOfWork.CityRepository.AddAsync(entity);
             await _unitOfWork.CompleteAsync();
             return Response<string>.Success("City created");
         }

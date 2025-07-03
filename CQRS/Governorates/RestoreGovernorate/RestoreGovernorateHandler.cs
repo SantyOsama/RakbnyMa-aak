@@ -17,7 +17,7 @@ namespace RakbnyMa_aak.CQRS.Governorates.RestoreGovernorate
         public async Task<Response<string>> Handle(RestoreGovernorateCommand request, CancellationToken cancellationToken)
         {
             
-            var governorate = await _unitOfWork.Governorates
+            var governorate = await _unitOfWork.GovernorateRepository
                 .GetAllQueryable()
                 .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(g => g.Id == request.Id, cancellationToken);
@@ -31,10 +31,10 @@ namespace RakbnyMa_aak.CQRS.Governorates.RestoreGovernorate
             
             governorate.IsDeleted = false;
             governorate.UpdatedAt = DateTime.UtcNow;
-            _unitOfWork.Governorates.Update(governorate);
+            _unitOfWork.GovernorateRepository.Update(governorate);
 
            
-            var cities = await _unitOfWork.Cities
+            var cities = await _unitOfWork.CityRepository
                 .GetAllQueryable()
                 .IgnoreQueryFilters()
                 .Where(c => c.GovernorateId == governorate.Id && c.IsDeleted)
@@ -44,7 +44,7 @@ namespace RakbnyMa_aak.CQRS.Governorates.RestoreGovernorate
             {
                 city.IsDeleted = false;
                 city.UpdatedAt = DateTime.UtcNow;
-                _unitOfWork.Cities.Update(city);
+                _unitOfWork.CityRepository.Update(city);
             }
 
             await _unitOfWork.CompleteAsync();

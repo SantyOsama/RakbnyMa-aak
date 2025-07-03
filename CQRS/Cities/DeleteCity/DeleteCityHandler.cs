@@ -13,14 +13,14 @@ namespace RakbnyMa_aak.CQRS.Cities.DeleteCity
         public async Task<Response<string>> Handle(DeleteCityCommand request, CancellationToken cancellationToken)
         {
             
-            var city = await _unitOfWork.Cities.GetByIdAsync(request.Id);
+            var city = await _unitOfWork.CityRepository.GetByIdAsync(request.Id);
             if (city == null || city.IsDeleted)
                 return Response<string>.Fail("City not found.");
 
             city.IsDeleted = true;
             city.UpdatedAt = DateTime.UtcNow;
 
-            _unitOfWork.Cities.Update(city);
+            _unitOfWork.CityRepository.Update(city);
             await _unitOfWork.CompleteAsync();
 
             return Response<string>.Success("City soft-deleted successfully.");

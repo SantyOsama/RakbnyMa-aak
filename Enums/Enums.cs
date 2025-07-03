@@ -1,4 +1,6 @@
-﻿namespace RakbnyMa_aak.Enums
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace RakbnyMa_aak.Enums
 {
     public class Enums
     {
@@ -10,10 +12,29 @@
 
         public enum CarType
         {
+            [Display(Name = "Sedan")]
             Sedan,
+
+            [Display(Name = "SUV")]
             SUV,
+
+            [Display(Name = "Van")]
             Van,
-            Bus
+
+            [Display(Name = "Bus")]
+            Bus,
+
+            [Display(Name = "Taxi")]
+            Taxi,
+
+            [Display(Name = "Motorcycle")]
+            Motorcycle,
+
+            [Display(Name = "Pickup Truck")]
+            PickupTruck,
+
+            [Display(Name = "Minibus")]
+            Minibus
         }
 
         public enum TripStatus

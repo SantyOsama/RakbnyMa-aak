@@ -6,6 +6,7 @@ using RakbnyMa_aak.CQRS.Governorates.CreateGovernorate;
 using RakbnyMa_aak.CQRS.Governorates.DeleteGovernorate;
 using RakbnyMa_aak.CQRS.Governorates.GetAllGovernorates;
 using RakbnyMa_aak.CQRS.Governorates.GetGovernorateById;
+using RakbnyMa_aak.CQRS.Governorates.GetGovernorateByName;
 using RakbnyMa_aak.CQRS.Governorates.RestoreGovernorate;
 using RakbnyMa_aak.CQRS.Governorates.UpdateGovernorate;
 using RakbnyMa_aak.GeneralResponse;
@@ -23,11 +24,13 @@ namespace RakbnyMa_aak.Controllers
             _mediator = mediator;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<Response<PaginatedResult<GovernorateDto>>>> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            var result = await _mediator.Send(new GetAllGovernoratesQuery());
-            return Ok(result);
+            var result = await _mediator.Send(new GetAllGovernoratesQuery(page, pageSize));
+            return StatusCode(result.StatusCode, result);
         }
+
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] GovernorateDto dto)
         {
@@ -63,6 +66,19 @@ namespace RakbnyMa_aak.Controllers
         {
             var result = await _mediator.Send(new GetGovernorateByIdQuery(id));
 
+            if (!result.IsSucceeded)
+                return NotFound(result);
+
+            return Ok(result);
+        }
+
+        [HttpGet("GetByName")]
+        public async Task<IActionResult> GetGovernorateByName([FromQuery] string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return BadRequest(Response<string>.Fail("Governorate name is required."));
+
+            var result = await _mediator.Send(new GetGovernorateByNameQuery(name));
             if (!result.IsSucceeded)
                 return NotFound(result);
 

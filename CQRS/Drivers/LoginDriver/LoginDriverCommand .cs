@@ -4,13 +4,5 @@ using RakbnyMa_aak.GeneralResponse;
 
 namespace RakbnyMa_aak.CQRS.Drivers.Login.Commands
 {
-    public class LoginDriverCommand : IRequest<Response<AuthResponseDto>>
-    {
-        public LoginDto Dto { get; set; }
-
-        public LoginDriverCommand(LoginDto dto)
-        {
-            Dto = dto;
-        }
-    }
+    public record LoginDriverCommand(LoginDto Dto) : IRequest<Response<AuthResponseDto>>;
 }

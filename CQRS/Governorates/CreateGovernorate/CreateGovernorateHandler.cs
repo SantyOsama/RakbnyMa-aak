@@ -21,7 +21,7 @@ namespace RakbnyMa_aak.CQRS.Governorates.CreateGovernorate
         {
             var entity = _mapper.Map<Governorate>(request.Dto);
             entity.CreatedAt = DateTime.UtcNow;
-            _unitOfWork.Governorates.AddAsync(entity);
+            _unitOfWork.GovernorateRepository.AddAsync(entity);
             await _unitOfWork.CompleteAsync();
             return Response<string>.Success("Governorate created");
         }

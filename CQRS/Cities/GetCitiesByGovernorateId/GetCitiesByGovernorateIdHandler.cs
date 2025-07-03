@@ -21,7 +21,7 @@ namespace RakbnyMa_aak.CQRS.Cities.GetCitiesByGovernorateId
         public async Task<Response<List<CityDto>>> Handle(GetCitiesByGovernorateIdQuery request, CancellationToken cancellationToken)
         {
 
-            var cities = await _unitOfWork.Cities
+            var cities = await _unitOfWork.CityRepository
          .GetAllQueryable()
          .Where(c => c.GovernorateId == request.GovernorateId && !c.IsDeleted)
          .Include(c => c.Governorate)

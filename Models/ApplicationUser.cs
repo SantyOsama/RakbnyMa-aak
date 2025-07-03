@@ -1,16 +1,31 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 using static RakbnyMa_aak.Enums.Enums;
 
 namespace RakbnyMa_aak.Models
 {
     public class ApplicationUser: IdentityUser
     {
+        [Display(Name = "Full Name")]
+        [Required(ErrorMessage = "Please enter your full name.")]
+        [MinLength(3, ErrorMessage = "Full name must be at least 3 characters long.")]
+        [MaxLength(100, ErrorMessage = "Full name must not exceed 100 characters.")]
         public string FullName { get; set; }
+
+        [Display(Name = "Profile Picture")]
+        [Required(ErrorMessage = "Please enter a profile picture.")]
         public string Picture { get; set; }
+
+        [Display(Name = "Phone Number")]
+        [Required(ErrorMessage = "Please enter your phone number.")]
+        [RegularExpression(@"^(010|011|012|015)\d{8}$", ErrorMessage = "Phone number must be 11 digits and start with 010, 011, 012, or 015.")]
+        public string PhoneNumber { get; set; }
+
+        [Display(Name = "User Type")]
+        [Required(ErrorMessage = "Please select a user type.")]
         public UserType UserType { get; set; }
         public virtual Driver? Driver { get; set; }
-        public virtual Passenger? Passenger { get; set; }
         public virtual ICollection<Rating>? RatingsGiven { get; set; }
         public virtual ICollection<Rating>? RatingsReceived { get; set; }
 

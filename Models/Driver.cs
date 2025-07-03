@@ -26,7 +26,7 @@ namespace RakbnyMa_aak.Models
         [Required(ErrorMessage = "Car color is required.")]
         [StringLength(30, ErrorMessage = "Car color must not exceed 30 characters.")]
         [Display(Name = "Car Color")]
-        public string CarColor { get; set; }
+        public CarColor CarColor { get; set; }
 
         [Required(ErrorMessage = "Car capacity is required.")]
         [Range(2, 150, ErrorMessage = "Car capacity must be at least 2.")]

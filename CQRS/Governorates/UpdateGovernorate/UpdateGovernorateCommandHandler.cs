@@ -18,12 +18,12 @@ namespace RakbnyMa_aak.CQRS.Governorates.UpdateGovernorate
 
         public async Task<Response<string>> Handle(UpdateGovernorateCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _unitOfWork.Governorates.GetByIdAsync(request.Dto.Id);
+            var entity = await _unitOfWork.GovernorateRepository.GetByIdAsync(request.Dto.Id);
             if (entity == null)
                 return Response<string>.Fail("Not found");
 
             _mapper.Map(request.Dto, entity);
-            _unitOfWork.Governorates.Update(entity);
+            _unitOfWork.GovernorateRepository.Update(entity);
             await _unitOfWork.CompleteAsync();
             return Response<string>.Success("Updated");
         }

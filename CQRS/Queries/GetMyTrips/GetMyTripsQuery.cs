@@ -4,7 +4,7 @@ using RakbnyMa_aak.GeneralResponse;
 
 namespace RakbnyMa_aak.CQRS.Queries.GetAllTrips
 {
-    public class GetAllTripsQuery : IRequest<Response<List<TripDto>>>
-    {
-    }
+    public record GetMyTripsQuery(int Page = 1, int PageSize = 10)
+     : IRequest<Response<PaginatedResult<TripDto>>>;
+
 }

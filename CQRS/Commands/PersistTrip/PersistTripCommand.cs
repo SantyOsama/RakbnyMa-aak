@@ -4,8 +4,5 @@ using RakbnyMa_aak.GeneralResponse;
 
 namespace RakbnyMa_aak.CQRS.Commands.PersistTrip
 {
-    public class PersistTripCommand : IRequest<Response<int>>
-    {
-        public TripDto TripDto { get; set; }
-    }
+    public record PersistTripCommand(TripDto TripDto) : IRequest<Response<int>>;
 }

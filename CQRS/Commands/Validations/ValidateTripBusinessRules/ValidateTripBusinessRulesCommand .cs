@@ -4,8 +4,5 @@ using RakbnyMa_aak.GeneralResponse;
 
 namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripBusinessRules
 {
-    public class ValidateTripBusinessRulesCommand : IRequest<Response<bool>>
-    {
-        public TripDto Trip { get; set; }
-    }
+    public record ValidateTripBusinessRulesCommand(TripDto Trip) : IRequest<Response<bool>>;
 }

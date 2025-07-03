@@ -11,12 +11,6 @@ namespace RakbnyMa_aak.DTOs.UserDTOs
         [MaxLength(100, ErrorMessage = "Full name must not exceed 100 characters.")]
         public string FullName { get; set; }
 
-        [Required(ErrorMessage = "Username is required.")]
-        [Display(Name = "Username")]
-        [MinLength(3, ErrorMessage = "Username must be at least 3 characters.")]
-        [MaxLength(50, ErrorMessage = "Username must not exceed 50 characters.")]
-        public string UserName { get; set; }
-
         [Required(ErrorMessage = "Email is required.")]
         [EmailAddress(ErrorMessage = "Invalid email address.")]
         [Display(Name = "Email")]

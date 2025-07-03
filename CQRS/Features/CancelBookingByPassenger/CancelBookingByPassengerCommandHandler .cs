@@ -52,11 +52,8 @@ namespace RakbnyMa_aak.CQRS.Features.CancelBookingByPassenger
             // Step 6: If the booking was confirmed, restore seats
             if (wasConfirmed)
             {
-                await _mediator.Send(new RestoreTripSeatsCommand
-                {
-                    Trip = trip,
-                    SeatsToRestore = booking.NumberOfSeats
-                });
+                await _mediator.Send(new RestoreTripSeatsCommand(trip, booking.NumberOfSeats));
+
             }
 
             await _unitOfWork.CompleteAsync();

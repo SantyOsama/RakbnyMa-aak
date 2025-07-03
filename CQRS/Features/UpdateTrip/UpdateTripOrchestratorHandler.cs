@@ -23,7 +23,7 @@ namespace RakbnyMa_aak.CQRS.Features.UpdateTrip
         {
             var dto = request.TripDto;
 
-            var isDriver = await _mediator.Send(new ValidateDriverCommand { UserId = request.CurrentUserId });
+            var isDriver = await _mediator.Send(new ValidateDriverCommand (request.CurrentUserId));
             if (!isDriver.IsSucceeded)
                 return Response<int>.Fail(isDriver.Message);
 
@@ -38,31 +38,32 @@ namespace RakbnyMa_aak.CQRS.Features.UpdateTrip
             if (!isOwner.IsSucceeded)
                 return Response<int>.Fail(isOwner.Message);
 
-            var validation = await _mediator.Send(new ValidateTripBusinessRulesCommand { Trip = dto });
+            var validation = await _mediator.Send(new ValidateTripBusinessRulesCommand (dto));
             if (!validation.IsSucceeded)
                 return Response<int>.Fail(validation.Message);
 
-            var fromCityValidation = await _mediator.Send(new ValidateCityInGovernorateCommand
-            {
-                CityId = dto.FromCityId,
-                GovernorateId = dto.FromGovernorateId
-            });
+            var fromCityValidation = await _mediator.Send(
+              new ValidateCityInGovernorateCommand(dto.FromCityId, dto.FromGovernorateId)
+             );
+
             if (!fromCityValidation.IsSucceeded)
                 return Response<int>.Fail(fromCityValidation.Message);
 
-            var toCityValidation = await _mediator.Send(new ValidateCityInGovernorateCommand
-            {
-                CityId = dto.ToCityId,
-                GovernorateId = dto.ToGovernorateId
-            });
+            //var toCityValidation = await _mediator.Send(new ValidateCityInGovernorateCommand
+            //{
+            //    CityId = dto.ToCityId,
+            //    GovernorateId = dto.ToGovernorateId
+            //});
+            var toCityValidation = await _mediator.Send(
+             new ValidateCityInGovernorateCommand(dto.ToCityId, dto.ToGovernorateId)
+            );
+
             if (!toCityValidation.IsSucceeded)
                 return Response<int>.Fail(toCityValidation.Message);
+            var updateResult = await _mediator.Send(
+                new UpdateTripCommand(request.TripId, dto)
+            );
 
-            var updateResult = await _mediator.Send(new UpdateTripCommand
-            {
-                TripId = request.TripId,
-                TripDto = dto
-            });
 
             return updateResult;
         }

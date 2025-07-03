@@ -20,31 +20,29 @@ namespace RakbnyMa_aak.CQRS.Features.CreateTripOrchestrator
         {
             var dto = request.TripDto;
 
-            var isDriver = await _mediator.Send(new ValidateDriverCommand { UserId = dto.DriverId });
+            var isDriver = await _mediator.Send(new ValidateDriverCommand(dto.DriverId));
+
             if (!isDriver.IsSucceeded) return Response<int>.Fail(isDriver.Message);
 
-            var validation = await _mediator.Send(new ValidateTripBusinessRulesCommand { Trip = dto });
+            var validation = await _mediator.Send(new ValidateTripBusinessRulesCommand (dto));
             if (!validation.IsSucceeded) return Response<int>.Fail(validation.Message);
-            var fromCityValidation = await _mediator.Send(new ValidateCityInGovernorateCommand
-            {
-                CityId = dto.FromCityId,
-                GovernorateId = dto.FromGovernorateId
-            });
+            var fromCityValidation = await _mediator.Send(
+              new ValidateCityInGovernorateCommand(dto.FromCityId, dto.FromGovernorateId)
+            );
 
             if (!fromCityValidation.IsSucceeded)
                 return Response<int>.Fail(fromCityValidation.Message);
 
-            var toCityValidation = await _mediator.Send(new ValidateCityInGovernorateCommand
-            {
-                CityId = dto.ToCityId,
-                GovernorateId = dto.ToGovernorateId
-            });
+            var toCityValidation = await _mediator.Send(
+             new ValidateCityInGovernorateCommand(dto.ToCityId, dto.ToGovernorateId)
+             );
+
 
             if (!toCityValidation.IsSucceeded)
                 return Response<int>.Fail(toCityValidation.Message);
 
 
-            var createResult = await _mediator.Send(new PersistTripCommand { TripDto = dto });
+            var createResult = await _mediator.Send(new PersistTripCommand (dto));
             return createResult;
         }
     }

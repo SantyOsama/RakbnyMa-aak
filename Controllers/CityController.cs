@@ -7,6 +7,7 @@ using RakbnyMa_aak.CQRS.Cities.DeleteCity;
 using RakbnyMa_aak.CQRS.Cities.GetAllCities;
 using RakbnyMa_aak.CQRS.Cities.GetCitiesByGovernorateId;
 using RakbnyMa_aak.CQRS.Cities.GetCityById;
+using RakbnyMa_aak.CQRS.Cities.GetCityByName;
 using RakbnyMa_aak.CQRS.Cities.UpdateCity;
 using RakbnyMa_aak.GeneralResponse;
 
@@ -24,11 +25,12 @@ namespace RakbnyMa_aak.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<Response<PaginatedResult<CityDto>>>> GetAllCities([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            var result = await _mediator.Send(new GetAllCitiesQuery());
-            return Ok(result);
+            var result = await _mediator.Send(new GetAllCitiesQuery(page, pageSize));
+            return StatusCode(result.StatusCode, result);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CityDto dto)
@@ -71,6 +73,19 @@ namespace RakbnyMa_aak.Controllers
 
             if (!result.IsSucceeded)
                 return NotFound(result);
+
+            return Ok(result);
+        }
+
+        [HttpGet("by-name")]
+        public async Task<IActionResult> GetCityByName([FromQuery] string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return BadRequest("City name is required.");
+
+            var result = await _mediator.Send(new GetCityByNameQuery(name));
+            if (!result.IsSucceeded)
+                return NotFound(result.Message);
 
             return Ok(result);
         }

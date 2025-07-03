@@ -4,15 +4,5 @@ using RakbnyMa_aak.GeneralResponse;
 
 namespace RakbnyMa_aak.CQRS.Users.RegisterUser.Commands
 {
-    public class RegisterUserCommand : IRequest<Response<string>>
-    {
-        public RegisterUserDto Dto { get; set; }
-        public RegisterUserCommand(RegisterUserDto dto)
-        {
-
-            Dto = dto;
-
-
-        }
-    }
+    public record RegisterUserCommand(RegisterUserDto Dto) : IRequest<Response<string>>;
 }

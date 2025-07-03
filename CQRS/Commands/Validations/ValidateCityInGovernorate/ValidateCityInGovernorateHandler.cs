@@ -15,7 +15,7 @@ namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateCityInGovernorate
 
         public async Task<Response<bool>> Handle(ValidateCityInGovernorateCommand request, CancellationToken cancellationToken)
         {
-            var city = await _unitOfWork.Cities.GetByIdAsync(request.CityId);
+            var city = await _unitOfWork.CityRepository.GetByIdAsync(request.CityId);
 
             if (city == null)
                 return Response<bool>.Fail("City not found");

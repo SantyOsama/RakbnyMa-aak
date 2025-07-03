@@ -11,7 +11,7 @@ namespace RakbnyMa_aak.CQRS.Governorates.DeleteGovernorate
 
         public async Task<Response<string>> Handle(DeleteGovernorateCommand request, CancellationToken cancellationToken)
         {
-            var governorate = await _unitOfWork.Governorates.GetByIdAsync(request.Id);
+            var governorate = await _unitOfWork.GovernorateRepository.GetByIdAsync(request.Id);
 
             if (governorate == null || governorate.IsDeleted)
                 return Response<string>.Fail("Governorate not found.");
@@ -22,16 +22,16 @@ namespace RakbnyMa_aak.CQRS.Governorates.DeleteGovernorate
                 governorate.IsDeleted = true;
                 governorate.UpdatedAt = DateTime.UtcNow;
 
-                _unitOfWork.Governorates.Update(governorate);
+                _unitOfWork.GovernorateRepository.Update(governorate);
 
                 // Get related cities
-                var relatedCities = await _unitOfWork.Cities.GetAllAsync(c => c.GovernorateId == request.Id && !c.IsDeleted);
+                var relatedCities = await _unitOfWork.CityRepository.GetAllAsync(c => c.GovernorateId == request.Id && !c.IsDeleted);
 
                 foreach (var city in relatedCities)
                 {
                     city.IsDeleted = true;
                     city.UpdatedAt = DateTime.UtcNow;
-                    _unitOfWork.Cities.Update(city);
+                    _unitOfWork.CityRepository.Update(city);
                 }
 
                 await _unitOfWork.CompleteAsync();

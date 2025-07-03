@@ -6,7 +6,7 @@ using RakbnyMa_aak.UOW;
 
 namespace RakbnyMa_aak.CQRS.Cities.GetAllCities
 {
-    public class GetAllCitiesHandler : IRequestHandler<GetAllCitiesQuery, Response<List<CityDto>>>
+    public class GetAllCitiesHandler : IRequestHandler<GetAllCitiesQuery, Response<PaginatedResult<CityDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -17,17 +17,32 @@ namespace RakbnyMa_aak.CQRS.Cities.GetAllCities
             _mapper = mapper;
         }
 
-        public async Task<Response<List<CityDto>>> Handle(GetAllCitiesQuery request, CancellationToken cancellationToken)
+        public async Task<Response<PaginatedResult<CityDto>>> Handle(GetAllCitiesQuery request, CancellationToken cancellationToken)
         {
-            var cities = await _unitOfWork.Cities
+            var query = _unitOfWork.CityRepository
                 .GetAllQueryable()
                 .Where(c => !c.IsDeleted)
                 .Include(c => c.Governorate)
+                .OrderBy(c => c.Id);
+
+            var totalCount = await query.CountAsync(cancellationToken);
+
+            var pagedItems = await query
+                .Skip((request.Page - 1) * request.PageSize)
+                .Take(request.PageSize)
                 .ToListAsync(cancellationToken);
 
-            var cityDtos = _mapper.Map<List<CityDto>>(cities);
+            var cityDtos = _mapper.Map<List<CityDto>>(pagedItems);
 
-            return Response<List<CityDto>>.Success(cityDtos);
+            var result = new PaginatedResult<CityDto>(
+                items: cityDtos,
+                totalCount: totalCount,
+                page: request.Page,
+                pageSize: request.PageSize
+            );
+
+            return Response<PaginatedResult<CityDto>>.Success(result);
         }
     }
+
 }

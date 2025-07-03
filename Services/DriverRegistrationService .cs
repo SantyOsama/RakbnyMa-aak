@@ -35,23 +35,23 @@ namespace RakbnyMa_aak.Services.Drivers
             {
                 return Response<string>.Fail("Email or Username already exists.");
             }
-            var uploadTasks = new[]
-                {
-                    _cloudinary.UploadImageAsync(dto.NationalIdImage, "drivers/nationalId"),
-                    _cloudinary.UploadImageAsync(dto.DriverLicenseImage, "drivers/license"),
-                    _cloudinary.UploadImageAsync(dto.CarLicenseImage, "drivers/carlicense"),
-                    _cloudinary.UploadImageAsync(dto.SelfieImage, "drivers/selfie")
-                };
+            //var uploadTasks = new[]
+            //    {
+            //        _cloudinary.UploadImageAsync(dto.NationalIdImage, "drivers/nationalId"),
+            //        _cloudinary.UploadImageAsync(dto.DriverLicenseImage, "drivers/license"),
+            //        _cloudinary.UploadImageAsync(dto.CarLicenseImage, "drivers/carlicense"),
+            //        _cloudinary.UploadImageAsync(dto.SelfieImage, "drivers/selfie")
+            //    };
 
-            var uploadResults = await Task.WhenAll(uploadTasks);
-            if (uploadResults.Any(url => string.IsNullOrEmpty(url)))
-                return Response<string>.Fail("Failed to upload one or more images.");
+            //var uploadResults = await Task.WhenAll(uploadTasks);
+            //if (uploadResults.Any(url => string.IsNullOrEmpty(url)))
+            //    return Response<string>.Fail("Failed to upload one or more images.");
 
-            // Upload images
-            //var nationalIdImgUrl = await _cloudinary.UploadImageAsync(dto.NationalIdImage, "drivers/nationalId");
-            //var licenseImgUrl = await _cloudinary.UploadImageAsync(dto.DriverLicenseImage, "drivers/license");
-            //var carLicenseImgUrl = await _cloudinary.UploadImageAsync(dto.CarLicenseImage, "drivers/carlicense");
-            //var selfieImgUrl = await _cloudinary.UploadImageAsync(dto.SelfieImage, "drivers/selfie");
+            //Upload images
+            var nationalIdImgUrl = await _cloudinary.UploadImageAsync(dto.NationalIdImage, "drivers/nationalId");
+            var licenseImgUrl = await _cloudinary.UploadImageAsync(dto.DriverLicenseImage, "drivers/license");
+            var carLicenseImgUrl = await _cloudinary.UploadImageAsync(dto.CarLicenseImage, "drivers/carlicense");
+            var selfieImgUrl = await _cloudinary.UploadImageAsync(dto.SelfieImage, "drivers/selfie");
 
             // Optional: Face verification
             /*
@@ -60,16 +60,16 @@ namespace RakbnyMa_aak.Services.Drivers
                 return Response<string>.Fail("Face verification failed.");
             */
 
-            var nationalIdImgUrl = uploadResults[0];
-            var licenseImgUrl = uploadResults[1];
-            var carLicenseImgUrl = uploadResults[2];
-            var selfieImgUrl = uploadResults[3];
+            //var nationalIdImgUrl = uploadResults[0];
+            //var licenseImgUrl = uploadResults[1];
+            //var carLicenseImgUrl = uploadResults[2];
+            //var selfieImgUrl = uploadResults[3];
             // Create Identity User
             var user = new ApplicationUser
             {
                 FullName = dto.FullName,
-                UserName = dto.Email,
                 Email = dto.Email,
+                UserName = dto.FullName,
                 PhoneNumber = dto.PhoneNumber,
                 Picture = selfieImgUrl,
                 UserType = UserType.Driver
@@ -88,7 +88,9 @@ namespace RakbnyMa_aak.Services.Drivers
                 UserId = user.Id,
                 NationalId = dto.NationalId,
                 CarType = dto.CarType,
+                CarColor=dto.CarColor,
                 CarCapacity = dto.CarCapacity,
+                CarModel=dto.CarModel,
                 DriverNationalIdImagePath = nationalIdImgUrl,
                 DriverLicenseImagePath = licenseImgUrl,
                 CarLicenseImagePath = carLicenseImgUrl,

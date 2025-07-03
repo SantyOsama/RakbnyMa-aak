@@ -51,9 +51,8 @@ namespace RakbnyMa_aak.DTOs.DriverDTOs
         public string CarModel { get; set; }
 
         [Required(ErrorMessage = "Car color is required.")]
-        [StringLength(30, ErrorMessage = "Car color must not exceed 30 characters.")]
         [Display(Name = "Car Color")]
-        public string CarColor { get; set; }
+        public CarColor CarColor { get; set; }
 
         [Display(Name = "Car Capacity")]
         [Required(ErrorMessage = "Car capacity is required.")]

@@ -338,7 +338,6 @@ namespace RakbnyMa_aak.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("CarColor")
-                        .HasMaxLength(30)
                         .HasColumnType("int");
 
                     b.Property<string>("CarLicenseImagePath")

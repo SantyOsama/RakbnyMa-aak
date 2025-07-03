@@ -41,7 +41,7 @@ namespace RakbnyMa_aak.Services.Users
             var user = _mapper.Map<ApplicationUser>(dto);
             user.UserName = dto.FullName;
             user.Email = dto.Email;
-            user.UserName = dto.Email;
+            user.UserName = dto.FullName;
             user.PhoneNumber = dto.PhoneNumber;
             user.UserType = UserType.User;
             user.Picture = pictureUrl;

@@ -88,7 +88,7 @@ namespace RakbnyMa_aak.Migrations
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -184,7 +184,7 @@ namespace RakbnyMa_aak.Migrations
                     NationalId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CarType = table.Column<int>(type: "int", nullable: false),
                     CarModel = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    CarColor = table.Column<int>(type: "int", maxLength: 30, nullable: false),
+                    CarColor = table.Column<int>(type: "int", nullable: false),
                     CarCapacity = table.Column<int>(type: "int", nullable: false),
                     DriverNationalIdImagePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DriverLicenseImagePath = table.Column<string>(type: "nvarchar(max)", nullable: false),

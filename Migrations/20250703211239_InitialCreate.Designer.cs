@@ -12,7 +12,7 @@ using RakbnyMa_aak.Data;
 namespace RakbnyMa_aak.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250703204153_InitialCreate")]
+    [Migration("20250703211239_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -341,7 +341,6 @@ namespace RakbnyMa_aak.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("CarColor")
-                        .HasMaxLength(30)
                         .HasColumnType("int");
 
                     b.Property<string>("CarLicenseImagePath")

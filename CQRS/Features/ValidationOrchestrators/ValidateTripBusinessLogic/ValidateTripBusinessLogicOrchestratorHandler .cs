@@ -24,19 +24,19 @@ namespace RakbnyMa_aak.CQRS.Features.ValidationOrchestrators.ValidateTripCommon
 
             // Step 2: Ensure the "FromCity" actually belongs to the "FromGovernorate"
             var fromCityValidation = await _mediator.Send(new ValidateCityInGovernorateCommand
-            {
-                CityId = dto.FromCityId,
-                GovernorateId = dto.FromGovernorateId
-            });
+            (
+                dto.FromCityId,
+                dto.FromGovernorateId
+            ));
             if (!fromCityValidation.IsSucceeded)
                 return Response<bool>.Fail(fromCityValidation.Message);
 
             // Step 3 Ensure the "ToCity" actually belongs to the "ToGovernorate"
             var toCityValidation = await _mediator.Send(new ValidateCityInGovernorateCommand
-            {
-                CityId = dto.ToCityId,
-                GovernorateId = dto.ToGovernorateId
-            });
+            (
+                dto.ToCityId,
+                dto.ToGovernorateId
+            ));
             if (!toCityValidation.IsSucceeded)
                 return Response<bool>.Fail(toCityValidation.Message);
 

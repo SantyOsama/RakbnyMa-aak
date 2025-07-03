@@ -30,8 +30,9 @@ namespace RakbnyMa_aak.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FullName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Picture = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserType = table.Column<int>(type: "int", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -41,7 +42,6 @@ namespace RakbnyMa_aak.Migrations
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
@@ -59,7 +59,7 @@ namespace RakbnyMa_aak.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
@@ -183,6 +183,8 @@ namespace RakbnyMa_aak.Migrations
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     NationalId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CarType = table.Column<int>(type: "int", nullable: false),
+                    CarModel = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    CarColor = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     CarCapacity = table.Column<int>(type: "int", nullable: false),
                     DriverNationalIdImagePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DriverLicenseImagePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -210,11 +212,14 @@ namespace RakbnyMa_aak.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Passengers",
+                name: "Notifications",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    IsRead = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
@@ -222,9 +227,9 @@ namespace RakbnyMa_aak.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Passengers", x => x.UserId);
+                    table.PrimaryKey("PK_Notifications", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Passengers_AspNetUsers_UserId",
+                        name: "FK_Notifications_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -237,7 +242,7 @@ namespace RakbnyMa_aak.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     GovernorateId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -327,8 +332,9 @@ namespace RakbnyMa_aak.Migrations
                     TripId = table.Column<int>(type: "int", nullable: false),
                     RequestStatus = table.Column<int>(type: "int", nullable: false),
                     NumberOfSeats = table.Column<int>(type: "int", nullable: false),
-                    BookingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PassengerUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    HasStarted = table.Column<bool>(type: "bit", nullable: false),
+                    HasEnded = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
@@ -345,11 +351,6 @@ namespace RakbnyMa_aak.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
-                        name: "FK_Bookings_Passengers_PassengerUserId",
-                        column: x => x.PassengerUserId,
-                        principalTable: "Passengers",
-                        principalColumn: "UserId");
-                    table.ForeignKey(
                         name: "FK_Bookings_Trips_TripId",
                         column: x => x.TripId,
                         principalTable: "Trips",
@@ -365,7 +366,7 @@ namespace RakbnyMa_aak.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TripId = table.Column<int>(type: "int", nullable: false),
                     SenderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     SentAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -399,7 +400,7 @@ namespace RakbnyMa_aak.Migrations
                     RaterId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     RatedId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     RatingValue = table.Column<int>(type: "int", nullable: false),
-                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
@@ -495,11 +496,6 @@ namespace RakbnyMa_aak.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bookings_PassengerUserId",
-                table: "Bookings",
-                column: "PassengerUserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Bookings_TripId",
                 table: "Bookings",
                 column: "TripId");
@@ -541,6 +537,11 @@ namespace RakbnyMa_aak.Migrations
                 name: "IX_Messages_TripId",
                 table: "Messages",
                 column: "TripId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notifications_UserId",
+                table: "Notifications",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Ratings_RatedId",
@@ -614,6 +615,9 @@ namespace RakbnyMa_aak.Migrations
                 name: "Messages");
 
             migrationBuilder.DropTable(
+                name: "Notifications");
+
+            migrationBuilder.DropTable(
                 name: "Ratings");
 
             migrationBuilder.DropTable(
@@ -621,9 +625,6 @@ namespace RakbnyMa_aak.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "Passengers");
 
             migrationBuilder.DropTable(
                 name: "Trips");

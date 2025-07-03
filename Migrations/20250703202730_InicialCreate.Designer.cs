@@ -12,8 +12,8 @@ using RakbnyMa_aak.Data;
 namespace RakbnyMa_aak.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250625083148_we4rt")]
-    partial class we4rt
+    [Migration("20250703202730_InicialCreate")]
+    partial class InicialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -179,7 +179,8 @@ namespace RakbnyMa_aak.Migrations
 
                     b.Property<string>("FullName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -199,6 +200,7 @@ namespace RakbnyMa_aak.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("PhoneNumberConfirmed")
@@ -242,20 +244,20 @@ namespace RakbnyMa_aak.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("BookingDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("HasEnded")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("HasStarted")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<int>("NumberOfSeats")
                         .HasColumnType("int");
-
-                    b.Property<string>("PassengerUserId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("RequestStatus")
                         .HasColumnType("int");
@@ -264,6 +266,9 @@ namespace RakbnyMa_aak.Migrations
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
+
+                    b.Property<decimal?>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("TripId")
                         .HasColumnType("int");
@@ -276,8 +281,6 @@ namespace RakbnyMa_aak.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PassengerUserId");
 
                     b.HasIndex("TripId");
 
@@ -308,7 +311,8 @@ namespace RakbnyMa_aak.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -336,9 +340,19 @@ namespace RakbnyMa_aak.Migrations
                     b.Property<int>("CarCapacity")
                         .HasColumnType("int");
 
+                    b.Property<string>("CarColor")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
                     b.Property<string>("CarLicenseImagePath")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CarModel")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("CarType")
                         .HasColumnType("int");
@@ -412,7 +426,8 @@ namespace RakbnyMa_aak.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -440,7 +455,8 @@ namespace RakbnyMa_aak.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -475,19 +491,27 @@ namespace RakbnyMa_aak.Migrations
                     b.ToTable("Messages");
                 });
 
-            modelBuilder.Entity("RakbnyMa_aak.Models.Passenger", b =>
+            modelBuilder.Entity("RakbnyMa_aak.Models.Notification", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -497,9 +521,15 @@ namespace RakbnyMa_aak.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("UserId");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
-                    b.ToTable("Passengers");
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("RakbnyMa_aak.Models.Rating", b =>
@@ -512,7 +542,8 @@ namespace RakbnyMa_aak.Migrations
 
                     b.Property<string>("Comment")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -738,10 +769,6 @@ namespace RakbnyMa_aak.Migrations
 
             modelBuilder.Entity("RakbnyMa_aak.Models.Booking", b =>
                 {
-                    b.HasOne("RakbnyMa_aak.Models.Passenger", null)
-                        .WithMany("Bookings")
-                        .HasForeignKey("PassengerUserId");
-
                     b.HasOne("RakbnyMa_aak.Models.Trip", "Trip")
                         .WithMany("Bookings")
                         .HasForeignKey("TripId")
@@ -800,11 +827,11 @@ namespace RakbnyMa_aak.Migrations
                     b.Navigation("Trip");
                 });
 
-            modelBuilder.Entity("RakbnyMa_aak.Models.Passenger", b =>
+            modelBuilder.Entity("RakbnyMa_aak.Models.Notification", b =>
                 {
                     b.HasOne("RakbnyMa_aak.Models.ApplicationUser", "User")
-                        .WithOne("Passenger")
-                        .HasForeignKey("RakbnyMa_aak.Models.Passenger", "UserId")
+                        .WithMany("Notifications")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -898,7 +925,7 @@ namespace RakbnyMa_aak.Migrations
 
                     b.Navigation("Driver");
 
-                    b.Navigation("Passenger");
+                    b.Navigation("Notifications");
 
                     b.Navigation("RatingsGiven");
 
@@ -915,11 +942,6 @@ namespace RakbnyMa_aak.Migrations
             modelBuilder.Entity("RakbnyMa_aak.Models.Governorate", b =>
                 {
                     b.Navigation("Cities");
-                });
-
-            modelBuilder.Entity("RakbnyMa_aak.Models.Passenger", b =>
-                {
-                    b.Navigation("Bookings");
                 });
 
             modelBuilder.Entity("RakbnyMa_aak.Models.Trip", b =>

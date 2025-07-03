@@ -12,6 +12,7 @@ using RakbnyMa_aak.CQRS.Queries.GetAllTrips;
 using RakbnyMa_aak.CQRS.Trips.Delete_Trip;
 using RakbnyMa_aak.CQRS.Trips.GetDriverTripBookings;
 using RakbnyMa_aak.DTOs.TripDTOs;
+using RakbnyMa_aak.GeneralResponse;
 using System.Security.Claims;
 
 namespace RakbnyMa_aak.Controllers
@@ -65,27 +66,24 @@ namespace RakbnyMa_aak.Controllers
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var result = await _mediator.Send(new DeleteTripCommand
-            {
-                TripId = id,
-                CurrentUserId = currentUserId
-            });
+            var result = await _mediator.Send(
+             new DeleteTripCommand(id, currentUserId)
+           );
+
 
             if (!result.IsSucceeded)
                 return BadRequest(result);
 
             return Ok(result);
         }
-        [HttpGet]
-        public async Task<IActionResult> GetAllTrips()
+        [HttpGet("my-trips")]
+        [Authorize(Roles = "Driver")] 
+        public async Task<ActionResult<Response<PaginatedResult<TripDto>>>> GetMyTrips([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            var result = await _mediator.Send(new GetAllTripsQuery());
-
-            if (!result.IsSucceeded)
-                return BadRequest(result);
-
-            return Ok(result);
+            var result = await _mediator.Send(new GetMyTripsQuery(page, pageSize));
+            return StatusCode(result.StatusCode, result);
         }
+
 
 
         [Authorize(Roles = "Driver")]

@@ -3,16 +3,6 @@ using RakbnyMa_aak.GeneralResponse;
 
 namespace RakbnyMa_aak.CQRS.Features.StartTripByPassenger
 {
-    public class StartTripByPassengerCommand : IRequest<Response<bool>>
-    {
-        public int BookingId { get; set; }
-        public string CurrentUserId { get; set; }
-
-        public StartTripByPassengerCommand(int bookingId, string currentUserId)
-        {
-            BookingId = bookingId;
-            CurrentUserId = currentUserId;
-        }
-    }
+    public record StartTripByPassengerCommand(int BookingId, string CurrentUserId) : IRequest<Response<bool>>;
 
 }

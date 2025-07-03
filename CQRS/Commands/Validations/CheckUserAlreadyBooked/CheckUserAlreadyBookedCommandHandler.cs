@@ -15,7 +15,7 @@ namespace RakbnyMa_aak.CQRS.Commands.Validations.CheckUserAlreadyBooked
 
         public async Task<Response<bool>> Handle(CheckUserAlreadyBookedCommand request, CancellationToken cancellationToken)
         {
-            var dto = request.checkUserAlreadyBookedDto;
+            var dto = request.CheckUserAlreadyBookedDto;
 
             if (string.IsNullOrWhiteSpace(dto.UserId) || dto.TripId <= 0)
                 return Response<bool>.Fail("Invalid request data.");

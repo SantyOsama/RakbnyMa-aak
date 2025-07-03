@@ -12,8 +12,8 @@ using RakbnyMa_aak.Data;
 namespace RakbnyMa_aak.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250703202730_InicialCreate")]
-    partial class InicialCreate
+    [Migration("20250703204153_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -340,10 +340,9 @@ namespace RakbnyMa_aak.Migrations
                     b.Property<int>("CarCapacity")
                         .HasColumnType("int");
 
-                    b.Property<string>("CarColor")
-                        .IsRequired()
+                    b.Property<int>("CarColor")
                         .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasColumnType("int");
 
                     b.Property<string>("CarLicenseImagePath")
                         .IsRequired()

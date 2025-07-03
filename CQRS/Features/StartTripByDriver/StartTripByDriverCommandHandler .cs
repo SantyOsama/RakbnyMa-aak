@@ -24,6 +24,9 @@ namespace RakbnyMa_aak.CQRS.Features.StartTripByDriver
             if (trip.TripStatus != TripStatus.Scheduled)
                 return Response<bool>.Fail("Trip is already started or completed.");
 
+            if (DateTime.UtcNow < trip.TripDate)
+                return Response<bool>.Fail("Cannot start the trip before its scheduled start time.");
+
             trip.TripStatus = TripStatus.Ongoing;
             trip.UpdatedAt = DateTime.UtcNow;
 

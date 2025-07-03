@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.Models;
 using RakbnyMa_aak.UOW;
@@ -17,15 +18,25 @@ namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripForEnding
 
         public async Task<Response<Trip>> Handle(ValidateTripForEndingCommand request, CancellationToken cancellationToken)
         {
-            var trip = await _unitOfWork.TripRepository.GetByIdAsync(request.TripId);
+            var tripProjection = await _unitOfWork.TripRepository
+                .GetAllQueryable()
+                .Where(t => t.Id == request.TripId)
+                .Select(t => new Trip
+                {
+                    Id = t.Id,
+                    DriverId = t.DriverId,
+                    IsDeleted = t.IsDeleted,
+                    TripStatus = t.TripStatus
+                })
+                .FirstOrDefaultAsync(cancellationToken);
 
-            if (trip == null || trip.IsDeleted || trip.DriverId != request.DriverId)
+            if (tripProjection == null || tripProjection.IsDeleted || tripProjection.DriverId != request.DriverId)
                 return Response<Trip>.Fail("Unauthorized or trip not found.");
 
-            if (trip.TripStatus != TripStatus.Ongoing)
+            if (tripProjection.TripStatus != TripStatus.Ongoing)
                 return Response<Trip>.Fail("Trip has not started yet.");
 
-            return Response<Trip>.Success(trip, "Valid trip");
+            return Response<Trip>.Success(tripProjection, "Valid trip");
         }
     }
 }

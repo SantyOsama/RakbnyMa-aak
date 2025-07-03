@@ -26,7 +26,8 @@ namespace RakbnyMa_aak.Services.Users
 
         public async Task<Response<string>> RegisterUserAsync(RegisterUserDto dto)
         {
-            if (await _userManager.FindByEmailAsync(dto.Email) != null)
+            if (await _userManager.FindByEmailAsync(dto.Email) != null ||
+                await _userManager.FindByNameAsync(dto.FullName) != null)
             {
                 return Response<string>.Fail("Email already exists");
             }
@@ -38,7 +39,7 @@ namespace RakbnyMa_aak.Services.Users
             }
 
             var user = _mapper.Map<ApplicationUser>(dto);
-          
+            user.UserName = dto.FullName;
             user.Email = dto.Email;
             user.UserName = dto.Email;
             user.PhoneNumber = dto.PhoneNumber;

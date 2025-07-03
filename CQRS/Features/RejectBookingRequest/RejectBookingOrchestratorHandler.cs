@@ -1,11 +1,8 @@
 ﻿using MediatR;
 using RakbnyMa_aak.CQRS.Commands.SendNotification;
 using RakbnyMa_aak.CQRS.Commands.UpdateBookingStatus;
-using RakbnyMa_aak.CQRS.Commands.Validations.ValidateBookingExists;
-using RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripExists;
-using RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripOwner;
+using RakbnyMa_aak.CQRS.Features.ValidationOrchestrators.BookValidationOrchestrator;
 using RakbnyMa_aak.GeneralResponse;
-using RakbnyMa_aak.Models;
 using static RakbnyMa_aak.Enums.Enums;
 
 namespace RakbnyMa_aak.CQRS.Features.RejectBookingRequest
@@ -21,36 +18,28 @@ namespace RakbnyMa_aak.CQRS.Features.RejectBookingRequest
 
         public async Task<Response<bool>> Handle(RejectBookingOrchestrator request, CancellationToken cancellationToken)
         {
-            // Step 1: Validate booking exists
-            var bookingResult = await _mediator.Send(new ValidateBookingExistsCommand(request.BookingId));
-            if (!bookingResult.IsSucceeded)
-                return Response<bool>.Fail(bookingResult.Message);
-            Booking booking = bookingResult.Data;
+            // Step 1: Use shared BookingValidationOrchestrator
+            var validation = await _mediator.Send(new BookingValidationOrchestrator(request.BookingId, request.CurrentUserId));
+            if (!validation.IsSucceeded)
+                return Response<bool>.Fail(validation.Message);
 
-            // Step 2: Validate trip exists
-            var tripResult = await _mediator.Send(new ValidateTripExistsCommand(booking.TripId));
-            if (!tripResult.IsSucceeded)
-                return Response<bool>.Fail(tripResult.Message);
-            Trip trip = tripResult.Data;
+            var result = validation.Data;
 
-            // Step 3: Check if current user is the trip owner
-            var ownerResult = await _mediator.Send(new ValidateTripOwnerCommand(request.CurrentUserId, trip.DriverId));
-            if (!ownerResult.IsSucceeded)
-                return Response<bool>.Fail(ownerResult.Message);
-
-            // Step 4: Update booking status to Rejected
-            var approveResult = await _mediator.Send(new UpdateBookingStatusCommand(
-                    booking.Id,
-                    trip.Id,
+            //Step 2: Update status to Rejected
+            var rejectResult = await _mediator.Send(
+                new UpdateBookingStatusCommand(
+                    result.BookingId,
+                    result.TripId,
                     RequestStatus.Rejected));
-            if (!approveResult.IsSucceeded)
-                return Response<bool>.Fail(approveResult.Message);
 
-            // Step 5: Send notification to passenger
+            if (!rejectResult.IsSucceeded)
+                return Response<bool>.Fail(rejectResult.Message);
+
+            //Step 3: Send notification
             await _mediator.Send(new SendNotificationCommand(new SendNotificationDto
             {
-                ReceiverId = booking.UserId,
-                SenderUserId = booking.Trip.DriverId,
+                ReceiverId = result.PassengerId,
+                SenderUserId = result.DriverId,
                 Message = "Your booking request has been rejected."
             }));
 

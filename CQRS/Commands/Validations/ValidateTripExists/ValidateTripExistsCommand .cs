@@ -4,6 +4,7 @@ using RakbnyMa_aak.Models;
 
 namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripExists
 {
-    public record ValidateTripExistsCommand(int TripId) : IRequest<Response<Trip>>;
+    public record ValidateTripExistsCommand(int TripId) : IRequest<Response<TripValidationResultDto>>;
+
 
 }

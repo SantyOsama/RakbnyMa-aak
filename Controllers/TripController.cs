@@ -48,11 +48,13 @@ namespace RakbnyMa_aak.Controllers
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var result = await _mediator.Send(new UpdateTripOrchestrator
-            {
-                TripId = id,
-                CurrentUserId = currentUserId,
-                TripDto = dto
-            });
+            (
+                 id,
+                 currentUserId,
+                 dto
+              
+               
+            ));
 
             if (!result.IsSucceeded)
                 return BadRequest(result);
@@ -66,9 +68,11 @@ namespace RakbnyMa_aak.Controllers
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var result = await _mediator.Send(
-             new DeleteTripCommand(id, currentUserId)
-           );
+            var result = await _mediator.Send(new DeleteTripCommand
+            (
+                id,
+                currentUserId
+            ));
 
 
             if (!result.IsSucceeded)

@@ -37,7 +37,7 @@ namespace RakbnyMa_aak.CQRS.Trips.Delete_Trip
             trip.IsDeleted = true;
             await _unitOfWork.CompleteAsync();
 
-            return Response<string>.Success($"Trip with ID {trip.Id} has been deleted successfully.");
+            return Response<string>.Success($"Trip with ID {trip.TripId} has been deleted successfully.");
         }
     }
 }

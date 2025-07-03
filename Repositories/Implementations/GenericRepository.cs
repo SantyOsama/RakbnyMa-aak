@@ -41,17 +41,22 @@ namespace RakbnyMa_aak.Repositories.Implementations
             _dbSet.Remove(entity);
         }
 
-        public async Task SaveAsync()
+        public async Task<int> CompleteAsync()
         {
-            await _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync();
         }
+
         public IQueryable<T> GetAllQueryable()
         {
             return _dbSet.AsNoTracking();
         }
+        public IQueryable<T> GetByIdQueryable(object id)
+        {
+            return _dbSet.Where(e => EF.Property<object>(e, "Id")!.Equals(id));
+        }
         public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
         {
-            return await _context.Set<T>().AnyAsync(predicate);
+            return await _dbSet.AnyAsync(predicate);
         }
 
     }

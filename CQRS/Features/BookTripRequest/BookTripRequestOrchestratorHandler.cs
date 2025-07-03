@@ -1,7 +1,6 @@
 using AutoMapper;
 using MediatR;
 using RakbnyMa_aak.CQRS.Commands.CreateBooking;
-using RakbnyMa_aak.CQRS.Commands.IncreaseBookingSeats;
 using RakbnyMa_aak.CQRS.Commands.SendNotification;
 using RakbnyMa_aak.CQRS.Commands.Validations.CheckUserAlreadyBooked;
 using RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripExists;
@@ -45,7 +44,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookTripRequest
 
             Response<int> bookingResponse;
 
-            if (checkBookingResponse.Data) // already booked → increase seats
+            if (checkBookingResponse.Data) // already booked → can't book again, but can update existing booking
             {
                 // Get booking by user and trip
                 var existingBooking = await _unitOfWork.BookingRepository
@@ -54,8 +53,8 @@ namespace RakbnyMa_aak.CQRS.Features.BookTripRequest
                 if (existingBooking == null)
                     return Response<int>.Fail("Existing booking not found.");
 
-                bookingResponse = await _mediator.Send(
-                    new IncreaseBookingSeatsCommand(existingBooking.Id, bookingDto.NumberOfSeats));
+                return Response<int>.Fail("You Can Only Make One Booking, Please try to Update your Booking.");
+
             }
             else // first time booking → create
             {
@@ -65,14 +64,14 @@ namespace RakbnyMa_aak.CQRS.Features.BookTripRequest
             if (!bookingResponse.IsSucceeded)
                 return bookingResponse;
 
-            // Step 2: Get DriverId by TripId
+            // Step 3: Get DriverId by TripId
             var driverIdResponse = await _mediator.Send(new GetDriverIdByTripIdQuery(bookingDto.TripId));
             if (!driverIdResponse.IsSucceeded || string.IsNullOrEmpty(driverIdResponse.Data))
                 return Response<int>.Fail("Driver not found for this trip.");
 
             var driverId = driverIdResponse.Data;
 
-            // Step 3: Send Notification to Driver
+            // Step 4: Send Notification to Driver
             await _mediator.Send(new SendNotificationCommand(new SendNotificationDto
             {
                 ReceiverId = driverId,

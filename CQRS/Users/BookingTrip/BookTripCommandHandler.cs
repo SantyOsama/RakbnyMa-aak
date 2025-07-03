@@ -29,7 +29,7 @@ namespace RakbnyMa_aak.CQRS.Users.BookingTrip
                 return Response<int>.Fail("You have already booked this trip.");
 
             var booking = _mapper.Map<Booking>(dto);
-            booking.BookingDate = DateTime.UtcNow;
+            booking.CreatedAt = DateTime.UtcNow;
             booking.RequestStatus = RequestStatus.Pending;
             // booking.IsPaid = dto.PaymentMethod.ToLower() == "online" ? false : true;
 

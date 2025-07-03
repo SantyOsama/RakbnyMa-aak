@@ -1,9 +1,20 @@
-﻿namespace RakbnyMa_aak.CQRS.Commands.CreateBooking
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace RakbnyMa_aak.CQRS.Commands.CreateBooking
 {
     public class CreateBookingDto
     {
+        [Required(ErrorMessage = "Trip ID is required.")]
+        [Display(Name = "Trip ID")]
         public int TripId { get; set; }
+
+        [Required(ErrorMessage = "User ID is required.")]
+        [Display(Name = "User ID")]
         public string UserId { get; set; }
+
+        [Required(ErrorMessage = "Number of seats is required.")]
+        [Range(1, 150, ErrorMessage = "Number of seats must be between 1 and 150.")]
+        [Display(Name = "Number of Seats")]
         public int NumberOfSeats { get; set; }
     }
 }

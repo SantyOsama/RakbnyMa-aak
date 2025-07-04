@@ -1,20 +1,21 @@
 ﻿using MediatR;
+using RakbnyMa_aak.CQRS.Commands.IncreaseTripSeats;
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.UOW;
 using static RakbnyMa_aak.Enums.Enums;
 
 namespace RakbnyMa_aak.CQRS.Commands.DecreaseTripSeats
 {
-    public class DecreaseTripSeatsCommandHandler : IRequestHandler<DecreaseTripSeatsCommand, Response<string>>
+    public class IncreaseTripSeatsCommandHandler : IRequestHandler<IncreaseTripSeatsCommand, Response<string>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public DecreaseTripSeatsCommandHandler(IUnitOfWork unitOfWork)
+        public IncreaseTripSeatsCommandHandler(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Response<string>> Handle(DecreaseTripSeatsCommand request, CancellationToken cancellationToken)
+        public async Task<Response<string>> Handle(IncreaseTripSeatsCommand request, CancellationToken cancellationToken)
         {
             var dto = request.SeatsDto;
 
@@ -26,7 +27,7 @@ namespace RakbnyMa_aak.CQRS.Commands.DecreaseTripSeats
             if (trip.AvailableSeats < dto.NumberOfSeats)
                 return Response<string>.Fail("Not enough seats available.");
 
-            trip.AvailableSeats -= dto.NumberOfSeats;
+            trip.AvailableSeats += dto.NumberOfSeats;
             trip.UpdatedAt = DateTime.UtcNow;
             _unitOfWork.TripRepository.Update(trip);
             await _unitOfWork.CompleteAsync();

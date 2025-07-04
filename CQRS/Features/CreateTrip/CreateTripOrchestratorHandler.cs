@@ -20,11 +20,13 @@ namespace RakbnyMa_aak.CQRS.Features.CreateTripOrchestrator
 
             // Step 1: Validate common validations for the trip DTO
             var commonValidation = await _mediator.Send(new ValidateTripBusinessLogicOrchestrator(request.TripDto));
+
             if (!commonValidation.IsSucceeded)
                 return Response<int>.Fail(commonValidation.Message);
 
             // Step 2: All validations passed, persist the trip to the database
             var createResult = await _mediator.Send(new PersistTripCommand(dto));
+
             return createResult;
         }
     }

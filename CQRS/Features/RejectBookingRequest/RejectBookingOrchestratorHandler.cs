@@ -3,6 +3,7 @@ using RakbnyMa_aak.CQRS.Commands.SendNotification;
 using RakbnyMa_aak.CQRS.Commands.UpdateBookingStatus;
 using RakbnyMa_aak.CQRS.Features.ValidationOrchestrators.BookValidationOrchestrator;
 using RakbnyMa_aak.GeneralResponse;
+using RakbnyMa_aak.Models;
 using static RakbnyMa_aak.Enums.Enums;
 
 namespace RakbnyMa_aak.CQRS.Features.RejectBookingRequest
@@ -24,6 +25,9 @@ namespace RakbnyMa_aak.CQRS.Features.RejectBookingRequest
                 return Response<bool>.Fail(validation.Message);
 
             var result = validation.Data;
+
+            if (result.requestStatus == RequestStatus.Confirmed)
+                return Response<bool>.Fail("This booking has already been approved and cannot be rejected.");
 
             //Step 2: Update status to Rejected
             var rejectResult = await _mediator.Send(

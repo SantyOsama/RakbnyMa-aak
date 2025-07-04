@@ -30,6 +30,11 @@ namespace RakbnyMa_aak.CQRS.Features.BookTripRequest
             if (!validateTripResponse.IsSucceeded)
                 return Response<int>.Fail(validateTripResponse.Message);
 
+            var trip = validateTripResponse.Data;
+
+            if (bookingDto.NumberOfSeats > trip.AvailableSeats)
+                return Response<int>.Fail($"Not enough available seats. Only {trip.AvailableSeats} seats left.");
+
             // Step 2: Check if user already booked the same trip
             var checkBookingResponse = await _mediator.Send(
                 new CheckUserAlreadyBookedCommand(

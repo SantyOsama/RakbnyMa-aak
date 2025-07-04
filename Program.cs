@@ -174,6 +174,9 @@ namespace RakbnyMa_aak
             {
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
                 await DbSeeder.SeedRolesAsync(roleManager);
+
+                var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                await DbSeeder.SeedGovernoratesAndCitiesAsync(context);
             }
 
             // 5. Use Swagger

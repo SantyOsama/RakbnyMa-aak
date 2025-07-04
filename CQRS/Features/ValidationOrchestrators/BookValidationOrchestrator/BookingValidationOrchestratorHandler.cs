@@ -35,13 +35,18 @@ namespace RakbnyMa_aak.CQRS.Features.ValidationOrchestrators.BookValidationOrche
             if (!ownerResult.IsSucceeded)
                 return Response<BookingValidationResultDto>.Fail(ownerResult.Message);
 
-            // Step 4: Return the validated data in a DTO
+            // Step 4: Check that booking seats ≤ available seats
+            if (booking.NumberOfSeats > trip.AvailableSeats)
+                return Response<BookingValidationResultDto>.Fail("Booking cannot exceed available trip seats.");
+
+            // Step 5: Return the validated data in a DTO
             return Response<BookingValidationResultDto>.Success(new BookingValidationResultDto
             {
                 BookingId = booking.Id,
                 TripId = trip.TripId,
                 PassengerId = booking.UserId,
-                DriverId = trip.DriverId
+                DriverId = trip.DriverId,
+                requestStatus = booking.RequestStatus,
             });
         }
     }

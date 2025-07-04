@@ -57,7 +57,7 @@ namespace RakbnyMa_aak.Models
 
 
         [Required(ErrorMessage = "Price per seat is required.")]
-        [Range(1, 10000, ErrorMessage = "Price must be greater than 0.")]
+        [Range(1, double.MaxValue, ErrorMessage = "Price must be greater than 0.")]
         [Display(Name = "Price per Seat")]
         public decimal PricePerSeat { get; set; }
 

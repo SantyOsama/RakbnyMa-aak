@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using RakbnyMa_aak.CQRS.Commands.CreateBooking;
 using RakbnyMa_aak.CQRS.Features.BookTripRequest;
 using RakbnyMa_aak.CQRS.Features.CancelBookingByPassenger;
+using RakbnyMa_aak.CQRS.Features.UpdateBooking;
 using System.Security.Claims;
 namespace RakbnyMa_aak.Controllers
 {
@@ -29,6 +30,16 @@ namespace RakbnyMa_aak.Controllers
             var result = await _mediator.Send(new BookTripRequestOrchestrator(bookingDto));
             return result.IsSucceeded ? Ok(result) : BadRequest(result);
         }
+
+
+        [HttpPut("update-booking")]
+        public async Task<IActionResult> UpdateBooking([FromBody] UpdateBookingDto dto)
+        {
+            var command = new UpdateBookingOrchestrator(dto);
+            var result = await _mediator.Send(command);
+            return result.IsSucceeded ? Ok(result) : BadRequest(result);
+        }
+
 
         [Authorize(Roles = "User")]
         [HttpDelete("cancel/{bookingId}")]

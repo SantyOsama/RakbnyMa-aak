@@ -9,6 +9,9 @@ namespace RakbnyMa_aak.Models
         [Required(ErrorMessage = "User is required.")]
         [Display(Name = "User")]
         public string UserId { get; set; } 
+
+
+
         [Required(ErrorMessage = "Trip is required.")]
         [Display(Name = "Trip")]
         public int TripId { get; set; }
@@ -27,9 +30,15 @@ namespace RakbnyMa_aak.Models
         //public bool IsPaid { get; set; } =false;
         //public string PaymentMethod { get; set; }
 
+        [Required(ErrorMessage = "Price per seat is required.")]
+        [Range(1, double.MaxValue, ErrorMessage = "Price must be greater than 0.")]
+        [Display(Name = "Price per Seat")]
+        public decimal PricePerSeat { get; set; }
+
+
         [Display(Name = "Total Price")]
         [Range(0, double.MaxValue, ErrorMessage = "Total price must be a positive number.")]
-        public decimal? TotalPrice { get; set; }
+        public decimal? TotalPrice => PricePerSeat * NumberOfSeats;
 
         [Display(Name = "Has the trip started?")]
         public bool HasStarted { get; set; } = false;

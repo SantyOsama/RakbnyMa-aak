@@ -30,17 +30,6 @@ namespace RakbnyMa_aak.CQRS.Commands.CreateBooking
         {
             var booking = _mapper.Map<Booking>(request.BookingDto);
 
-            var tripPrice = await _unitOfWork.TripRepository
-                    .GetAllQueryable()
-                    .Where(t => t.Id == booking.TripId)
-                    .Select(t => t.PricePerSeat)
-                    .FirstOrDefaultAsync();
-
-            if (tripPrice == default)
-                return Response<int>.Fail("Trip not found.");
-
-            booking.TotalPrice = tripPrice * booking.NumberOfSeats;
-
             await _unitOfWork.BookingRepository.AddAsync(booking);
 
             await _unitOfWork.CompleteAsync();

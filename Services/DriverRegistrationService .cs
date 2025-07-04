@@ -52,7 +52,15 @@ namespace RakbnyMa_aak.Services.Drivers
             var licenseImgUrl = await _cloudinary.UploadImageAsync(dto.DriverLicenseImage, "drivers/license");
             var carLicenseImgUrl = await _cloudinary.UploadImageAsync(dto.CarLicenseImage, "drivers/carlicense");
             var selfieImgUrl = await _cloudinary.UploadImageAsync(dto.SelfieImage, "drivers/selfie");
-
+            string profileImageUrl;
+            if (dto.Picture != null && dto.Picture.Length > 0)
+            {
+                profileImageUrl = await _cloudinary.UploadImageAsync(dto.Picture, "users/profile");
+            }
+            else
+            {
+                profileImageUrl = "https://res.cloudinary.com/dbrz7pbsa/image/upload/v1751624539/default-profile_zo7m6z.png";
+            }
             // Optional: Face verification
             /*
             bool isFaceValid = await _verificationService.MatchFaceAsync(selfieImgUrl, nationalIdImgUrl);
@@ -71,8 +79,9 @@ namespace RakbnyMa_aak.Services.Drivers
                 Email = dto.Email,
                 UserName = dto.FullName,
                 PhoneNumber = dto.PhoneNumber,
-                Picture = selfieImgUrl,
-                UserType = UserType.Driver
+                Picture = profileImageUrl,
+                UserType = UserType.Driver,
+                Gender=dto.Gender
             };
 
             var result = await _userManager.CreateAsync(user, dto.Password);
@@ -95,9 +104,6 @@ namespace RakbnyMa_aak.Services.Drivers
                 DriverLicenseImagePath = licenseImgUrl,
                 CarLicenseImagePath = carLicenseImgUrl,
                 SelfieImagePath = selfieImgUrl,
-                IsFaceVerified = false, // or isFaceValid if used
-                IsPhoneVerified = false,
-                IsApproved = false
             };
 
             await _repo.AddAsync(driver);

@@ -13,6 +13,7 @@ using RakbnyMa_aak.MiddleWares;
 using RakbnyMa_aak.Models;
 using RakbnyMa_aak.Repositories.Implementations;
 using RakbnyMa_aak.Repositories.Interfaces;
+using RakbnyMa_aak.SeedData;
 using RakbnyMa_aak.Services;
 using RakbnyMa_aak.Services.Drivers;
 using RakbnyMa_aak.Services.Users;
@@ -24,7 +25,7 @@ namespace RakbnyMa_aak
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -167,6 +168,13 @@ namespace RakbnyMa_aak
             builder.Services.AddAuthorization();
 
             var app = builder.Build();
+
+            //Seed the database with initial data
+            using (var scope = app.Services.CreateScope())
+            {
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                await DbSeeder.SeedRolesAsync(roleManager);
+            }
 
             // 5. Use Swagger
             if (app.Environment.IsDevelopment())

@@ -13,6 +13,7 @@ namespace RakbnyMa_aak.Models
         [Required(ErrorMessage = "Governorate is required.")]
         [Display(Name = "Governorate")]
         public int GovernorateId { get; set; }
+
         [ForeignKey("GovernorateId")]
         public virtual Governorate Governorate { get; set; }
     }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.Models;
 using RakbnyMa_aak.SignalR;
@@ -29,7 +30,16 @@ namespace RakbnyMa_aak.CQRS.Commands.CreateBooking
         {
             var booking = _mapper.Map<Booking>(request.BookingDto);
 
-            booking.RequestStatus = RequestStatus.Pending;
+            var tripPrice = await _unitOfWork.TripRepository
+                    .GetAllQueryable()
+                    .Where(t => t.Id == booking.TripId)
+                    .Select(t => t.PricePerSeat)
+                    .FirstOrDefaultAsync();
+
+            if (tripPrice == default)
+                return Response<int>.Fail("Trip not found.");
+
+            booking.TotalPrice = tripPrice * booking.NumberOfSeats;
 
             await _unitOfWork.BookingRepository.AddAsync(booking);
 

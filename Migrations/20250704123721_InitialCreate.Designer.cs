@@ -12,7 +12,7 @@ using RakbnyMa_aak.Data;
 namespace RakbnyMa_aak.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250703211239_InitialCreate")]
+    [Migration("20250704123721_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -182,6 +182,10 @@ namespace RakbnyMa_aak.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(20)");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -220,8 +224,9 @@ namespace RakbnyMa_aak.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<int>("UserType")
-                        .HasColumnType("int");
+                    b.Property<string>("UserType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id");
 
@@ -259,8 +264,9 @@ namespace RakbnyMa_aak.Migrations
                     b.Property<int>("NumberOfSeats")
                         .HasColumnType("int");
 
-                    b.Property<int>("RequestStatus")
-                        .HasColumnType("int");
+                    b.Property<string>("RequestStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -286,10 +292,7 @@ namespace RakbnyMa_aak.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Bookings", t =>
-                        {
-                            t.HasCheckConstraint("CK_Booking_NumberOfSeats", "[NumberOfSeats] > 0");
-                        });
+                    b.ToTable("Bookings");
                 });
 
             modelBuilder.Entity("RakbnyMa_aak.Models.City", b =>
@@ -340,8 +343,9 @@ namespace RakbnyMa_aak.Migrations
                     b.Property<int>("CarCapacity")
                         .HasColumnType("int");
 
-                    b.Property<int>("CarColor")
-                        .HasColumnType("int");
+                    b.Property<string>("CarColor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CarLicenseImagePath")
                         .IsRequired()
@@ -352,8 +356,9 @@ namespace RakbnyMa_aak.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("CarType")
-                        .HasColumnType("int");
+                    b.Property<string>("CarType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -580,10 +585,7 @@ namespace RakbnyMa_aak.Migrations
                     b.HasIndex("RaterId", "RatedId", "TripId")
                         .IsUnique();
 
-                    b.ToTable("Ratings", t =>
-                        {
-                            t.HasCheckConstraint("CK_Rating_RatingValue", "[RatingValue] BETWEEN 1 AND 5");
-                        });
+                    b.ToTable("Ratings");
                 });
 
             modelBuilder.Entity("RakbnyMa_aak.Models.Trip", b =>
@@ -607,9 +609,6 @@ namespace RakbnyMa_aak.Migrations
                     b.Property<string>("DriverId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<TimeSpan>("Duration")
-                        .HasColumnType("time");
 
                     b.Property<int>("FromCityId")
                         .HasColumnType("int");
@@ -644,8 +643,9 @@ namespace RakbnyMa_aak.Migrations
                     b.Property<DateTime>("TripDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("TripStatus")
-                        .HasColumnType("int");
+                    b.Property<string>("TripStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -665,12 +665,7 @@ namespace RakbnyMa_aak.Migrations
 
                     b.HasIndex("ToGovernorateId");
 
-                    b.ToTable("Trips", t =>
-                        {
-                            t.HasCheckConstraint("CK_Trip_AvailableSeats", "[AvailableSeats] >= 0");
-
-                            t.HasCheckConstraint("CK_Trip_PricePerSeat", "[PricePerSeat] > 0");
-                        });
+                    b.ToTable("Trips");
                 });
 
             modelBuilder.Entity("RakbnyMa_aak.Models.TripTracking", b =>

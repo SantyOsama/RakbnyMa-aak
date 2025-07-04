@@ -33,7 +33,8 @@ namespace RakbnyMa_aak.Migrations
                     FullName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Picture = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserType = table.Column<int>(type: "int", nullable: false),
+                    UserType = table.Column<string>(type: "nvarchar(20)", nullable: false),
+                    Gender = table.Column<string>(type: "nvarchar(20)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -182,9 +183,9 @@ namespace RakbnyMa_aak.Migrations
                 {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     NationalId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CarType = table.Column<int>(type: "int", nullable: false),
+                    CarType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CarModel = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    CarColor = table.Column<int>(type: "int", nullable: false),
+                    CarColor = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CarCapacity = table.Column<int>(type: "int", nullable: false),
                     DriverNationalIdImagePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DriverLicenseImagePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -274,10 +275,9 @@ namespace RakbnyMa_aak.Migrations
                     PickupLocation = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DestinationLocation = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TripDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Duration = table.Column<TimeSpan>(type: "time", nullable: false),
                     AvailableSeats = table.Column<int>(type: "int", nullable: false),
                     PricePerSeat = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    TripStatus = table.Column<int>(type: "int", nullable: false),
+                    TripStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsRecurring = table.Column<bool>(type: "bit", nullable: false),
                     WomenOnly = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -288,8 +288,6 @@ namespace RakbnyMa_aak.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Trips", x => x.Id);
-                    table.CheckConstraint("CK_Trip_AvailableSeats", "[AvailableSeats] >= 0");
-                    table.CheckConstraint("CK_Trip_PricePerSeat", "[PricePerSeat] > 0");
                     table.ForeignKey(
                         name: "FK_Trips_Cities_FromCityId",
                         column: x => x.FromCityId,
@@ -330,7 +328,7 @@ namespace RakbnyMa_aak.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     TripId = table.Column<int>(type: "int", nullable: false),
-                    RequestStatus = table.Column<int>(type: "int", nullable: false),
+                    RequestStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     NumberOfSeats = table.Column<int>(type: "int", nullable: false),
                     TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     HasStarted = table.Column<bool>(type: "bit", nullable: false),
@@ -343,7 +341,6 @@ namespace RakbnyMa_aak.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Bookings", x => x.Id);
-                    table.CheckConstraint("CK_Booking_NumberOfSeats", "[NumberOfSeats] > 0");
                     table.ForeignKey(
                         name: "FK_Bookings_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -409,7 +406,6 @@ namespace RakbnyMa_aak.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Ratings", x => x.Id);
-                    table.CheckConstraint("CK_Rating_RatingValue", "[RatingValue] BETWEEN 1 AND 5");
                     table.ForeignKey(
                         name: "FK_Ratings_AspNetUsers_RatedId",
                         column: x => x.RatedId,

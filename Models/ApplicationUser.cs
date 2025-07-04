@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using static RakbnyMa_aak.Enums.Enums;
 
 namespace RakbnyMa_aak.Models
@@ -14,7 +15,6 @@ namespace RakbnyMa_aak.Models
         public string FullName { get; set; }
 
         [Display(Name = "Profile Picture")]
-        [Required(ErrorMessage = "Please enter a profile picture.")]
         public string Picture { get; set; }
 
         [Display(Name = "Phone Number")]
@@ -24,7 +24,19 @@ namespace RakbnyMa_aak.Models
 
         [Display(Name = "User Type")]
         [Required(ErrorMessage = "Please select a user type.")]
+        [EnumDataType(typeof(UserType))]
+        [Column(TypeName = "nvarchar(20)")]
         public UserType UserType { get; set; }
+
+
+
+        [Display(Name = "Gender")]
+        [Required(ErrorMessage = "Please select a gender.")]
+        [EnumDataType(typeof(Gender))]
+        [Column(TypeName = "nvarchar(20)")]
+        public Gender Gender { get; set; }
+
+
         public virtual Driver? Driver { get; set; }
         public virtual ICollection<Rating>? RatingsGiven { get; set; }
         public virtual ICollection<Rating>? RatingsReceived { get; set; }

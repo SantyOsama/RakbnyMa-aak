@@ -8,19 +8,21 @@ namespace RakbnyMa_aak.Models
     {
         [Required(ErrorMessage = "User is required.")]
         [Display(Name = "User")]
-        public string UserId { get; set; } // FK to ApplicationUser (the user who made the booking)
+        public string UserId { get; set; } 
         [Required(ErrorMessage = "Trip is required.")]
         [Display(Name = "Trip")]
-        public int TripId { get; set; } // FK to Trip (int, as Trip.Id is int)
+        public int TripId { get; set; }
+
+
         [Required]
         [Display(Name = "Request Status")]
-        public RequestStatus RequestStatus { get; set; } //= RequestStatus.Pending;
+        public RequestStatus RequestStatus { get; set; } = RequestStatus.Pending;
+
+
         [Required(ErrorMessage = "Please enter the number of seats.")]
         [Range(1, 150, ErrorMessage = "Number of seats must be at least 1.")]
         [Display(Name = "Number of Seats")]
-        public int NumberOfSeats { get; set; } // Renamed from NoOfSeat for clarity
-        //public DateTime BookingDate { get; set; } = DateTime.UtcNow; // Added booking date // المفروض يتمسح عشان عندنا كريتيد ات    
-
+        public int NumberOfSeats { get; set; }
 
         //public bool IsPaid { get; set; } =false;
         //public string PaymentMethod { get; set; }
@@ -31,6 +33,8 @@ namespace RakbnyMa_aak.Models
 
         [Display(Name = "Has the trip started?")]
         public bool HasStarted { get; set; } = false;
+
+
         [Display(Name = "Has the trip ended?")]
         public bool HasEnded { get; set; } = false;
 

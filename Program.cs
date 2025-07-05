@@ -8,6 +8,7 @@ using RakbnyMa_aak.Behaviors;
 using RakbnyMa_aak.CQRS.Drivers.RegisterDriver.Commands;
 using RakbnyMa_aak.Data;
 using RakbnyMa_aak.Filters;
+using RakbnyMa_aak.Hubs;
 using RakbnyMa_aak.Mapping;
 using RakbnyMa_aak.MiddleWares;
 using RakbnyMa_aak.Models;
@@ -164,6 +165,7 @@ namespace RakbnyMa_aak
 
             builder.Services.AddSignalR();
 
+
             builder.Services.AddAuthorization();
 
             var app = builder.Build();
@@ -189,8 +191,10 @@ namespace RakbnyMa_aak
             // 7. Use Authentication and Authorization
             app.UseAuthentication(); // important for Identity
             app.UseAuthorization();
+            //chat
+            app.UseCors("AllowFrontend");
 
-
+            app.MapHub<ChatHub>("/chatHub");
 
             app.MapHub<NotificationHub>("/notificationHub");
             // 8. Map Controllers

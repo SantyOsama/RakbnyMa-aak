@@ -1,0 +1,55 @@
+﻿using AutoMapper;
+using MediatR;
+using RakbnyMa_aak.CQRS.Features.SendMessage;
+using RakbnyMa_aak.GeneralResponse;
+using RakbnyMa_aak.UOW;
+using System.Security.Claims;
+using static RakbnyMa_aak.Enums.Enums;
+
+namespace RakbnyMa_aak.CQRS.Queries.GetMessagesByTripId
+{
+    public class GetMessagesByTripIdQueryHandler : IRequestHandler<GetMessagesByTripIdQuery, Response<List<MessageDto>>>
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public GetMessagesByTripIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        public async Task<Response<List<MessageDto>>> Handle(GetMessagesByTripIdQuery request, CancellationToken cancellationToken)
+        {
+            var userId = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+                return Response<List<MessageDto>>.Fail("Unauthorized");
+
+            var trip = await _unitOfWork.TripRepository.GetByIdAsync(request.TripId);
+
+            if (trip == null)
+                return Response<List<MessageDto>>.Fail("Trip not found.");
+
+            var approvedPassengerIds = await _unitOfWork.BookingRepository
+                .FindAllAsync(b => b.TripId == request.TripId && b.RequestStatus == RequestStatus.Confirmed);
+            var passengerIds = approvedPassengerIds.Select(b => b.UserId).ToList();
+
+            var isDriver = trip.DriverId == userId;
+            var isPassenger = passengerIds.Contains(userId);
+
+            if (!isDriver && !isPassenger)
+                return Response<List<MessageDto>>.Fail("You are not authorized to view messages of this trip.");
+
+            var messages = await _unitOfWork.MessageRepository.GetMessagesByTripIdAsync(request.TripId);
+            var messageDtos = _mapper.Map<List<MessageDto>>(messages);
+
+            return Response<List<MessageDto>>.Success(messageDtos);
+        }
+    }
+
+
+
+}

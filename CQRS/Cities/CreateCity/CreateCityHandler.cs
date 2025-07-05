@@ -19,11 +19,23 @@ namespace RakbnyMa_aak.CQRS.Cities.CreateCity
 
         public async Task<Response<string>> Handle(CreateCityCommand request, CancellationToken cancellationToken)
         {
+
+            var isExist = await _unitOfWork.CityRepository
+                .AnyAsync(c => c.Name == request.Dto.Name && c.GovernorateId == request.Dto.GovernorateId);
+
+            if (isExist)
+            {
+                return Response<string>.Fail("This city already exists in the selected governorate");
+            }
+
             var entity = _mapper.Map<City>(request.Dto);
-           entity.CreatedAt = DateTime.UtcNow;
-           await _unitOfWork.CityRepository.AddAsync(entity);
+            entity.CreatedAt = DateTime.UtcNow;
+
+            await _unitOfWork.CityRepository.AddAsync(entity);
             await _unitOfWork.CompleteAsync();
+
             return Response<string>.Success("City created");
         }
+
     }
 }

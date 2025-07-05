@@ -18,6 +18,8 @@ namespace RakbnyMa_aak.UOW
 
         public IRatingRepository RatingRepository { get; }
 
+        public IMessageRepository MessageRepository { get; private set; }
+
 
         public ITripRepository TripRepository { get; }
 
@@ -42,6 +44,7 @@ namespace RakbnyMa_aak.UOW
             BookingRepository = new BookingRepository(_context);
             TripRepository = new TripRepository(_context);
             NotificationRepository= new NotificationRepository(_context);
+            MessageRepository= new MessageRepository(_context);
             GovernorateRepository = new GovernorateRepository(_context);
             CityRepository = new CityRepository(_context);
             RatingRepository= new RatingRepository(_context);

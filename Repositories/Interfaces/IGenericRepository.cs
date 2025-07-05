@@ -12,6 +12,8 @@ namespace RakbnyMa_aak.Repositories.Interfaces
         void Delete(T entity);
         Task<int> CompleteAsync();
         IQueryable<T> GetByIdQueryable(object id);
+        Task<List<T>> FindAllAsync(Expression<Func<T, bool>> predicate);
+
         Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
     }
 }

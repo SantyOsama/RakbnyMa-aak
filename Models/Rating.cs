@@ -8,24 +8,31 @@ namespace RakbnyMa_aak.Models
         // Id is inherited from BaseEntity (int PK)
         [Required(ErrorMessage = "Trip ID is required.")]
         [Display(Name = "Trip")]
-        public int TripId { get; set; } // FK to Trip
+        public int TripId { get; set; }
 
         [Required(ErrorMessage = "Rater ID is required.")]
         [Display(Name = "Rater")]
-        public string RaterId { get; set; } // FK to ApplicationUser (the one who gives the rating)
+        public string RaterId { get; set; }
+
+
 
         [Required(ErrorMessage = "Rated ID is required.")]
         [Display(Name = "Rated")]
-        public string RatedId { get; set; } // FK to ApplicationUser (the one who receives the rating)
+        public string RatedId { get; set; } 
+
+
 
         [Required(ErrorMessage = "Rating value is required.")]
         [Range(1, 5, ErrorMessage = "Rating must be between 1 and 5.")]
         [Display(Name = "Rating Value")]
-        public int RatingValue { get; set; } // Renamed from RatingNum for clarity (e.g., 1-5)
+        public int RatingValue { get; set; }
+
+
 
         [MaxLength(1000, ErrorMessage = "Comment must not exceed 1000 characters.")]
         [Display(Name = "Comment")]
         public string Comment { get; set; }
+
 
         // Navigation properties
         [ForeignKey("TripId")]

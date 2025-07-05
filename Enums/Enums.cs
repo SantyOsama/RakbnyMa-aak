@@ -8,8 +8,17 @@ namespace RakbnyMa_aak.Enums
         {
             Driver,
             User,
+            Admin
         }
 
+        public enum Gender
+        {
+            [Display(Name = "Male")]
+            Male,
+
+            [Display(Name = "Female")]
+            Female
+        }
         public enum CarType
         {
             [Display(Name = "Sedan")]

@@ -1,6 +1,7 @@
 using AutoMapper;
 using MediatR;
 using RakbnyMa_aak.CQRS.Commands.CreateBooking;
+using RakbnyMa_aak.CQRS.Commands.PreventDriverSelfBooking;
 using RakbnyMa_aak.CQRS.Commands.SendNotification;
 using RakbnyMa_aak.CQRS.Commands.Validations.CheckUserAlreadyBooked;
 using RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripExists;
@@ -30,7 +31,17 @@ namespace RakbnyMa_aak.CQRS.Features.BookTripRequest
             if (!validateTripResponse.IsSucceeded)
                 return Response<int>.Fail(validateTripResponse.Message);
 
-            // Step 2: Check if user already booked the same trip
+            var trip=validateTripResponse.Data;
+
+            // Step 2: prevent Driver From Booking From himself 
+            var preventBookingResponse = await _mediator.Send(new PreventDriverSelfBookingCommand(trip.DriverId, bookingDto.UserId));
+            if (!preventBookingResponse.IsSucceeded)
+                return Response<int>.Fail(preventBookingResponse.Message);
+
+            if (bookingDto.NumberOfSeats > trip.AvailableSeats)
+                return Response<int>.Fail($"Not enough available seats. Only {trip.AvailableSeats} seats left.");
+
+            // Step 3: Check if user already booked the same trip
             var checkBookingResponse = await _mediator.Send(
                 new CheckUserAlreadyBookedCommand(
                     new CheckUserAlreadyBookedDto
@@ -64,14 +75,14 @@ namespace RakbnyMa_aak.CQRS.Features.BookTripRequest
             if (!bookingResponse.IsSucceeded)
                 return bookingResponse;
 
-            // Step 3: Get DriverId by TripId
+            // Step 4: Get DriverId by TripId
             var driverIdResponse = await _mediator.Send(new GetDriverIdByTripIdQuery(bookingDto.TripId));
             if (!driverIdResponse.IsSucceeded || string.IsNullOrEmpty(driverIdResponse.Data))
                 return Response<int>.Fail("Driver not found for this trip.");
 
             var driverId = driverIdResponse.Data;
 
-            // Step 4: Send Notification to Driver
+            // Step 5: Send Notification to Driver
             await _mediator.Send(new SendNotificationCommand(new SendNotificationDto
             {
                 ReceiverId = driverId,

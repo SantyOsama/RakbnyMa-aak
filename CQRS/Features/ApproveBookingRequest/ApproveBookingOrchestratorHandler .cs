@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using RakbnyMa_aak.CQRS.Commands.DecreaseTripSeats;
 using RakbnyMa_aak.CQRS.Commands.SendNotification;
 using RakbnyMa_aak.CQRS.Commands.UpdateBookingStatus;
 using RakbnyMa_aak.CQRS.Features.ValidationOrchestrators.BookValidationOrchestrator;
@@ -33,7 +34,7 @@ namespace RakbnyMa_aak.CQRS.Features.ApproveBookingRequest
             if (!approveResult.IsSucceeded)
                 return Response<bool>.Fail(approveResult.Message);
 
-            // Step 5: Send notification to passenger
+
             await _mediator.Send(new SendNotificationCommand(new SendNotificationDto
             {
                 ReceiverId = result.PassengerId,

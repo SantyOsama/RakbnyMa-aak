@@ -19,21 +19,11 @@ namespace RakbnyMa_aak.CQRS.Commands.IncreaseBookingSeats
             if (booking == null || booking.IsDeleted)
                 return Response<int>.Fail("Booking not found.");
 
-            var trip = await _unitOfWork.TripRepository.GetByIdAsync(booking.TripId);
-            if (trip == null || trip.IsDeleted)
-                return Response<int>.Fail("Associated trip not found.");
-
-            if (trip.AvailableSeats < request.SeatsToAdd)
-                return Response<int>.Fail("Not enough available seats.");
-
             // Update trip and booking
-            trip.AvailableSeats -= request.SeatsToAdd;
             booking.NumberOfSeats += request.SeatsToAdd;
 
             booking.UpdatedAt = DateTime.UtcNow;
-            trip.UpdatedAt = DateTime.UtcNow;
 
-            _unitOfWork.TripRepository.Update(trip);
             _unitOfWork.BookingRepository.Update(booking);
 
             await _unitOfWork.CompleteAsync();

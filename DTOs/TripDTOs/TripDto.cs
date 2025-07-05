@@ -37,9 +37,6 @@ namespace RakbnyMa_aak.DTOs.TripDTOs
         [Display(Name = "Trip Date")]
         public DateTime TripDate { get; set; }
 
-        [Required(ErrorMessage = "Duration is required.")]
-        [Display(Name = "Duration")]
-        public TimeSpan Duration { get; set; }
 
         [Required(ErrorMessage = "Available seats is required.")]
         [Range(1, 150, ErrorMessage = "Available seats must be between 1 and 150.")]

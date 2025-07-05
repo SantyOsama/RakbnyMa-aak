@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.Models;
 using RakbnyMa_aak.SignalR;
@@ -28,8 +29,6 @@ namespace RakbnyMa_aak.CQRS.Commands.CreateBooking
         public async Task<Response<int>> Handle(CreateBookingCommand request, CancellationToken cancellationToken)
         {
             var booking = _mapper.Map<Booking>(request.BookingDto);
-
-            booking.RequestStatus = RequestStatus.Pending;
 
             await _unitOfWork.BookingRepository.AddAsync(booking);
 

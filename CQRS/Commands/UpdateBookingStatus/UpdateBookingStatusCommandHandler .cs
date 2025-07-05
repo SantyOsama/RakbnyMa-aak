@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using RakbnyMa_aak.CQRS.Commands.DecreaseTripSeats;
 using RakbnyMa_aak.CQRS.Commands.Validations.ValidateBookingExists;
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.UOW;
@@ -29,18 +30,16 @@ namespace RakbnyMa_aak.CQRS.Commands.UpdateBookingStatus
             // Step 2: If confirming, validate trip and available seats
             if (request.NewStatus == RequestStatus.Confirmed)
             {
-                var trip = await _unitOfWork.TripRepository.GetByIdAsync(request.TripId);
-                if (trip == null || trip.IsDeleted)
-                    return Response<bool>.Fail("Trip not found.");
+                //Decrease Trip Seats
+                var seatsDto = new DecreaseTripSeatsDto
+                {
+                    TripId = booking.TripId,
+                    NumberOfSeats = booking.NumberOfSeats
+                };
 
-                if (trip.AvailableSeats < booking.NumberOfSeats)
-                    return Response<bool>.Fail("Not enough available seats.");
-
-                // Update trip details
-                trip.AvailableSeats -= booking.NumberOfSeats;
-                trip.UpdatedAt = DateTime.UtcNow;
-
-                _unitOfWork.TripRepository.Update(trip);
+                var decreaseResult = await _mediator.Send(new DecreaseTripSeatsCommand(seatsDto));
+                if (!decreaseResult.IsSucceeded)
+                    return Response<bool>.Fail(decreaseResult.Message);
             }
 
             //Step 3: Update booking status

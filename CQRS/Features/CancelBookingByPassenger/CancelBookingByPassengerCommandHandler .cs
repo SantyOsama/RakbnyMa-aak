@@ -1,7 +1,5 @@
 ﻿using MediatR;
-using RakbnyMa_aak.CQRS.Commands.RestoreTripSeats;
-using RakbnyMa_aak.CQRS.Commands.Validations.ValidateOwnershipAndGetBooking;
-using RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripExists;
+using RakbnyMa_aak.CQRS.Commands.IncreaseTripSeats;
 using RakbnyMa_aak.CQRS.Features.ValidationOrchestrators.CancelBookingValidationOrchestrator;
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.UOW;
@@ -43,7 +41,12 @@ namespace RakbnyMa_aak.CQRS.Features.CancelBookingByPassenger
             //Step 3: Restore seats if booking was confirmed // Because only confirmed bookings affect trip seats
             if (dto.WasConfirmed)
             {
-                await _mediator.Send(new RestoreTripSeatsCommand(dto.TripId, dto.NumberOfSeats));
+                var increaseTripDto = new IncreaseTripSeatsDto
+                {
+                    TripId = dto.TripId,
+                    NumberOfSeats = dto.NumberOfSeats
+                };
+                await _mediator.Send(new IncreaseTripSeatsCommand(increaseTripDto));
             }
 
             await _unitOfWork.CompleteAsync();

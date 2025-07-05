@@ -37,13 +37,17 @@ namespace RakbnyMa_aak.Services.Users
             {
                 pictureUrl = await _cloudinary.UploadImageAsync(dto.Picture, "users/profile");
             }
+            else
+            {
+                pictureUrl = "https://res.cloudinary.com/dbrz7pbsa/image/upload/v1751624539/default-profile_zo7m6z.png";
+            }
 
             var user = _mapper.Map<ApplicationUser>(dto);
-            user.UserName = dto.FullName;
             user.Email = dto.Email;
             user.UserName = dto.FullName;
             user.PhoneNumber = dto.PhoneNumber;
             user.UserType = UserType.User;
+            user.Gender = dto.Gender;
             user.Picture = pictureUrl;
 
             var result = await _userManager.CreateAsync(user, dto.Password);

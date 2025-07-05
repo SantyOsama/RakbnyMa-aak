@@ -27,6 +27,7 @@ namespace RakbnyMa_aak.CQRS.Commands.DecreaseTripSeats
                 return Response<string>.Fail("Not enough seats available.");
 
             trip.AvailableSeats -= dto.NumberOfSeats;
+            trip.UpdatedAt = DateTime.UtcNow;
             _unitOfWork.TripRepository.Update(trip);
             await _unitOfWork.CompleteAsync();
 

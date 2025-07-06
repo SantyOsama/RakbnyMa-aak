@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Net.NetworkInformation;
-using static RakbnyMa_aak.Enums.Enums;
+using static RakbnyMa_aak.Utilities.Enums;
 
 namespace RakbnyMa_aak.Models
 {

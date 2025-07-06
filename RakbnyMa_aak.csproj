@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="CQRS\Features\Auth\Commands\RegisterDriver\Queries\**" />
+    <Content Remove="CQRS\Features\Auth\Commands\RegisterDriver\Queries\**" />
+    <EmbeddedResource Remove="CQRS\Features\Auth\Commands\RegisterDriver\Queries\**" />
+    <None Remove="CQRS\Features\Auth\Commands\RegisterDriver\Queries\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="14.0.0" />
     <PackageReference Include="CloudinaryDotNet" Version="1.27.6" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjectionFixed" Version="5.1.2" />
@@ -23,9 +30,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="CQRS\Drivers\RegisterDriver\Queries\" />
-    <Folder Include="DTOs\ResponseDTOs\" />
-    <Folder Include="DTOs\RequestsDTOs\" />
+    <Folder Include="CQRS\Features\BookingFeatures\Queries\" />
+    <Folder Include="DTOs\BookingsDTOs\ResponseDTOs\" />
+    <Folder Include="DTOs\TripDTOs\ResponseDTOs\" />
   </ItemGroup>
 
 </Project>

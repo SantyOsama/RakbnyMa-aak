@@ -1,9 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using RakbnyMa_aak.CQRS.Users.RegisterUser.Commands;
-using RakbnyMa_aak.DTOs.UserDTOs;
-
 namespace RakbnyMa_aak.Controllers
 {
     [Route("api/[controller]")]

@@ -1,17 +1,16 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using RakbnyMa_aak.CQRS.Features.CreateTripOrchestrator;
-using RakbnyMa_aak.CQRS.Features.EndTripByDriver;
-using RakbnyMa_aak.CQRS.Features.EndTripByPassenger;
-using RakbnyMa_aak.CQRS.Features.StartTripByDriver;
-using RakbnyMa_aak.CQRS.Features.StartTripByPassenger;
-using RakbnyMa_aak.CQRS.Features.UpdateTrip;
-using RakbnyMa_aak.CQRS.Queries.GetAllTrips;
+using RakbnyMa_aak.CQRS.Features.Trip.Commands.CreateTrip;
+using RakbnyMa_aak.CQRS.Features.Trip.Commands.EndTripByDriver;
+using RakbnyMa_aak.CQRS.Features.Trip.Commands.EndTripByPassenger;
+using RakbnyMa_aak.CQRS.Features.Trip.Commands.StartTripByDriver;
+using RakbnyMa_aak.CQRS.Features.Trip.Commands.StartTripByPassenger;
+using RakbnyMa_aak.CQRS.Features.Trip.Orchestrators.UpdateTrip;
+using RakbnyMa_aak.CQRS.Features.Trip.Queries.GetDriverTripBookings;
+using RakbnyMa_aak.CQRS.Features.Trip.Queries.GetMyTrips;
 using RakbnyMa_aak.CQRS.Trips.Delete_Trip;
-using RakbnyMa_aak.CQRS.Trips.GetDriverTripBookings;
-using RakbnyMa_aak.DTOs.TripDTOs;
+using RakbnyMa_aak.DTOs.TripDTOs.RequestsDTOs;
 using RakbnyMa_aak.GeneralResponse;
 using System.Security.Claims;
 
@@ -30,7 +29,7 @@ namespace RakbnyMa_aak.Controllers
         }
         [Authorize(Roles = "Driver")]
         [HttpPost]
-        public async Task<IActionResult> CreateTrip([FromBody] TripDto dto)
+        public async Task<IActionResult> CreateTrip([FromBody] TripRequestDto dto)
         {
             var command = new CreateTripOrchestrator(dto);
             var result = await _mediator.Send(command);
@@ -42,7 +41,7 @@ namespace RakbnyMa_aak.Controllers
         }
         [HttpPut("{id}")]
         [Authorize(Roles = "Driver")]
-        public async Task<IActionResult> UpdateTrip(int id, [FromBody] TripDto dto)
+        public async Task<IActionResult> UpdateTrip(int id, [FromBody] TripRequestDto dto)
         {
           
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -82,7 +81,7 @@ namespace RakbnyMa_aak.Controllers
         }
         [HttpGet("my-trips")]
         [Authorize(Roles = "Driver")] 
-        public async Task<ActionResult<Response<PaginatedResult<TripDto>>>> GetMyTrips([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        public async Task<ActionResult<Response<PaginatedResult<TripRequestDto>>>> GetMyTrips([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             var result = await _mediator.Send(new GetMyTripsQuery(page, pageSize));
             return StatusCode(result.StatusCode, result);

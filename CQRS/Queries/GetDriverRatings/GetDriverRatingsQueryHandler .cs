@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.UOW;
-using static RakbnyMa_aak.Enums.Enums;
+using static RakbnyMa_aak.Utilities.Enums;
 
 namespace RakbnyMa_aak.CQRS.Ratings.DriverGetRatings
 {

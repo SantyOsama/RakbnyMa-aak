@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using RakbnyMa_aak.UOW;
 using System.Security.Claims;
-using static RakbnyMa_aak.Enums.Enums;
+using static RakbnyMa_aak.Utilities.Enums;
 
 namespace RakbnyMa_aak.Hubs
 {

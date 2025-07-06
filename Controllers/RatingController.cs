@@ -1,15 +1,14 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using RakbnyMa_aak.CQRS.Ratings.UserAddRating;
-using RakbnyMa_aak.CQRS.Ratings.UserUpdateRating;
-using RakbnyMa_aak.CQRS.Ratings.UserDeleteRating;
-using RakbnyMa_aak.GeneralResponse;
 using Microsoft.AspNetCore.Authorization;
 using RakbnyMa_aak.CQRS.Ratings.DriverGetRatings;
 using RakbnyMa_aak.CQRS.Queries.GetUserRatings;
-using RakbnyMa_aak.CQRS.Ratings.DriverAddRating;
-using RakbnyMa_aak.CQRS.Ratings.DriverUpdateRating;
-using RakbnyMa_aak.CQRS.Ratings.DriverDeleteRating;
+using RakbnyMa_aak.CQRS.Features.Ratings.DriverAddRating;
+using RakbnyMa_aak.CQRS.Features.Ratings.DriverUpdateRating;
+using RakbnyMa_aak.CQRS.Features.Ratings.UserAddRating;
+using RakbnyMa_aak.CQRS.Features.Ratings.UserUpdateRating;
+using RakbnyMa_aak.CQRS.Features.Ratings.UserDeleteRating;
+using RakbnyMa_aak.CQRS.Features.Ratings.DriverDeleteRating;
 
 namespace RakbnyMa_aak.Controllers
 {

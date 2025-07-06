@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using RakbnyMa_aak.Data;
 using RakbnyMa_aak.Models;
-using static RakbnyMa_aak.Enums.Enums;
+using static RakbnyMa_aak.Utilities.Enums;
 
 namespace RakbnyMa_aak.SeedData
 {

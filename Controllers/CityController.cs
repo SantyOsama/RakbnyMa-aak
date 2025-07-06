@@ -1,14 +1,14 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using RakbnyMa_aak.CQRS.Cities;
-using RakbnyMa_aak.CQRS.Cities.CreateCity;
-using RakbnyMa_aak.CQRS.Cities.DeleteCity;
-using RakbnyMa_aak.CQRS.Cities.GetAllCities;
-using RakbnyMa_aak.CQRS.Cities.GetCitiesByGovernorateId;
-using RakbnyMa_aak.CQRS.Cities.GetCityById;
-using RakbnyMa_aak.CQRS.Cities.GetCityByName;
-using RakbnyMa_aak.CQRS.Cities.UpdateCity;
+using RakbnyMa_aak.CQRS.Features.Cities;
+using RakbnyMa_aak.CQRS.Features.Cities.CreateCity;
+using RakbnyMa_aak.CQRS.Features.Cities.DeleteCity;
+using RakbnyMa_aak.CQRS.Features.Cities.GetAllCities;
+using RakbnyMa_aak.CQRS.Features.Cities.GetCitiesByGovernorateId;
+using RakbnyMa_aak.CQRS.Features.Cities.GetCityById;
+using RakbnyMa_aak.CQRS.Features.Cities.GetCityByName;
+using RakbnyMa_aak.CQRS.Features.Cities.UpdateCity;
+using RakbnyMa_aak.DTOs.Shared;
 using RakbnyMa_aak.GeneralResponse;
 
 namespace RakbnyMa_aak.Controllers
@@ -27,7 +27,10 @@ namespace RakbnyMa_aak.Controllers
         [HttpGet]
         public async Task<ActionResult<Response<PaginatedResult<CityDto>>>> GetAllCities([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            var result = await _mediator.Send(new GetAllCitiesQuery(page, pageSize));
+            var result = await _mediator.Send(new GetAllCitiesQuery(
+                new GetAllRequestDto { Page = page, PageSize = pageSize }
+              ));
+
             return StatusCode(result.StatusCode, result);
         }
 

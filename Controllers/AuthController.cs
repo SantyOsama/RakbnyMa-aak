@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using RakbnyMa_aak.CQRS.Features.Admin.Login;
 using RakbnyMa_aak.CQRS.Features.Auth.Commands.LoginDriver;
 using RakbnyMa_aak.CQRS.Features.Auth.Commands.LoginUser;
 using RakbnyMa_aak.CQRS.Features.Auth.Commands.RegisterDriver;
@@ -16,7 +17,7 @@ public class AuthController : ControllerBase
 
 
     [HttpPost("admin/login")]
-    public async Task<IActionResult> LoginAdmin([FromBody] LoginDto dto)
+    public async Task<IActionResult> LoginAdmin([FromBody] LoginRequestDto dto)
     {
         var result = await _mediator.Send(new LoginAdminCommand(dto));
         return StatusCode(result.StatusCode, result);

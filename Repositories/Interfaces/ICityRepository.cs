@@ -6,6 +6,7 @@ namespace RakbnyMa_aak.Repositories.Interfaces
     public interface ICityRepository : IGenericRepository<City>
     {
         Task<IEnumerable<City>> GetAllAsync(Expression<Func<City, bool>> filter);
+        Task<City> GetCityWithGovernorateNameByIdAsync(int cityId);
 
 
     }

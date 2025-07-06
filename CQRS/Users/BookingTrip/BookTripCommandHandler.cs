@@ -3,7 +3,7 @@ using MediatR;
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.Models;
 using RakbnyMa_aak.UOW;
-using static RakbnyMa_aak.Enums.Enums;
+using static RakbnyMa_aak.Utilities.Enums;
 
 namespace RakbnyMa_aak.CQRS.Users.BookingTrip
 {

@@ -4,7 +4,7 @@ using RakbnyMa_aak.Data;
 using RakbnyMa_aak.Models;
 using RakbnyMa_aak.Repositories.Implementations;
 using RakbnyMa_aak.Repositories.Interfaces;
-using RakbnyMa_aak.Services;
+using RakbnyMa_aak.Services.Interfaces;
 
 namespace RakbnyMa_aak.UOW
 {

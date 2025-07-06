@@ -1,14 +1,15 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using RakbnyMa_aak.CQRS.Governorates;
-using RakbnyMa_aak.CQRS.Governorates.CreateGovernorate;
-using RakbnyMa_aak.CQRS.Governorates.DeleteGovernorate;
-using RakbnyMa_aak.CQRS.Governorates.GetAllGovernorates;
-using RakbnyMa_aak.CQRS.Governorates.GetGovernorateById;
-using RakbnyMa_aak.CQRS.Governorates.GetGovernorateByName;
-using RakbnyMa_aak.CQRS.Governorates.RestoreGovernorate;
-using RakbnyMa_aak.CQRS.Governorates.UpdateGovernorate;
+using RakbnyMa_aak.CQRS.Features.Governorates;
+using RakbnyMa_aak.CQRS.Features.Governorates.CreateGovernorate;
+using RakbnyMa_aak.CQRS.Features.Governorates.DeleteGovernorate;
+using RakbnyMa_aak.CQRS.Features.Governorates.GetAllGovernorates;
+using RakbnyMa_aak.CQRS.Features.Governorates.GetGovernorateById;
+using RakbnyMa_aak.CQRS.Features.Governorates.GetGovernorateByName;
+using RakbnyMa_aak.CQRS.Features.Governorates.RestoreGovernorate;
+using RakbnyMa_aak.CQRS.Features.Governorates.UpdateGovernorate;
+using RakbnyMa_aak.DTOs.Shared;
 using RakbnyMa_aak.GeneralResponse;
 
 namespace RakbnyMa_aak.Controllers
@@ -26,7 +27,9 @@ namespace RakbnyMa_aak.Controllers
         [HttpGet]
         public async Task<ActionResult<Response<PaginatedResult<GovernorateDto>>>> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            var result = await _mediator.Send(new GetAllGovernoratesQuery(page, pageSize));
+            var result = await _mediator.Send(new GetAllGovernoratesQuery(
+                new GetAllRequestDto { Page = page, PageSize = pageSize }
+            ));
             return StatusCode(result.StatusCode, result);
         }
 

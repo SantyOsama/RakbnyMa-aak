@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
-using RakbnyMa_aak.CQRS.Features.ApproveBookingRequest;
-using RakbnyMa_aak.CQRS.Features.RejectBookingRequest;
+using RakbnyMa_aak.CQRS.Features.Booking.Commands.ApproveBookingRequest;
+using RakbnyMa_aak.CQRS.Features.Booking.Commands.RejectBookingRequest;
 namespace RakbnyMa_aak.Controllers
 {
     [Route("api/[controller]")]

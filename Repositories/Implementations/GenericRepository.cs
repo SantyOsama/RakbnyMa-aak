@@ -1,5 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper.QueryableExtensions;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using RakbnyMa_aak.Data;
+using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.Repositories.Interfaces;
 using System.Linq.Expressions;
 
@@ -63,6 +66,75 @@ namespace RakbnyMa_aak.Repositories.Implementations
         {
             return await _dbSet.AnyAsync(predicate);
         }
+        public async Task<PaginatedResult<T>> GetPaginatedAsync(int pageNumber, int pageSize)
+        {
+            var totalCount = await _dbSet.CountAsync();
+
+            var items = await _dbSet
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return new PaginatedResult<T>(items, totalCount, pageNumber, pageSize);
+        }
+        public async Task<PaginatedResult<T>> GetPaginatedAsync(Expression<Func<T, bool>> predicate, int pageNumber, int pageSize)
+        {
+            var query = _dbSet.Where(predicate);
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return new PaginatedResult<T>(items, totalCount, pageNumber, pageSize);
+        }
+        public async Task<List<TDto>> GetProjectedListAsync<TDto>(
+            Expression<Func<T, bool>> predicate,
+            IMapper mapper,
+            CancellationToken cancellationToken)
+                {
+                    return await _dbSet
+                        .Where(predicate)
+                        .AsNoTracking()
+                        .ProjectTo<TDto>(mapper.ConfigurationProvider)
+                        .ToListAsync(cancellationToken);
+                }
+
+        public async Task<PaginatedResult<TDto>> GetProjectedPaginatedAsync<TDto>(
+                Expression<Func<T, bool>> predicate,
+                int page,
+                int pageSize,
+                IMapper mapper,
+                CancellationToken cancellationToken)
+                    {
+                        var query = _dbSet
+                            .Where(predicate)
+                            .AsNoTracking();
+
+                        var totalCount = await query.CountAsync(cancellationToken);
+
+                        var items = await query
+                            .Skip((page - 1) * pageSize)
+                            .Take(pageSize)
+                            .ProjectTo<TDto>(mapper.ConfigurationProvider)
+                            .ToListAsync(cancellationToken);
+
+                        return new PaginatedResult<TDto>(items, totalCount, page, pageSize);
+                    }
+        public async Task<TDto?> GetProjectedSingleAsync<TDto>(
+            Expression<Func<T, bool>> predicate,
+            IMapper mapper,
+            CancellationToken cancellationToken)
+                {
+                    return await _dbSet
+                        .Where(predicate)
+                        .AsNoTracking()
+                        .ProjectTo<TDto>(mapper.ConfigurationProvider)
+                        .FirstOrDefaultAsync(cancellationToken);
+                }
+
 
     }
 

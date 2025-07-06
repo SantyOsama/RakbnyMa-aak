@@ -2,10 +2,10 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RakbnyMa_aak.CQRS.Commands.CreateBooking;
-using RakbnyMa_aak.CQRS.Features.BookTripRequest;
-using RakbnyMa_aak.CQRS.Features.CancelBookingByPassenger;
-using RakbnyMa_aak.CQRS.Features.UpdateBooking;
+using RakbnyMa_aak.CQRS.Features.Booking.Commands.CancelBookingByPassenger;
+using RakbnyMa_aak.CQRS.Features.Booking.Commands.UpdateBooking;
+using RakbnyMa_aak.CQRS.Features.Booking.Orchestrators.BookTripRequest;
+using RakbnyMa_aak.DTOs.BookingsDTOs.Requests;
 using System.Security.Claims;
 namespace RakbnyMa_aak.Controllers
 {
@@ -26,7 +26,7 @@ namespace RakbnyMa_aak.Controllers
         [HttpPost("book")]
         public async Task<IActionResult> BookTrip([FromBody] BookTripDto dto)
         {
-            var bookingDto = _mapper.Map<CreateBookingDto>(dto);
+            var bookingDto = _mapper.Map<CreateBookingRequestDto>(dto);
             var result = await _mediator.Send(new BookTripRequestOrchestrator(bookingDto));
             return result.IsSucceeded ? Ok(result) : BadRequest(result);
         }

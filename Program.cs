@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RakbnyMa_aak.Behaviors;
-using RakbnyMa_aak.CQRS.Drivers.RegisterDriver.Commands;
+using RakbnyMa_aak.CQRS.Features.Auth.Commands.RegisterDriver;
 using RakbnyMa_aak.Data;
 using RakbnyMa_aak.Filters;
 using RakbnyMa_aak.Hubs;
@@ -15,9 +15,8 @@ using RakbnyMa_aak.Models;
 using RakbnyMa_aak.Repositories.Implementations;
 using RakbnyMa_aak.Repositories.Interfaces;
 using RakbnyMa_aak.SeedData;
-using RakbnyMa_aak.Services;
-using RakbnyMa_aak.Services.Drivers;
-using RakbnyMa_aak.Services.Users;
+using RakbnyMa_aak.Services.Implementations;
+using RakbnyMa_aak.Services.Interfaces;
 using RakbnyMa_aak.SignalR;
 using RakbnyMa_aak.UOW;
 using System.Text;
@@ -63,6 +62,7 @@ namespace RakbnyMa_aak
             builder.Services.AddScoped<ITripTrackingRepository, TripTrackingRepository>();
 
 
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             // 2. Configure Identity with ApplicationUser (NOT IdentityUser)
             builder.Services.AddScoped<SignInManager<ApplicationUser>>();

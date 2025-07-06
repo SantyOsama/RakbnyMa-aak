@@ -1,8 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using RakbnyMa_aak.CQRS.Drivers.RegisterDriver.Commands;
-using RakbnyMa_aak.DTOs.DriverDTOs;
 
 namespace RakbnyMa_aak.Controllers
 {

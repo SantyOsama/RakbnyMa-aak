@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using RakbnyMa_aak.Data;
 using RakbnyMa_aak.Models;
-using static RakbnyMa_aak.Enums.Enums;
+using RakbnyMa_aak.Utilities;
+using static RakbnyMa_aak.Utilities.Enums;
 
 namespace RakbnyMa_aak.SeedData
 {
@@ -376,7 +377,7 @@ namespace RakbnyMa_aak.SeedData
                     EmailConfirmed = true,
                     PhoneNumber = "01158039656",
                     Picture = "https://res.cloudinary.com/dbrz7pbsa/image/upload/v1751624539/default-profile_zo7m6z.png",
-                    UserType = Enums.Enums.UserType.Admin
+                    UserType = Enums.UserType.Admin
                 };
 
                 var createResult = await userManager.CreateAsync(user, adminPassword);

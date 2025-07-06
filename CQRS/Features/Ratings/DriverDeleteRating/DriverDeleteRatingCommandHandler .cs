@@ -1,0 +1,32 @@
+﻿using MediatR;
+using RakbnyMa_aak.GeneralResponse;
+using RakbnyMa_aak.UOW;
+
+namespace RakbnyMa_aak.CQRS.Features.Ratings.DriverDeleteRating
+{
+    public class DriverDeleteRatingCommandHandler : IRequestHandler<DriverDeleteRatingCommand, Response<bool>>
+    {
+        private readonly IUnitOfWork _unitOfWork;
+
+        public DriverDeleteRatingCommandHandler(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
+
+        public async Task<Response<bool>> Handle(DriverDeleteRatingCommand request, CancellationToken cancellationToken)
+        {
+            var rating = await _unitOfWork.RatingRepository.GetByIdAsync(request.RatingId);
+
+            if (rating == null)
+                return Response<bool>.Fail("Rating not found.");
+
+            if (rating.RaterId != request.RaterId)
+                return Response<bool>.Fail("Unauthorized: You can only delete your own ratings.");
+
+            _unitOfWork.RatingRepository.Delete(rating);
+            await _unitOfWork.CompleteAsync();
+
+            return Response<bool>.Success(true, "Rating deleted successfully.");
+        }
+    }
+}

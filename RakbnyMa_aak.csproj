@@ -24,6 +24,8 @@
 
   <ItemGroup>
     <Folder Include="CQRS\Drivers\RegisterDriver\Queries\" />
+    <Folder Include="DTOs\ResponseDTOs\" />
+    <Folder Include="DTOs\RequestsDTOs\" />
   </ItemGroup>
 
 </Project>

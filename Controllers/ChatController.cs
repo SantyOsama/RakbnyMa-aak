@@ -2,31 +2,32 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RakbnyMa_aak.CQRS.Chat.Commands;
 using RakbnyMa_aak.CQRS.Features.SendMessage;
 using RakbnyMa_aak.CQRS.Queries.GetMessagesByTripId;
+using RakbnyMa_aak.GeneralResponse;
 using System.Security.Claims;
 
 namespace RakbnyMa_aak.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MessagesController : ControllerBase
+    public class ChatController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public MessagesController(IMediator mediator)
+        public ChatController(IMediator mediator)
         {
             _mediator = mediator;
         }
 
-        [HttpPost("send-group")]
-        [Authorize]
-        public async Task<IActionResult> SendGroupMessage([FromBody] SendMessageDto dto)
+        [HttpPost("send")]
+        public async Task<ActionResult<Response<string>>> SendMessage([FromBody] SendMessageDto dto)
         {
-            var senderId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var command = new SendMessageCommand(senderId, dto);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var command = new SendChatMessageCommand(userId, dto);
             var result = await _mediator.Send(command);
-            return Ok(result);
+            return StatusCode(result.StatusCode, result);
         }
 
         [HttpGet("trip/{tripId}/messages")]

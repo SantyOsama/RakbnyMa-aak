@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RakbnyMa_aak.CQRS.Drivers.Login.Commands;
 using RakbnyMa_aak.CQRS.Drivers.RegisterDriver.Commands;
+using RakbnyMa_aak.CQRS.Features.Admin.Login;
 using RakbnyMa_aak.CQRS.Users.Login.Commands;
 using RakbnyMa_aak.CQRS.Users.RegisterUser.Commands;
 using RakbnyMa_aak.DTOs.Auth;
@@ -14,6 +15,14 @@ public class AuthController : ControllerBase
 {
     private readonly IMediator _mediator;
     public AuthController(IMediator mediator) => _mediator = mediator;
+
+
+    [HttpPost("admin/login")]
+    public async Task<IActionResult> LoginAdmin([FromBody] LoginDto dto)
+    {
+        var result = await _mediator.Send(new LoginAdminCommand(dto));
+        return StatusCode(result.StatusCode, result);
+    }
 
     [HttpPost("user/register")]
     public async Task<IActionResult> RegisterUser([FromForm] RegisterUserDto dto)

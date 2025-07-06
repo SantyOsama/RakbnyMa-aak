@@ -1,33 +1,46 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Identity;
+using RakbnyMa_aak.CQRS.Features.Admin.ApproveDriver;
 using RakbnyMa_aak.GeneralResponse;
+using RakbnyMa_aak.Models;
 using RakbnyMa_aak.UOW;
 
-namespace RakbnyMa_aak.CQRS.Features.Admin.ApproveDriver
+public class ApproveDriverCommandHandler : IRequestHandler<ApproveDriverCommand, Response<bool>>
 {
-    public class ApproveDriverCommandHandler : IRequestHandler<ApproveDriverCommand, Response<bool>>
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly UserManager<ApplicationUser> _userManager;
+
+    public ApproveDriverCommandHandler(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
     {
-        private readonly IUnitOfWork _unitOfWork;
+        _unitOfWork = unitOfWork;
+        _userManager = userManager;
+    }
 
-        public ApproveDriverCommandHandler(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
+    public async Task<Response<bool>> Handle(ApproveDriverCommand request, CancellationToken cancellationToken)
+    {
+        var driverRepo = _unitOfWork.DriverRepository;
+        var driver = await driverRepo.GetByIdAsync(request.DriverId);
 
-        public async Task<Response<bool>> Handle(ApproveDriverCommand request, CancellationToken cancellationToken)
-        {
-            var driverRepo = _unitOfWork.DriverRepository;
-            var driver = await driverRepo.GetByIdAsync(request.DriverId);
+        if (driver == null)
+            return Response<bool>.Fail("Driver not found", statusCode: 404);
 
-            if (driver == null)
-                return Response<bool>.Fail("Driver not found", statusCode: 404);
+        driver.IsApproved = true;
+        driver.ApprovedAt = DateTime.UtcNow;
 
-            driver.IsApproved = true;
-            driver.ApprovedAt = DateTime.UtcNow;
+        driverRepo.Update(driver);
+        await _unitOfWork.CompleteAsync();
 
-            driverRepo.Update(driver);
-            await _unitOfWork.CompleteAsync();
+        var user = await _userManager.FindByIdAsync(driver.UserId);
 
-            return Response<bool>.Success(true, "Driver approved successfully");
-        }
+        if (user == null)
+            return Response<bool>.Fail("User not found", statusCode: 404);
+
+        var addRoleResult = await _userManager.AddToRoleAsync(user, "Driver");
+
+        if (!addRoleResult.Succeeded)
+            return Response<bool>.Fail("Driver approved but failed to assign role: " +
+                string.Join(", ", addRoleResult.Errors.Select(e => e.Description)));
+
+        return Response<bool>.Success(true, "Driver approved and role assigned successfully.");
     }
 }

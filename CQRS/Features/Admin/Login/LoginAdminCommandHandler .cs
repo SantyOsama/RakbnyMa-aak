@@ -1,9 +1,8 @@
 ﻿using MediatR;
-using RakbnyMa_aak.DTOs.Auth;
+using RakbnyMa_aak.DTOs.Auth.Responses;
 using RakbnyMa_aak.GeneralResponse;
-using RakbnyMa_aak.Services;
-using static RakbnyMa_aak.Enums.Enums;
-
+using RakbnyMa_aak.Services.Interfaces;
+using static RakbnyMa_aak.Utilities.Enums;
 namespace RakbnyMa_aak.CQRS.Features.Admin.Login
 {
     public class LoginAdminCommandHandler : IRequestHandler<LoginAdminCommand, Response<AuthResponseDto>>

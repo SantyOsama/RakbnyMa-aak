@@ -26,6 +26,7 @@ namespace RakbnyMa_aak.UOW
         public IGovernorateRepository GovernorateRepository { get; }
 
         public ICityRepository CityRepository { get; }
+        public ITripTrackingRepository TripTrackingRepository { get; }
 
         public UnitOfWork(
             AppDbContext context,

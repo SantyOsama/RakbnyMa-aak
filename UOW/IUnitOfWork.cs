@@ -1,4 +1,5 @@
-﻿using RakbnyMa_aak.Repositories.Interfaces;
+﻿using RakbnyMa_aak.Repositories.Implementations;
+using RakbnyMa_aak.Repositories.Interfaces;
 
 namespace RakbnyMa_aak.UOW
 {
@@ -13,6 +14,7 @@ namespace RakbnyMa_aak.UOW
         ICityRepository CityRepository { get; }
         IRatingRepository RatingRepository { get; }
         IMessageRepository MessageRepository { get; }
+        ITripTrackingRepository TripTrackingRepository {  get; }
 
         Task<int> CompleteAsync(); // SaveChanges
         Task RollbackAsync(); // Rollback 

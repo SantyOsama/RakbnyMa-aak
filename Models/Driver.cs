@@ -50,6 +50,9 @@ namespace RakbnyMa_aak.Models
         public bool IsPhoneVerified { get; set; } = false;
         [Display(Name = "Approved")]
         public bool IsApproved { get; set; } = false; // For admin approval
+
+        public DateTime? ApprovedAt { get; set; }
+
         [Display(Name = "Phone Verification Code")]
         public string? PhoneVerificationCode { get; set; }
 

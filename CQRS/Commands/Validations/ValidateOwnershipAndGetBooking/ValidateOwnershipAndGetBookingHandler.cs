@@ -1,11 +1,12 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using RakbnyMa_aak.CQRS.Commands.Validations.ValidateUserOwnsBooking;
 using RakbnyMa_aak.GeneralResponse;
-using RakbnyMa_aak.Models;
 using RakbnyMa_aak.UOW;
 
 namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateOwnershipAndGetBooking
 {
-    public class ValidateOwnershipAndGetBookingHandler : IRequestHandler<ValidateOwnershipAndGetBookingCommand, Response<Booking>>
+    public class ValidateOwnershipAndGetBookingHandler : IRequestHandler<ValidateOwnershipAndGetBookingCommand, Response<ValidateBookingOwnerShipResultDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -14,16 +15,24 @@ namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateOwnershipAndGetBooking
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Response<Booking>> Handle(ValidateOwnershipAndGetBookingCommand request, CancellationToken cancellationToken)
+        public async Task<Response<ValidateBookingOwnerShipResultDto>> Handle(ValidateOwnershipAndGetBookingCommand request, CancellationToken cancellationToken)
         {
-            var booking = await _unitOfWork.BookingRepository.GetByIdAsync(request.BookingId);
-            if (booking == null || booking.IsDeleted)
-                return Response<Booking>.Fail("Booking not found.");
+            var result = await _unitOfWork.BookingRepository
+                .GetAllQueryable()
+                .Where(b => b.Id == request.BookingId && !b.IsDeleted)
+                .Where(b => b.UserId == request.UserId)
+                .Select(b => new ValidateBookingOwnerShipResultDto
+                {
+                    TripId = b.TripId,
+                    NumberOfSeats = b.NumberOfSeats,
+                    RequestStatus = b.RequestStatus
+                })
+                .FirstOrDefaultAsync(cancellationToken);
 
-            if (booking.UserId != request.UserId)
-                return Response<Booking>.Fail("Unauthorized action.");
+            if (result == null)
+                return Response<ValidateBookingOwnerShipResultDto>.Fail("Booking not found or unauthorized.");
 
-            return Response<Booking>.Success(booking);
+            return Response<ValidateBookingOwnerShipResultDto>.Success(result);
         }
     }
 

@@ -8,6 +8,7 @@ using RakbnyMa_aak.Behaviors;
 using RakbnyMa_aak.CQRS.Drivers.RegisterDriver.Commands;
 using RakbnyMa_aak.Data;
 using RakbnyMa_aak.Filters;
+using RakbnyMa_aak.Hubs;
 using RakbnyMa_aak.Mapping;
 using RakbnyMa_aak.MiddleWares;
 using RakbnyMa_aak.Models;
@@ -59,6 +60,7 @@ namespace RakbnyMa_aak
             builder.Services.AddScoped<IGovernorateRepository, GovernorateRepository>();
             builder.Services.AddScoped<ICityRepository, CityRepository>();
             builder.Services.AddScoped<IRatingRepository, RatingRepository>();
+            builder.Services.AddScoped<ITripTrackingRepository, TripTrackingRepository>();
 
 
 
@@ -202,8 +204,9 @@ namespace RakbnyMa_aak
             app.UseAuthorization();
 
 
-
             app.MapHub<NotificationHub>("/notificationHub");
+            app.MapHub<TripTrackingHub>("/tripTrackingHub");
+            app.MapHub<ChatHub>("/chatHub");
             // 8. Map Controllers
             app.MapControllers();
 

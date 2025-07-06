@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using RakbnyMa_aak.DTOs.Auth;
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.Models;
@@ -33,11 +34,23 @@ namespace RakbnyMa_aak.Services
             if (user.UserType != expectedType)
                 return Response<AuthResponseDto>.Fail("Unauthorized login for this role");
 
+            // Check driver approval status
+            if (expectedType == UserType.Driver)
+            {
+                var isApproved = await _userManager.Users
+                    .Where(u => u.Id == user.Id)
+                    .Select(u => u.Driver.IsApproved)
+                    .FirstOrDefaultAsync();
+
+                if (!isApproved)
+                    return Response<AuthResponseDto>.Fail("Driver not approved yet.");
+            }
+
             var result = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, false);
             if (!result.Succeeded)
                 return Response<AuthResponseDto>.Fail("Invalid credentials");
 
-            var token = await _jwtService.GenerateToken(user); 
+            var token = await _jwtService.GenerateToken(user);
 
             return Response<AuthResponseDto>.Success(new AuthResponseDto
             {
@@ -47,7 +60,6 @@ namespace RakbnyMa_aak.Services
                 Role = user.UserType.ToString()
             }, "Login successful");
         }
-
     }
 
 }

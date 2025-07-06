@@ -1,10 +1,11 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.UOW;
 
 namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateUserOwnsBooking
 {
-    public class ValidateUserOwnsBookingCommandHandler : IRequestHandler<ValidateUserOwnsBookingCommand, Response<bool>>
+    public class ValidateUserOwnsBookingCommandHandler : IRequestHandler<ValidateUserOwnsBookingCommand, Response<ValidateBookingOwnerShipResultDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -13,15 +14,24 @@ namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateUserOwnsBooking
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Response<bool>> Handle(ValidateUserOwnsBookingCommand request, CancellationToken cancellationToken)
+        public async Task<Response<ValidateBookingOwnerShipResultDto>> Handle(ValidateUserOwnsBookingCommand request, CancellationToken cancellationToken)
         {
-            var booking = await _unitOfWork.BookingRepository.GetByIdAsync(request.BookingId);
-            if (booking == null || booking.IsDeleted)
-                return Response<bool>.Fail("Booking not found.");
+            var result = await _unitOfWork.BookingRepository
+                .GetAllQueryable()
+                .Where(b => b.Id == request.BookingId && !b.IsDeleted)
+                .Where(b => b.UserId == request.UserId)
+                .Select(b => new ValidateBookingOwnerShipResultDto
+                {
+                    TripId = b.TripId,
+                    NumberOfSeats = b.NumberOfSeats,
+                    RequestStatus = b.RequestStatus
+                })
+                .FirstOrDefaultAsync(cancellationToken);
 
-            return booking.UserId == request.UserId
-                ? Response<bool>.Success(true)
-                : Response<bool>.Fail("Unauthorized action.");
+            if (result == null)
+                return Response<ValidateBookingOwnerShipResultDto>.Fail("Booking not found or unauthorized.");
+
+            return Response<ValidateBookingOwnerShipResultDto>.Success(result);
         }
     }
 

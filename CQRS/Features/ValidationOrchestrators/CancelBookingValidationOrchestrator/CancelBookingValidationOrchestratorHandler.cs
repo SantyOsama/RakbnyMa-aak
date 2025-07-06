@@ -2,7 +2,6 @@
 using RakbnyMa_aak.CQRS.Commands.Validations.ValidateOwnershipAndGetBooking;
 using RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripExists;
 using RakbnyMa_aak.GeneralResponse;
-using RakbnyMa_aak.Models;
 using static RakbnyMa_aak.Enums.Enums;
 
 namespace RakbnyMa_aak.CQRS.Features.ValidationOrchestrators.CancelBookingValidationOrchestrator
@@ -39,7 +38,7 @@ namespace RakbnyMa_aak.CQRS.Features.ValidationOrchestrators.CancelBookingValida
 
             return Response<CancelBookingValidationResultDto>.Success(new CancelBookingValidationResultDto
             {
-                BookingId = booking.Id,
+                BookingId = request.BookingId,
                 TripId = booking.TripId,
                 NumberOfSeats = booking.NumberOfSeats,
                 WasConfirmed = booking.RequestStatus == RequestStatus.Confirmed,

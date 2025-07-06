@@ -19,7 +19,7 @@ public class ApproveDriverCommandHandler : IRequestHandler<ApproveDriverCommand,
     public async Task<Response<bool>> Handle(ApproveDriverCommand request, CancellationToken cancellationToken)
     {
         var driverRepo = _unitOfWork.DriverRepository;
-        var driver = await driverRepo.GetByIdAsync(request.DriverId);
+        var driver = await driverRepo.GetByUserIdAsync(request.DriverId);
 
         if (driver == null)
             return Response<bool>.Fail("Driver not found", statusCode: 404);

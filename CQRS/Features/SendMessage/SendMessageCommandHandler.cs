@@ -21,21 +21,22 @@ namespace RakbnyMa_aak.CQRS.Chat.Handlers
             _unitOfWork = unitOfWork;
             _hub = hub;
         }
-
         public async Task<Response<string>> Handle(SendChatMessageCommand request, CancellationToken cancellationToken)
         {
             var trip = await _unitOfWork.TripRepository.GetByIdAsync(request.Dto.TripId);
 
             if (trip == null || trip.TripStatus != TripStatus.Ongoing)
-                return Response<string>.Fail("الرحلة غير موجودة أو لم تبدأ بعد.");
+                return Response<string>.Fail("Trip does not exist or has not started yet.");
 
-            var isPassengerConfirmed = await _unitOfWork.BookingRepository
-                .AnyAsync(b => b.TripId == trip.Id && b.UserId == request.SenderId && b.RequestStatus == RequestStatus.Confirmed);
+            var isPassengerConfirmed = await _unitOfWork.BookingRepository.AnyAsync(
+                b => b.TripId == trip.Id &&
+                     b.UserId == request.SenderId &&
+                     b.RequestStatus == RequestStatus.Confirmed);
 
             var isDriver = trip.DriverId == request.SenderId;
 
             if (!isPassengerConfirmed && !isDriver)
-                return Response<string>.Fail("غير مسموح لك بالمشاركة في محادثة هذه الرحلة.");
+                return Response<string>.Fail("You are not allowed to participate in this trip chat.");
 
             var message = new Message
             {
@@ -63,7 +64,8 @@ namespace RakbnyMa_aak.CQRS.Chat.Handlers
 
             await _hub.Clients.Group(trip.Id.ToString()).SendAsync("ReceiveGroupMessage", result);
 
-            return Response<string>.Success("تم إرسال الرسالة بنجاح.");
+            return Response<string>.Success("Message sent successfully.");
         }
+
     }
 }

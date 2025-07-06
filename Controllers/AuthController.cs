@@ -14,6 +14,14 @@ public class AuthController : ControllerBase
     private readonly IMediator _mediator;
     public AuthController(IMediator mediator) => _mediator = mediator;
 
+
+    [HttpPost("admin/login")]
+    public async Task<IActionResult> LoginAdmin([FromBody] LoginDto dto)
+    {
+        var result = await _mediator.Send(new LoginAdminCommand(dto));
+        return StatusCode(result.StatusCode, result);
+    }
+
     [HttpPost("user/register")]
     public async Task<IActionResult> RegisterUser([FromForm] RegisterUserRequestDto dto)
     {

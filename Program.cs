@@ -179,6 +179,11 @@ namespace RakbnyMa_aak
 
                 var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                 await DbSeeder.SeedGovernoratesAndCitiesAsync(context);
+
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>(); 
+                var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();                   
+                await DbSeeder.SeedAdminUserAsync(userManager, roleManager, config);
+
             }
 
             // 5. Use Swagger

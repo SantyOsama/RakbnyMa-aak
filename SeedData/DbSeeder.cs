@@ -353,6 +353,46 @@ namespace RakbnyMa_aak.SeedData
             }
            
         }
+        public static async Task SeedAdminUserAsync(
+        UserManager<ApplicationUser> userManager,
+        RoleManager<IdentityRole> roleManager,
+        IConfiguration config)
+        {
+            var section = config.GetSection("AdminUser");
+            var adminEmail = section["Email"];
+            var adminUserName = section["UserName"];
+            var adminPassword = section["Password"];
+            var adminFullName = section["FullName"];
+
+            var adminUser = await userManager.FindByEmailAsync(adminEmail);
+
+            if (adminUser == null)
+            {
+                var user = new ApplicationUser
+                {
+                    UserName = adminUserName,
+                    FullName = adminFullName,
+                    Email = adminEmail,
+                    EmailConfirmed = true,
+                    PhoneNumber = "01158039656",
+                    Picture = "https://res.cloudinary.com/dbrz7pbsa/image/upload/v1751624539/default-profile_zo7m6z.png",
+                    UserType = Enums.Enums.UserType.Admin
+                };
+
+                var createResult = await userManager.CreateAsync(user, adminPassword);
+
+                if (createResult.Succeeded)
+                {
+                    if (!await roleManager.RoleExistsAsync("Admin"))
+                    {
+                        await roleManager.CreateAsync(new IdentityRole("Admin"));
+                    }
+
+                    await userManager.AddToRoleAsync(user, "Admin");
+                }
+            }
+        }
+
     }
 
 }

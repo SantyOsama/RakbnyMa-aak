@@ -24,7 +24,7 @@ namespace RakbnyMa_aak.CQRS.Drivers.Handlers
                 .Include(d => d.User)
                 .Select(d => new PendingDriverResponseDto
                 {
-                    Id = d.Id,
+                    Id = d.UserId,
                     FullName = d.User.FullName,
                     Email = d.User.Email,
                     PhoneNumber = d.User.PhoneNumber,

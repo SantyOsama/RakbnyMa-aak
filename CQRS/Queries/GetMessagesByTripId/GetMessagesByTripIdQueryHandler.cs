@@ -23,13 +23,14 @@ namespace RakbnyMa_aak.CQRS.Queries.GetMessagesByTripId
 
         public async Task<Response<List<MessageDto>>> Handle(GetMessagesByTripIdQuery request, CancellationToken cancellationToken)
         {
-            var userId = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var user = _httpContextAccessor.HttpContext?.User;
+            var userId = user?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userRole = user?.FindFirst(ClaimTypes.Role)?.Value;
 
             if (string.IsNullOrEmpty(userId))
                 return Response<List<MessageDto>>.Fail("Unauthorized");
 
             var trip = await _unitOfWork.TripRepository.GetByIdAsync(request.TripId);
-
             if (trip == null)
                 return Response<List<MessageDto>>.Fail("Trip not found.");
 
@@ -39,8 +40,9 @@ namespace RakbnyMa_aak.CQRS.Queries.GetMessagesByTripId
 
             var isDriver = trip.DriverId == userId;
             var isPassenger = passengerIds.Contains(userId);
+            var isAdmin = userRole == "Admin"; 
 
-            if (!isDriver && !isPassenger)
+            if (!isDriver && !isPassenger && !isAdmin)
                 return Response<List<MessageDto>>.Fail("You are not authorized to view messages of this trip.");
 
             var messages = await _unitOfWork.MessageRepository.GetMessagesByTripIdAsync(request.TripId);
@@ -48,6 +50,7 @@ namespace RakbnyMa_aak.CQRS.Queries.GetMessagesByTripId
 
             return Response<List<MessageDto>>.Success(messageDtos);
         }
+
     }
 
 

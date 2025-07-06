@@ -19,7 +19,7 @@ namespace RakbnyMa_aak.Controllers
         }
 
         [HttpPost("{driverId}/approve")]
-        public async Task<IActionResult> ApproveDriver(int driverId)
+        public async Task<IActionResult> ApproveDriver(string driverId)
         {
             var result = await _mediator.Send(new ApproveDriverCommand (driverId ));
             return StatusCode(result.StatusCode, result);

@@ -1,75 +1,62 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
-using RakbnyMa_aak.Data;
+using RakbnyMa_aak.CQRS.Chat.Commands;
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.Hubs;
 using RakbnyMa_aak.Models;
 using RakbnyMa_aak.UOW;
 using static RakbnyMa_aak.Enums.Enums;
 
-namespace RakbnyMa_aak.CQRS.Features.SendMessage
+namespace RakbnyMa_aak.CQRS.Chat.Handlers
 {
-    public class SendMessageCommandHandler : IRequestHandler<SendMessageCommand, Response<string>>
+    public class SendChatMessageCommandHandler
+        : IRequestHandler<SendChatMessageCommand, Response<string>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHubContext<ChatHub> _hub;
 
-        public SendMessageCommandHandler(IUnitOfWork unitOfWork, IHubContext<ChatHub> hub)
+        public SendChatMessageCommandHandler(IUnitOfWork unitOfWork, IHubContext<ChatHub> hub)
         {
             _unitOfWork = unitOfWork;
             _hub = hub;
         }
 
-
-        public async Task<Response<string>> Handle(SendMessageCommand request, CancellationToken cancellationToken)
+        public async Task<Response<string>> Handle(SendChatMessageCommand request, CancellationToken cancellationToken)
         {
             var trip = await _unitOfWork.TripRepository.GetByIdAsync(request.Dto.TripId);
 
             if (trip == null || trip.TripStatus != TripStatus.Ongoing)
-                return Response<string>.Fail("The trip has not started or does not exist.");
+                return Response<string>.Fail("الرحلة غير موجودة أو لم تبدأ بعد.");
 
-            var approvedPassengerIds = await _unitOfWork.BookingRepository
-                .FindAllAsync(b => b.TripId == request.Dto.TripId && b.RequestStatus == RequestStatus.Confirmed);
+            var isPassengerConfirmed = await _unitOfWork.BookingRepository
+                .AnyAsync(b => b.TripId == trip.Id && b.UserId == request.SenderId && b.RequestStatus == RequestStatus.Confirmed);
 
-            var approvedPassengerIdsList = approvedPassengerIds.Select(b => b.UserId).ToList();
+            var isDriver = trip.DriverId == request.SenderId;
 
-            var isSenderDriver = trip.DriverId == request.SenderId;
-            var isSenderPassenger = approvedPassengerIdsList.Contains(request.SenderId);
-
-            if (!isSenderDriver && !isSenderPassenger)
-                return Response<string>.Fail("You are not part of this trip.");
+            if (!isPassengerConfirmed && !isDriver)
+                return Response<string>.Fail("غير مسموح لك بالمشاركة في محادثة هذه الرحلة.");
 
             var message = new Message
             {
                 TripId = request.Dto.TripId,
-                SenderId = request.SenderId,
                 Content = request.Dto.Content,
+                SenderId = request.SenderId,
                 SentAt = DateTime.UtcNow,
-                CreatedAt = DateTime.UtcNow,
-                IsDeleted = false
+                CreatedAt = DateTime.UtcNow
             };
 
             await _unitOfWork.MessageRepository.AddAsync(message);
             await _unitOfWork.CompleteAsync();
 
-            var allRecipients = approvedPassengerIdsList
-                .Append(trip.DriverId)
-                .Where(id => id != request.SenderId);
-
-            foreach (var userId in allRecipients)
+            await _hub.Clients.Group(trip.Id.ToString()).SendAsync("ReceiveGroupMessage", new
             {
-                await _hub.Clients.User(userId).SendAsync("ReceiveGroupMessage", new
-                {
-                    message.TripId,
-                    message.Content,
-                    message.SenderId,
-                    message.SentAt
-                });
-            }
+                TripId = message.TripId,
+                Content = message.Content,
+                SenderId = message.SenderId,
+                SentAt = message.SentAt
+            });
 
-            return Response<string>.Success("Message sent to all members of the trip.");
+            return Response<string>.Success("تم إرسال الرسالة بنجاح.");
         }
-
     }
 }

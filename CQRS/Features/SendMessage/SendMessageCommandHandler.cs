@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using RakbnyMa_aak.CQRS.Chat.Commands;
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.Hubs;
@@ -48,13 +49,19 @@ namespace RakbnyMa_aak.CQRS.Chat.Handlers
             await _unitOfWork.MessageRepository.AddAsync(message);
             await _unitOfWork.CompleteAsync();
 
-            await _hub.Clients.Group(trip.Id.ToString()).SendAsync("ReceiveGroupMessage", new
-            {
-                TripId = message.TripId,
-                Content = message.Content,
-                SenderId = message.SenderId,
-                SentAt = message.SentAt
-            });
+            var result = await _unitOfWork.MessageRepository.GetAllQueryable()
+                .Where(m => m.Id == message.Id)
+                .Select(m => new
+                {
+                    m.TripId,
+                    m.Content,
+                    m.SenderId,
+                    SenderName = m.Sender.FullName,
+                    m.SentAt
+                })
+                .FirstOrDefaultAsync();
+
+            await _hub.Clients.Group(trip.Id.ToString()).SendAsync("ReceiveGroupMessage", result);
 
             return Response<string>.Success("تم إرسال الرسالة بنجاح.");
         }

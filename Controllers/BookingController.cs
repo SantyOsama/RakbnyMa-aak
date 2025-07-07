@@ -5,13 +5,15 @@ using Microsoft.AspNetCore.Mvc;
 using RakbnyMa_aak.CQRS.Features.Booking.Commands.CancelBookingByPassenger;
 using RakbnyMa_aak.CQRS.Features.Booking.Commands.UpdateBooking;
 using RakbnyMa_aak.CQRS.Features.Booking.Orchestrators.BookTripRequest;
+using RakbnyMa_aak.CQRS.Queries.Driver.GetApprovedBookings;
+using RakbnyMa_aak.CQRS.Queries.Driver.GetPendingBooking;
 using RakbnyMa_aak.DTOs.BookingsDTOs.Requests;
 using System.Security.Claims;
 namespace RakbnyMa_aak.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "User")]
+   
     public class BookingController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -23,7 +25,9 @@ namespace RakbnyMa_aak.Controllers
             _mapper = mapper;
         }
 
+        [Authorize(Roles = "User")]
         [HttpPost("book")]
+
         public async Task<IActionResult> BookTrip([FromBody] BookTripDto dto)
         {
             var bookingDto = _mapper.Map<CreateBookingRequestDto>(dto);
@@ -31,7 +35,7 @@ namespace RakbnyMa_aak.Controllers
             return result.IsSucceeded ? Ok(result) : BadRequest(result);
         }
 
-
+        [Authorize(Roles = "User")]
         [HttpPut("update-booking")]
         public async Task<IActionResult> UpdateBooking([FromBody] UpdateBookingDto dto)
         {
@@ -52,5 +56,23 @@ namespace RakbnyMa_aak.Controllers
             var result = await _mediator.Send(new CancelBookingByPassengerCommand(bookingId, currentUserId));
             return result.IsSucceeded ? Ok(result) : BadRequest(result);
         }
+        [Authorize(Roles = "Driver")]
+        [HttpGet("Pending")]
+        public async Task<IActionResult> GetPendingBookings([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        {
+            var result = await _mediator.Send(new GetPendingBookingsQuery(page, pageSize));
+            return Ok(result);
+        }
+
+        [Authorize(Roles = "Driver")]
+        [HttpGet("Confirmed")]
+        public async Task<IActionResult> GetApprovedBookings([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        {
+            var result = await _mediator.Send(new GetApprovedBookingsQuery(page, pageSize));
+            return Ok(result);
+        }
+
+
+
     }
 }

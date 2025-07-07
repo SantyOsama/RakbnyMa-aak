@@ -9,8 +9,10 @@ using RakbnyMa_aak.CQRS.Features.Trip.Commands.StartTripByPassenger;
 using RakbnyMa_aak.CQRS.Features.Trip.Orchestrators.UpdateTrip;
 using RakbnyMa_aak.CQRS.Features.Trip.Queries.GetDriverTripBookings;
 using RakbnyMa_aak.CQRS.Features.Trip.Queries.GetMyTrips;
+using RakbnyMa_aak.CQRS.Features.Trips.Queries.GetAllTrips;
 using RakbnyMa_aak.CQRS.Trips.Delete_Trip;
 using RakbnyMa_aak.DTOs.TripDTOs.RequestsDTOs;
+using RakbnyMa_aak.DTOs.TripDTOs.ResponseDTOs;
 using RakbnyMa_aak.GeneralResponse;
 using System.Security.Claims;
 
@@ -79,7 +81,7 @@ namespace RakbnyMa_aak.Controllers
 
             return Ok(result);
         }
-        [HttpGet("my-trips")]
+        [HttpGet("/driver/my-trips")]
         [Authorize(Roles = "Driver")] 
         public async Task<ActionResult<Response<PaginatedResult<TripRequestDto>>>> GetMyTrips([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
@@ -160,6 +162,12 @@ namespace RakbnyMa_aak.Controllers
             return result.IsSucceeded ? Ok(result) : BadRequest(result);
         }
 
+        [HttpGet("AllTrips")]
+        public async Task<ActionResult<PaginatedResult<TripResponseDto>>> GetAllTrips([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        {
+            var result = await _mediator.Send(new GetAllTripsQuery(page, pageSize));
+            return Ok(result);
+        }
 
     }
 }

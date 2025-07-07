@@ -135,7 +135,6 @@ namespace RakbnyMa_aak.Repositories.Implementations
                         .FirstOrDefaultAsync(cancellationToken);
                 }
 
-
     }
 
 }

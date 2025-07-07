@@ -2,9 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using RakbnyMa_aak.CQRS.Chat.Commands;
-using RakbnyMa_aak.CQRS.Features.SendMessage;
 using RakbnyMa_aak.CQRS.Queries.GetMessagesByTripId;
+using RakbnyMa_aak.CQRS.Shared.SendMessage;
 using RakbnyMa_aak.GeneralResponse;
 using System.Security.Claims;
 

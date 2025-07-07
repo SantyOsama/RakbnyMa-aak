@@ -1,14 +1,13 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using RakbnyMa_aak.CQRS.Chat.Commands;
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.Hubs;
 using RakbnyMa_aak.Models;
 using RakbnyMa_aak.UOW;
 using static RakbnyMa_aak.Utilities.Enums;
 
-namespace RakbnyMa_aak.CQRS.Chat.Handlers
+namespace RakbnyMa_aak.CQRS.Shared.SendMessage
 {
     public class SendChatMessageCommandHandler
         : IRequestHandler<SendChatMessageCommand, Response<string>>

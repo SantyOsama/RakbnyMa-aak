@@ -46,8 +46,11 @@ namespace RakbnyMa_aak.CQRS.Features.Ratings.CommonAddRating
                 if (booking == null)
                     return Response<bool>.Fail("You can only rate this trip after completing it.");
             }
+            // Step 3: Prevent self-rating
+            if (dto.RaterId == dto.RatedId)
+                return Response<bool>.Fail("You cannot rate yourself.");
 
-            // Step 3: Check if already rated
+            // Step 4: Check if already rated
             bool alreadyRated = await _unitOfWork.RatingRepository
                 .AnyAsync(r => r.TripId == dto.TripId &&
                                r.RaterId == dto.RaterId &&
@@ -56,7 +59,7 @@ namespace RakbnyMa_aak.CQRS.Features.Ratings.CommonAddRating
             if (alreadyRated)
                 return Response<bool>.Fail("You have already rated this person for this trip.");
 
-            // Step 4: Add rating
+            // Step 5: Add rating
             var rating = new Rating
             {
                 TripId = dto.TripId,

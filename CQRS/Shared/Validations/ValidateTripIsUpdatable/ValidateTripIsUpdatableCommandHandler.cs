@@ -28,6 +28,8 @@ namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripIsUpdatable
             if (trip.TripStatus != TripStatus.Scheduled)
                 return Response<Trip>.Fail("Only scheduled trips can be updated.");
 
+            ///لو فه بوكينج كونفيرميد ممنوع التعديل
+
             return Response<Trip>.Success(trip);
         }
     }

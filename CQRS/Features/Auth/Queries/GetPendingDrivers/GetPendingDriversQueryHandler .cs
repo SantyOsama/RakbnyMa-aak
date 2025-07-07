@@ -1,11 +1,10 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using RakbnyMa_aak.CQRS.Drivers.Queries;
 using RakbnyMa_aak.DTOs.DriverDTOs.ResponseDTOs;
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.UOW;
 
-namespace RakbnyMa_aak.CQRS.Drivers.Handlers
+namespace RakbnyMa_aak.CQRS.Features.Auth.Queries.GetPendingDrivers
 {
     public class GetPendingDriversQueryHandler : IRequestHandler<GetPendingDriversQuery, Response<PaginatedResult<PendingDriverResponseDto>>>
     {

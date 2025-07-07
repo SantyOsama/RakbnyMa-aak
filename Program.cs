@@ -173,6 +173,11 @@ namespace RakbnyMa_aak
 
             builder.Services.AddAuthorization();
 
+
+            var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+            builder.WebHost.UseUrls($"http://*:{port}");
+
+
             var app = builder.Build();
 
             //Seed the database with initial data

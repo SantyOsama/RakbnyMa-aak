@@ -3,7 +3,7 @@ using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.UOW;
 using static RakbnyMa_aak.Utilities.Enums;
 
-namespace RakbnyMa_aak.CQRS.Features.Booking.Commands.MarkBookingAsEnded
+namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.MarkBookingAsEnded
 {
     public class MarkBookingAsEndedCommandHandler : IRequestHandler<MarkBookingAsEndedCommand, Response<bool>>
     {

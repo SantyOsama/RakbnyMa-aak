@@ -1,6 +1,6 @@
 ﻿using static RakbnyMa_aak.Utilities.Enums;
 
-namespace RakbnyMa_aak.CQRS.Features.Booking.Orchestrators.CancelBookingValidationOrchestrator
+namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.CancelBookingValidationOrchestrator
 {
     public class CancelBookingValidationResultDto
     {

@@ -4,7 +4,7 @@ using RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripExists;
 using RakbnyMa_aak.GeneralResponse;
 using static RakbnyMa_aak.Utilities.Enums;
 
-namespace RakbnyMa_aak.CQRS.Features.Booking.Orchestrators.CancelBookingValidationOrchestrator
+namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.CancelBookingValidationOrchestrator
 {
     public class CancelBookingValidationOrchestratorHandler
       : IRequestHandler<CancelBookingValidationOrchestrator, Response<CancelBookingValidationResultDto>>

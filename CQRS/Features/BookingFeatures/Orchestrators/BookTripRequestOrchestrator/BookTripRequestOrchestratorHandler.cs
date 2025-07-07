@@ -1,24 +1,27 @@
+using AutoMapper;
 using MediatR;
 using RakbnyMa_aak.CQRS.Commands.SendNotification;
 using RakbnyMa_aak.CQRS.Commands.Validations.CheckUserAlreadyBooked;
 using RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripExists;
-using RakbnyMa_aak.CQRS.Features.Booking.Commands.CreateBooking;
-using RakbnyMa_aak.CQRS.Features.Booking.Commands.PreventDriverSelfBooking;
+using RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.CreateBooking;
+using RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.PreventDriverSelfBooking;
 using RakbnyMa_aak.CQRS.Trips.Queries;
+using RakbnyMa_aak.DTOs.BookingsDTOs.Requests;
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.UOW;
 
-namespace RakbnyMa_aak.CQRS.Features.Booking.Orchestrators.BookTripRequest
+namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.BookTripRequest
 {
     public class BookTripRequestOrchestratorHandler : IRequestHandler<BookTripRequestOrchestrator, Response<int>>
     {
         private readonly IMediator _mediator;
         private readonly IUnitOfWork _unitOfWork;
-
-        public BookTripRequestOrchestratorHandler(IMediator mediator, IUnitOfWork unitOfWork)
+        private readonly IMapper _mapper;
+        public BookTripRequestOrchestratorHandler(IMediator mediator, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _mediator = mediator;
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public async Task<Response<int>> Handle(BookTripRequestOrchestrator request, CancellationToken cancellationToken)
@@ -68,7 +71,11 @@ namespace RakbnyMa_aak.CQRS.Features.Booking.Orchestrators.BookTripRequest
             }
             else // first time booking → create
             {
-                bookingResponse = await _mediator.Send(new CreateBookingCommand(bookingDto));
+                var createBookingDto = _mapper.Map<CreateBookingRequestDto>(bookingDto);
+
+                createBookingDto.PricePerSeat = trip.PricePerSeat;
+
+                bookingResponse = await _mediator.Send(new CreateBookingCommand(createBookingDto));
             }
 
             if (!bookingResponse.IsSucceeded)

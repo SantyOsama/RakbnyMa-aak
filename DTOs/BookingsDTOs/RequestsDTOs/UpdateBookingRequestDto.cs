@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace RakbnyMa_aak.CQRS.Features.Booking.Commands.UpdateBooking
+namespace RakbnyMa_aak.DTOs.BookingsDTOs.RequestsDTOs
 {
-    public class UpdateBookingDto
+    public class UpdateBookingRequestDto
     {
         [Required(ErrorMessage = "Trip ID is required.")]
         public int TripId { get; set; }

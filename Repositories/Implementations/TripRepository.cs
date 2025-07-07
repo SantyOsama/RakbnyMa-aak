@@ -29,6 +29,7 @@ namespace RakbnyMa_aak.Repositories.Implementations
                     DriverId = t.DriverId,
                     TripDate = t.TripDate,
                     AvailableSeats = t.AvailableSeats,
+                    PricePerSeat = t.PricePerSeat,
                     IsDeleted = t.IsDeleted
                 })
                 .FirstOrDefaultAsync();

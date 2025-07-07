@@ -2,10 +2,11 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RakbnyMa_aak.CQRS.Features.Booking.Commands.CancelBookingByPassenger;
-using RakbnyMa_aak.CQRS.Features.Booking.Commands.UpdateBooking;
-using RakbnyMa_aak.CQRS.Features.Booking.Orchestrators.BookTripRequest;
+using RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.CancelBookingByPassenger;
+using RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.BookTripRequest;
+using RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.UpdateBookingOrchestrator;
 using RakbnyMa_aak.DTOs.BookingsDTOs.Requests;
+using RakbnyMa_aak.DTOs.BookingsDTOs.RequestsDTOs;
 using System.Security.Claims;
 namespace RakbnyMa_aak.Controllers
 {
@@ -24,16 +25,15 @@ namespace RakbnyMa_aak.Controllers
         }
 
         [HttpPost("book")]
-        public async Task<IActionResult> BookTrip([FromBody] BookTripDto dto)
+        public async Task<IActionResult> BookTrip([FromBody] BookTripRequestDto dto)
         {
-            var bookingDto = _mapper.Map<CreateBookingRequestDto>(dto);
-            var result = await _mediator.Send(new BookTripRequestOrchestrator(bookingDto));
+            var result = await _mediator.Send(new BookTripRequestOrchestrator(dto));
             return result.IsSucceeded ? Ok(result) : BadRequest(result);
         }
 
 
         [HttpPut("update-booking")]
-        public async Task<IActionResult> UpdateBooking([FromBody] UpdateBookingDto dto)
+        public async Task<IActionResult> UpdateBooking([FromBody] UpdateBookingRequestDto dto)
         {
             var command = new UpdateBookingOrchestrator(dto);
             var result = await _mediator.Send(command);
@@ -43,13 +43,9 @@ namespace RakbnyMa_aak.Controllers
 
         [Authorize(Roles = "User")]
         [HttpDelete("cancel/{bookingId}")]
-        public async Task<IActionResult> CancelBooking([FromQuery] int bookingId)
+        public async Task<IActionResult> CancelBooking([FromBody] HandleBookingRequestDto dto)
         {
-            var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrWhiteSpace(currentUserId))
-                return Unauthorized("User ID not found in token.");
-
-            var result = await _mediator.Send(new CancelBookingByPassengerCommand(bookingId, currentUserId));
+            var result = await _mediator.Send(new CancelBookingByPassengerCommand(dto));
             return result.IsSucceeded ? Ok(result) : BadRequest(result);
         }
     }

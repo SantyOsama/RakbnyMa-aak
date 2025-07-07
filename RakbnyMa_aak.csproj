@@ -30,8 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="CQRS\Features\BookingFeatures\Queries\" />
-    <Folder Include="DTOs\BookingsDTOs\ResponseDTOs\" />
     <Folder Include="DTOs\TripDTOs\ResponseDTOs\" />
   </ItemGroup>
 

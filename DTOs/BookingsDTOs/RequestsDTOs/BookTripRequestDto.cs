@@ -17,9 +17,5 @@ namespace RakbnyMa_aak.DTOs.BookingsDTOs.Requests
         [Display(Name = "Number of Seats")]
         public int NumberOfSeats { get; set; }
 
-        [Required(ErrorMessage = "Price per seat is required.")]
-        [Range(1, double.MaxValue, ErrorMessage = "Price must be greater than 0.")]
-        [Display(Name = "Price per Seat")]
-        public decimal PricePerSeat { get; set; }
     }
 }

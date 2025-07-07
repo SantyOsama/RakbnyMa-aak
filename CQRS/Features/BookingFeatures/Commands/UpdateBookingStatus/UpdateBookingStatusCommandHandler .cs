@@ -5,7 +5,7 @@ using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.UOW;
 using static RakbnyMa_aak.Utilities.Enums;
 
-namespace RakbnyMa_aak.CQRS.Features.Booking.Commands.UpdateBookingStatus
+namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.UpdateBookingStatus
 {
     public class UpdateBookingStatusCommandHandler : IRequestHandler<UpdateBookingStatusCommand, Response<bool>>
     {

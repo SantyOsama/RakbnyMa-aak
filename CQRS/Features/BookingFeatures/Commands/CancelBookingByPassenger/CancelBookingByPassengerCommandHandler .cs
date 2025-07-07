@@ -1,11 +1,11 @@
 ﻿using MediatR;
-using RakbnyMa_aak.CQRS.Features.Booking.Orchestrators.CancelBookingValidationOrchestrator;
+using RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.CancelBookingValidationOrchestrator;
 using RakbnyMa_aak.CQRS.Features.Trip.Commands.IncreaseTripSeats;
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.UOW;
 using static RakbnyMa_aak.Utilities.Enums;
 
-namespace RakbnyMa_aak.CQRS.Features.Booking.Commands.CancelBookingByPassenger
+namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.CancelBookingByPassenger
 {
     public class CancelBookingByPassengerHandler : IRequestHandler<CancelBookingByPassengerCommand, Response<bool>>
     {
@@ -21,7 +21,7 @@ namespace RakbnyMa_aak.CQRS.Features.Booking.Commands.CancelBookingByPassenger
         public async Task<Response<bool>> Handle(CancelBookingByPassengerCommand request, CancellationToken cancellationToken)
         {
             //Step 1: Validate and get info
-            var validationResult = await _mediator.Send(new CancelBookingValidationOrchestrator(request.BookingId, request.CurrentUserId));
+            var validationResult = await _mediator.Send(new CancelBookingValidationOrchestrator(request.Dto.BookingId, request.Dto.CurrentUserId));
             if (!validationResult.IsSucceeded)
                 return Response<bool>.Fail(validationResult.Message);
 

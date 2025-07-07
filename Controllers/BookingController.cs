@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.CancelBookingByPassenger;
 using RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.BookTripRequest;
 using RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.UpdateBookingOrchestrator;
+using RakbnyMa_aak.CQRS.Queries.Driver.GetApprovedBookings;
+using RakbnyMa_aak.CQRS.Queries.Driver.GetPendingBooking;
 using RakbnyMa_aak.DTOs.BookingsDTOs.Requests;
 using RakbnyMa_aak.DTOs.BookingsDTOs.RequestsDTOs;
 using System.Security.Claims;

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.BookTripRequest;
 using RakbnyMa_aak.CQRS.Features.Cities;
 using RakbnyMa_aak.CQRS.Features.Governorates;
 using RakbnyMa_aak.CQRS.Queries.GetMessagesByTripId;

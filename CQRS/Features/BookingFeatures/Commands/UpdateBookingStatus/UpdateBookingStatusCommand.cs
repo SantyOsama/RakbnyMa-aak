@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using RakbnyMa_aak.GeneralResponse;
-using RakbnyMa_aak.Models;
 using static RakbnyMa_aak.Utilities.Enums;
 
 namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.UpdateBookingStatus

@@ -47,7 +47,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.UpdateConfirmedBoo
                 var tripResult = await _mediator.Send(new DecreaseTripSeatsCommand(new DecreaseTripSeatsDto
                 {
                     TripId = dto.TripId,
-                    NumberOfSeats = difference
+                    NumberOfSeats= difference
                 }));
                 if (!tripResult.IsSucceeded)
                     return Response<UpdateBookingSeatsResponseDto>.Fail($"Failed to decrease trip seats: {tripResult.Message}");
@@ -58,7 +58,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.UpdateConfirmedBoo
                 var bookingResult = await _mediator.Send(new DecreaseBookingSeatsCommand(new UpdateBookingSeatsRequestDto
                 {
                     BookingId = dto.BookingId,
-                    SeatsToChange = -difference
+                    SeatsToChange = difference
                 }));
                 if (!bookingResult.IsSucceeded)
                     return Response<UpdateBookingSeatsResponseDto>.Fail($"Failed to decrease booking seats: {bookingResult.Message}");

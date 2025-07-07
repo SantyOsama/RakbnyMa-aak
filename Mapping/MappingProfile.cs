@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
-using RakbnyMa_aak.CQRS.Features.Booking.Orchestrators.BookTripRequest;
+using RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.BookTripRequest;
 using RakbnyMa_aak.CQRS.Features.Cities;
 using RakbnyMa_aak.CQRS.Features.Governorates;
 using RakbnyMa_aak.CQRS.Queries.GetMessagesByTripId;
 using RakbnyMa_aak.DTOs.Auth.RequestDTOs;
 using RakbnyMa_aak.DTOs.BookingsDTOs.Requests;
+using RakbnyMa_aak.DTOs.BookingsDTOs.ResponseDTOs;
 using RakbnyMa_aak.DTOs.DriverDTOs.ResponseDTOs;
 using RakbnyMa_aak.DTOs.TripDTOs.RequestsDTOs;
 using RakbnyMa_aak.DTOs.UserDTOs;
@@ -20,8 +21,6 @@ namespace RakbnyMa_aak.Mapping
             CreateMap<RegisterUserRequestDto, ApplicationUser>().ReverseMap();
             CreateMap<TripRequestDto, Trip>().ReverseMap();
             CreateMap<CreateBookingRequestDto, Booking>().ReverseMap();
-            CreateMap<BookTripDto, Booking>().ReverseMap();
-            CreateMap<BookTripDto, CreateBookingRequestDto>().ReverseMap();
             CreateMap<GovernorateDto, Governorate>().ReverseMap();
             CreateMap<CityDto, City>().ReverseMap();
             CreateMap<Message, MessageDto>();
@@ -63,6 +62,16 @@ namespace RakbnyMa_aak.Mapping
                 src.RatingsReceived != null && src.RatingsReceived.Any()
                     ? src.RatingsReceived.Average(r => r.RatingValue)
                     : 0));
+
+
+            CreateMap<Booking, CreateBookingResponseDto>()
+            .ForMember(dest => dest.BookingId, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.PassengerId, opt => opt.MapFrom(src => src.UserId))
+            .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.TotalPrice ?? 0));
+
+            CreateMap<BookTripRequestDto, CreateBookingRequestDto>()
+            .ForMember(dest => dest.PricePerSeat, opt => opt.Ignore()); 
+
 
         }
     }

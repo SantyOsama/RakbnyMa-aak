@@ -1,11 +1,11 @@
 ﻿using MediatR;
 using RakbnyMa_aak.CQRS.Commands.SendNotification;
-using RakbnyMa_aak.CQRS.Features.Booking.Commands.UpdateBookingStatus;
-using RakbnyMa_aak.CQRS.Features.Booking.Orchestrators.BookValidationOrchestrator;
+using RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.UpdateBookingStatus;
+using RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.BookValidationOrchestrator;
 using RakbnyMa_aak.GeneralResponse;
 using static RakbnyMa_aak.Utilities.Enums;
 
-namespace RakbnyMa_aak.CQRS.Features.Booking.Commands.ApproveBookingRequest
+namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.ApproveBookingRequest
 {
     public class ApproveBookingOrchestratorHandler : IRequestHandler<ApproveBookingOrchestrator, Response<bool>>
     {
@@ -18,7 +18,7 @@ namespace RakbnyMa_aak.CQRS.Features.Booking.Commands.ApproveBookingRequest
 
         public async Task<Response<bool>> Handle(ApproveBookingOrchestrator request, CancellationToken cancellationToken)
         {
-            var validation = await _mediator.Send(new BookingValidationOrchestrator(request.BookingId, request.CurrentUserId));
+            var validation = await _mediator.Send(new BookingValidationOrchestrator(request.Dto.BookingId, request.Dto.CurrentUserId));
             if (!validation.IsSucceeded)
                 return Response<bool>.Fail(validation.Message);
 

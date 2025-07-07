@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using RakbnyMa_aak.CQRS.Commands.Validations.ValidateBookingForEnding;
-using RakbnyMa_aak.CQRS.Features.Booking.Commands.MarkBookingAsEnded;
+using RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.MarkBookingAsEnded;
 using RakbnyMa_aak.GeneralResponse;
 namespace RakbnyMa_aak.CQRS.Features.Trip.Commands.EndTripByPassenger
 {

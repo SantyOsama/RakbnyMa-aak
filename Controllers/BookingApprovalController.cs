@@ -1,10 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RakbnyMa_aak.CQRS.Features.Booking.Commands.ApproveBookingRequest;
-using RakbnyMa_aak.CQRS.Features.Booking.Commands.RejectBookingRequest;
-using RakbnyMa_aak.CQRS.Queries.Driver.GetPendingBooking;
-using System.Security.Claims;
+using RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.ApproveBookingRequest;
+using RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.RejectBookingRequest;
+using RakbnyMa_aak.DTOs.BookingsDTOs.RequestsDTOs;
 namespace RakbnyMa_aak.Controllers
 {
     [Route("api/[controller]")]
@@ -20,20 +19,18 @@ namespace RakbnyMa_aak.Controllers
         }
 
         [HttpPost("approve")]
-        public async Task<IActionResult> ApproveBooking([FromQuery] int bookingId)
+        public async Task<IActionResult> ApproveBooking([FromBody]HandleBookingRequestDto dto)
         {
-            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = await _mediator.Send(new ApproveBookingOrchestrator(bookingId,currentUserId));
+            var result = await _mediator.Send(new ApproveBookingOrchestrator(dto));
             return result.IsSucceeded ? Ok(result) : BadRequest(result);
         }
        
 
 
         [HttpPost("reject")]
-        public async Task<IActionResult> RejectBooking([FromQuery] int bookingId)
+        public async Task<IActionResult> RejectBooking([FromBody] HandleBookingRequestDto dto)
         {
-            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = await _mediator.Send(new RejectBookingOrchestrator(bookingId,currentUserId));
+            var result = await _mediator.Send(new RejectBookingOrchestrator(dto));
             return result.IsSucceeded ? Ok(result) : BadRequest(result);
         }
     }

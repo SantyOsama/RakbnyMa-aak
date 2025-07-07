@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
-using RakbnyMa_aak.CQRS.Features.Booking.Commands.CreateBooking;
+using RakbnyMa_aak.DTOs.BookingsDTOs.ResponseDTOs;
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.SignalR;
 using RakbnyMa_aak.UOW;
@@ -36,7 +36,9 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.CreateBooking
 
             //Notification but i will do orchestrator
 
-            return Response<int>.Success(booking.Id, "Booking request sent to driver.");
+            var responseDto = _mapper.Map<CreateBookingResponseDto>(booking);
+
+            return Response<int>.Success(responseDto.BookingId, "Booking request sent to driver.");
         }
 
     }

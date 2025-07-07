@@ -2,7 +2,7 @@
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.UOW;
 
-namespace RakbnyMa_aak.CQRS.Features.Booking.Commands.IncreaseBookingSeats
+namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.IncreaseBookingSeats
 {
     public class IncreaseBookingSeatsCommandHandler : IRequestHandler<IncreaseBookingSeatsCommand, Response<int>>
     {
@@ -15,12 +15,12 @@ namespace RakbnyMa_aak.CQRS.Features.Booking.Commands.IncreaseBookingSeats
 
         public async Task<Response<int>> Handle(IncreaseBookingSeatsCommand request, CancellationToken cancellationToken)
         {
-            var booking = await _unitOfWork.BookingRepository.GetByIdAsync(request.BookingId);
+            var booking = await _unitOfWork.BookingRepository.GetByIdAsync(request.Dto.BookingId);
             if (booking == null || booking.IsDeleted)
                 return Response<int>.Fail("Booking not found.");
 
             // Update trip and booking
-            booking.NumberOfSeats += request.SeatsToAdd;
+            booking.NumberOfSeats += request.Dto.SeatsToChange;
 
             booking.UpdatedAt = DateTime.UtcNow;
 

@@ -4,7 +4,7 @@ using RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripExists;
 using RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripOwner;
 using RakbnyMa_aak.GeneralResponse;
 
-namespace RakbnyMa_aak.CQRS.Features.Booking.Orchestrators.BookValidationOrchestrator
+namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.BookValidationOrchestrator
 {
 
     public class BookingValidationCommandHandler

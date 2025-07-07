@@ -1,0 +1,50 @@
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.UpdateConfirmedBooking;
+using RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.UpdatePendingBooking;
+using RakbnyMa_aak.DTOs.BookingsDTOs.ResponseDTOs;
+using RakbnyMa_aak.GeneralResponse;
+using RakbnyMa_aak.UOW;
+using static RakbnyMa_aak.Utilities.Enums;
+
+namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.UpdateBookingOrchestrator
+{
+    public class UpdateBookingOrchestratorHandler : IRequestHandler<UpdateBookingOrchestrator, Response<UpdateBookingSeatsResponseDto>>
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMediator _mediator;
+
+        public UpdateBookingOrchestratorHandler(IUnitOfWork unitOfWork, IMediator mediator)
+        {
+            _unitOfWork = unitOfWork;
+            _mediator = mediator;
+        }
+
+        public async Task<Response<UpdateBookingSeatsResponseDto>> Handle(UpdateBookingOrchestrator request, CancellationToken cancellationToken)
+        {
+            var dto = request.BookingDto;
+
+            var bookingInfo = await _unitOfWork.BookingRepository
+                .GetAllQueryable()
+                .Where(b => b.Id == dto.BookingId && b.UserId == dto.UserId)
+                .Select(b => new { OldSeats = b.NumberOfSeats, b.RequestStatus })
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (bookingInfo == null)
+                return Response<UpdateBookingSeatsResponseDto>.Fail("Booking not found or access denied");
+
+            var difference = dto.NewNumberOfSeats - bookingInfo.OldSeats;
+            if (difference == 0)
+                return Response<UpdateBookingSeatsResponseDto>.Fail("No change in seat count");
+
+            if (bookingInfo.RequestStatus == RequestStatus.Confirmed)
+            {
+                return await _mediator.Send(new UpdateConfirmedBookingCommand(dto, bookingInfo.OldSeats));
+            }
+            else
+            {
+                return await _mediator.Send(new UpdatePendingBookingCommand(dto,bookingInfo.OldSeats));
+            }
+        }
+    }
+}

@@ -2,7 +2,7 @@
 using RakbnyMa_aak.DTOs.BookingsDTOs.Requests;
 using RakbnyMa_aak.GeneralResponse;
 
-namespace RakbnyMa_aak.CQRS.Features.Booking.Orchestrators.BookTripRequest
+namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.BookTripRequest
 {
-    public record BookTripRequestOrchestrator(CreateBookingRequestDto BookingDto) : IRequest<Response<int>>;
+    public record BookTripRequestOrchestrator(BookTripRequestDto BookingDto) : IRequest<Response<int>>;
 }

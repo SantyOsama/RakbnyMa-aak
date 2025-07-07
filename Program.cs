@@ -84,7 +84,11 @@ namespace RakbnyMa_aak
             builder.Services.AddControllers(options =>
             {
                 options.Filters.Add<ValidateModelAttribute>();
-            });
+            })
+             .AddJsonOptions(opt =>
+             {
+                 opt.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+             });
 
             builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
 

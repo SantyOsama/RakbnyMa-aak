@@ -1,4 +1,4 @@
-﻿namespace RakbnyMa_aak.CQRS.Features.SendMessage
+﻿namespace RakbnyMa_aak.CQRS.Shared.SendMessage
 {
     public class SendMessageDto
     {

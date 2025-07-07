@@ -7,6 +7,7 @@ using RakbnyMa_aak.DTOs.BookingsDTOs.Requests;
 using RakbnyMa_aak.DTOs.BookingsDTOs.ResponseDTOs;
 using RakbnyMa_aak.DTOs.DriverDTOs.ResponseDTOs;
 using RakbnyMa_aak.DTOs.TripDTOs.RequestsDTOs;
+using RakbnyMa_aak.DTOs.TripDTOs.ResponseDTOs;
 using RakbnyMa_aak.DTOs.UserDTOs;
 using RakbnyMa_aak.Models;
 using static RakbnyMa_aak.Utilities.Enums;
@@ -69,7 +70,14 @@ namespace RakbnyMa_aak.Mapping
             .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.TotalPrice ?? 0));
 
             CreateMap<BookTripRequestDto, CreateBookingRequestDto>()
-            .ForMember(dest => dest.PricePerSeat, opt => opt.Ignore()); 
+            .ForMember(dest => dest.PricePerSeat, opt => opt.Ignore());
+
+            CreateMap<Trip, TripResponseDto>()
+              .ForMember(dest => dest.FromCityName, opt => opt.MapFrom(src => src.FromCity.Name))
+              .ForMember(dest => dest.ToCityName, opt => opt.MapFrom(src => src.ToCity.Name))
+              .ForMember(dest => dest.FromGovernorateName, opt => opt.MapFrom(src => src.FromGovernorate.Name))
+              .ForMember(dest => dest.ToGovernorateName, opt => opt.MapFrom(src => src.ToGovernorate.Name))
+              .ForMember(dest => dest.TripStatus, opt => opt.MapFrom(src => src.TripStatus.ToString()));
 
 
         }

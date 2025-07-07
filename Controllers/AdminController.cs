@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RakbnyMa_aak.CQRS.Drivers.Queries;
 using RakbnyMa_aak.CQRS.Features.Admin.ApproveDriver;
+using RakbnyMa_aak.CQRS.Features.Auth.Queries.GetPendingDrivers;
 
 namespace RakbnyMa_aak.Controllers
 {

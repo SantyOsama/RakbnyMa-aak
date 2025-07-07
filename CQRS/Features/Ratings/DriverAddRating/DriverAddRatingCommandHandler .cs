@@ -28,6 +28,9 @@ namespace RakbnyMa_aak.CQRS.Features.Ratings.DriverAddRating
             if (trip.DriverId != dto.RaterId)
                 return Response<bool>.Fail("You are not authorized to rate passengers on this trip.");
 
+            if (dto.RaterId == dto.RatedPassengerId)
+                return Response<bool>.Fail("You cannot rate yourself.");
+
             // Step 3: Check if the passenger has completed the trip
             var booking = await _unitOfWork.BookingRepository
                 .GetConfirmedFinishedBookingQueryable(dto.TripId, dto.RatedPassengerId)

@@ -32,6 +32,7 @@ namespace RakbnyMa_aak.CQRS.Features.Ratings.UserAddRating
             if (booking == null)
                 return Response<bool>.Fail("You can only rate this trip after completing it.");
 
+
             // Step 3: Check if already rated
             bool alreadyRated = await _unitOfWork.RatingRepository
                 .AnyAsync(r => r.TripId == dto.TripId &&

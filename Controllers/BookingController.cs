@@ -12,7 +12,7 @@ namespace RakbnyMa_aak.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "User")]
+   
     public class BookingController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -24,6 +24,7 @@ namespace RakbnyMa_aak.Controllers
             _mapper = mapper;
         }
 
+        [Authorize(Roles = "User")]
         [HttpPost("book")]
         public async Task<IActionResult> BookTrip([FromBody] BookTripRequestDto dto)
         {
@@ -31,7 +32,7 @@ namespace RakbnyMa_aak.Controllers
             return result.IsSucceeded ? Ok(result) : BadRequest(result);
         }
 
-
+        [Authorize(Roles = "User")]
         [HttpPut("update-booking")]
         public async Task<IActionResult> UpdateBooking([FromBody] UpdateBookingRequestDto dto)
         {
@@ -48,5 +49,23 @@ namespace RakbnyMa_aak.Controllers
             var result = await _mediator.Send(new CancelBookingByPassengerCommand(dto));
             return result.IsSucceeded ? Ok(result) : BadRequest(result);
         }
+        [Authorize(Roles = "Driver")]
+        [HttpGet("Pending")]
+        public async Task<IActionResult> GetPendingBookings([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        {
+            var result = await _mediator.Send(new GetPendingBookingsQuery(page, pageSize));
+            return Ok(result);
+        }
+
+        [Authorize(Roles = "Driver")]
+        [HttpGet("Confirmed")]
+        public async Task<IActionResult> GetApprovedBookings([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        {
+            var result = await _mediator.Send(new GetApprovedBookingsQuery(page, pageSize));
+            return Ok(result);
+        }
+
+
+
     }
 }

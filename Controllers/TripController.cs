@@ -162,6 +162,7 @@ namespace RakbnyMa_aak.Controllers
             return result.IsSucceeded ? Ok(result) : BadRequest(result);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("AllTrips")]
         public async Task<ActionResult<PaginatedResult<TripResponseDto>>> GetAllTrips([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {

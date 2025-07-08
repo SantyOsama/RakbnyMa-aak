@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.UOW;
+using static RakbnyMa_aak.Utilities.Enums;
 
 namespace RakbnyMa_aak.CQRS.Features.Trip.Commands.UpdateTrip
 {
@@ -23,8 +25,16 @@ namespace RakbnyMa_aak.CQRS.Features.Trip.Commands.UpdateTrip
             if (existingTrip == null || existingTrip.IsDeleted)
                 return Response<int>.Fail("Trip not found.");
 
-            _mapper.Map(request.TripDto, existingTrip);
+            var hasConfirmedBookings = await _unitOfWork.BookingRepository
+                .GetAllQueryable()
+                .AnyAsync(b => b.TripId == request.TripId && b.RequestStatus == RequestStatus.Confirmed, cancellationToken);
 
+            if (hasConfirmedBookings)
+            {
+                return Response<int>.Fail("Cannot update trip with confirmed bookings.");
+            }
+
+            _mapper.Map(request.TripDto, existingTrip);
             existingTrip.UpdatedAt = DateTime.UtcNow;
 
             _unitOfWork.TripRepository.Update(existingTrip);

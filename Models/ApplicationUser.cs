@@ -47,6 +47,7 @@ namespace RakbnyMa_aak.Models
         public virtual ICollection<Message>? SentMessages { get; set; }
         public virtual ICollection<Notification>? Notifications { get; set; }
 
+        public virtual Wallet Wallet { get; set; }
 
         public ApplicationUser()
         {

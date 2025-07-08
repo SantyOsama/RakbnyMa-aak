@@ -113,5 +113,40 @@ namespace RakbnyMa_aak.Utilities
             Cancelled,
             Rejected
         }
+
+        public enum PaymentMethod
+        {
+            Cash,
+            VodafoneCash,
+            CreditCard,
+            Wallet
+        }
+
+        public enum PaymentStatus
+        {
+            Pending,
+            Completed,
+            Failed,
+            Refunded
+        }
+
+        public enum PaymentType
+        {
+            BookingPayment,
+            WalletTopUp,
+            DriverPayout
+        }
+        public enum TransactionType
+        {
+            Credit,
+            Debit
+        }
+
+        public enum TransactionStatus
+        {
+            Pending,
+            Completed,
+            Failed
+        }
     }
 }

@@ -8,6 +8,10 @@ namespace RakbnyMa_aak.Data
     public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+        public DbSet<Payment> Payments { get; set; }
+        public DbSet<Wallet> Wallets { get; set; }
+        public DbSet<WalletTransaction> WalletTransactions { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Driver> Drivers { get; set; }
@@ -83,8 +87,26 @@ namespace RakbnyMa_aak.Data
                 .Property(b => b.RequestStatus)
                 .HasConversion<string>();
 
+            // Configure Payment relationships
+            builder.Entity<Payment>()
+                .HasOne(p => p.User)
+                .WithMany()
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Payment>()
+                .HasOne(p => p.Booking)
+                .WithOne(b => b.Payment)
+                .HasForeignKey<Payment>(p => p.BookingId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure Wallet Transactions
+            builder.Entity<WalletTransaction>()
+                .HasOne(t => t.Wallet)
+                .WithMany(w => w.Transactions)
+                .HasForeignKey(t => t.WalletUserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
         }
-
     }
 }

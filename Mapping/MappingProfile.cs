@@ -67,7 +67,7 @@ namespace RakbnyMa_aak.Mapping
             CreateMap<Booking, CreateBookingResponseDto>()
             .ForMember(dest => dest.BookingId, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.PassengerId, opt => opt.MapFrom(src => src.UserId))
-            .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.TotalPrice ?? 0));
+            .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.TotalPrice));
 
             CreateMap<BookTripRequestDto, CreateBookingRequestDto>()
             .ForMember(dest => dest.PricePerSeat, opt => opt.Ignore());

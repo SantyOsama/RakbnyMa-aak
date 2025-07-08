@@ -34,9 +34,21 @@ namespace RakbnyMa_aak
                 options.UseSqlServer(builder.Configuration.GetConnectionString("SQLConnectionString")));
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-
             builder.Configuration.GetSection("Cloudinary");
 
+            // Register payment service HERE (BEFORE builder.Build())
+            if (builder.Environment.IsDevelopment())
+            {
+                builder.Services.AddScoped<IPaymentService, MockPaymentService>();
+            }
+            else
+            {
+                builder.Services.AddHttpClient<IPaymentService, PaymentGatewayService>(client =>
+                {
+                    client.BaseAddress = new Uri(builder.Configuration["PaymentGateway:BaseUrl"]);
+                    client.Timeout = TimeSpan.FromSeconds(30);
+                });
+            }
 
             builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
             builder.Services.AddScoped<IDriverVerificationService, DriverVerificationService>();
@@ -48,27 +60,23 @@ namespace RakbnyMa_aak
             builder.Services.AddScoped<IJwtService, JwtService>();
             builder.Services.AddScoped<INotificationService, NotificationService>();
 
-
-
             builder.Services.AddScoped<IDriverRepository, DriverRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             builder.Services.AddScoped<ITripRepository, TripRepository>();
-            builder.Services.AddScoped<IBookingRepository, BookingRepository>(); 
+            builder.Services.AddScoped<IBookingRepository, BookingRepository>();
             builder.Services.AddScoped<IGovernorateRepository, GovernorateRepository>();
             builder.Services.AddScoped<ICityRepository, CityRepository>();
             builder.Services.AddScoped<IRatingRepository, RatingRepository>();
             builder.Services.AddScoped<ITripTrackingRepository, TripTrackingRepository>();
 
-
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
-            // 2. Configure Identity with ApplicationUser (NOT IdentityUser)
+            // 2. Configure Identity with ApplicationUser
             builder.Services.AddScoped<SignInManager<ApplicationUser>>();
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
-                // optional: password, lockout, etc.
                 options.Password.RequireDigit = false;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
@@ -92,19 +100,16 @@ namespace RakbnyMa_aak
 
             builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
 
-            /****** Swagger & sOpenAPI  ******/
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            /****** Swagger & OpenAPI  ******/
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(swagger =>
             {
-                //This is to generate the Default UI of Swagger Documentation    
                 swagger.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
                     Title = "ASP.NET 5 Web API",
-                    Description = " ITI Projrcy"
+                    Description = " ITI Project"
                 });
-                // To Enable authorization using Swagger (JWT)    
                 swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
                 {
                     Name = "Authorization",
@@ -117,30 +122,29 @@ namespace RakbnyMa_aak
                 swagger.AddSecurityRequirement(new OpenApiSecurityRequirement
                  {
                      {
-                     new OpenApiSecurityScheme
-                     {
-                     Reference = new OpenApiReference
-                     {
-                     Type = ReferenceType.SecurityScheme,
-                     Id = "Bearer"
+                         new OpenApiSecurityScheme
+                         {
+                             Reference = new OpenApiReference
+                             {
+                                 Type = ReferenceType.SecurityScheme,
+                                 Id = "Bearer"
+                             }
+                         },
+                         new string[] {}
                      }
-                     },
-                     new string[] {}
-                     }
-                     });
-                        }); // to support JWT
+                 });
+            });
 
-                        // 4. Optional: Enable CORS (if frontend will call the API)
-                        builder.Services.AddCors(options =>
-                        {
-                            options.AddPolicy("AllowAll", policy =>
-                            {
-                                policy.AllowAnyOrigin()
-                                      .AllowAnyHeader()
-                                      .AllowAnyMethod();
-                            });
-                        });
-
+            // 4. Enable CORS
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
 
             builder.Services.AddAutoMapper(typeof(MappingProfile));
 
@@ -167,10 +171,8 @@ namespace RakbnyMa_aak
                          ValidateLifetime = true
                      };
                  });
-            /// .. AddSignalR;
 
             builder.Services.AddSignalR();
-
             builder.Services.AddAuthorization();
 
             var app = builder.Build();
@@ -184,10 +186,9 @@ namespace RakbnyMa_aak
                 var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                 await DbSeeder.SeedGovernoratesAndCitiesAsync(context);
 
-                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>(); 
-                var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();                   
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
                 await DbSeeder.SeedAdminUserAsync(userManager, roleManager, config);
-
             }
 
             // 5. Use Swagger
@@ -202,20 +203,18 @@ namespace RakbnyMa_aak
             // 6. Use CORS
             app.UseCors("AllowAll");
 
-
             //Add custom middlewares
-
             app.UseMiddleware<GlobalErrorHandlerMiddleware>();
             app.UseMiddleware<TransactionMiddleware>();
 
             // 7. Use Authentication and Authorization
-            app.UseAuthentication(); // important for Identity
+            app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapHub<NotificationHub>("/notificationHub");
             app.MapHub<TripTrackingHub>("/tripTrackingHub");
             app.MapHub<ChatHub>("/chatHub");
+
             // 8. Map Controllers
             app.MapControllers();
 

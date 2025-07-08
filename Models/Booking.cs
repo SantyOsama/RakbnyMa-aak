@@ -36,9 +36,15 @@ namespace RakbnyMa_aak.Models
         public decimal PricePerSeat { get; set; }
 
 
+        public int? PaymentId { get; set; }
+
+        [ForeignKey("PaymentId")]
+        public virtual Payment Payment { get; set; }
+
+        // Update TotalPrice to be stored in DB
         [Display(Name = "Total Price")]
-        [Range(0, double.MaxValue, ErrorMessage = "Total price must be a positive number.")]
-        public decimal? TotalPrice => PricePerSeat * NumberOfSeats;
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal TotalPrice => PricePerSeat * NumberOfSeats;
 
         [Display(Name = "Has the trip started?")]
         public bool HasStarted { get; set; } = false;

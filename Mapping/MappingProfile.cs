@@ -79,6 +79,12 @@ namespace RakbnyMa_aak.Mapping
               .ForMember(dest => dest.ToGovernorateName, opt => opt.MapFrom(src => src.ToGovernorate.Name))
               .ForMember(dest => dest.TripStatus, opt => opt.MapFrom(src => src.TripStatus.ToString()));
 
+            CreateMap<Booking, BookingStatusResponseDto>()
+           .ForMember(dest => dest.BookingId, opt => opt.MapFrom(src => src.Id))
+           .ForMember(dest => dest.TripID, opt => opt.MapFrom(src => src.TripId))
+           .ForMember(dest => dest.UserFullName, opt => opt.MapFrom(src => src.User.FullName))
+           .ForMember(dest => dest.UserEmail, opt => opt.MapFrom(src => src.User.Email));
+
 
         }
     }

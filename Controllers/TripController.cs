@@ -10,6 +10,7 @@ using RakbnyMa_aak.CQRS.Features.Trip.Orchestrators.UpdateTrip;
 using RakbnyMa_aak.CQRS.Features.Trip.Queries.GetDriverTripBookings;
 using RakbnyMa_aak.CQRS.Features.Trip.Queries.GetMyTrips;
 using RakbnyMa_aak.CQRS.Features.Trips.Queries.GetAllTrips;
+using RakbnyMa_aak.CQRS.Features.Trips.Queries.GetScheduledTrips;
 using RakbnyMa_aak.CQRS.Trips.Delete_Trip;
 using RakbnyMa_aak.DTOs.TripDTOs.RequestsDTOs;
 using RakbnyMa_aak.DTOs.TripDTOs.ResponseDTOs;
@@ -167,6 +168,13 @@ namespace RakbnyMa_aak.Controllers
         public async Task<ActionResult<PaginatedResult<TripResponseDto>>> GetAllTrips([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             var result = await _mediator.Send(new GetAllTripsQuery(page, pageSize));
+            return Ok(result);
+        }
+        [Authorize(Roles = "User")]
+        [HttpGet("scheduled-trips")]
+        public async Task<IActionResult> GetScheduledTrips([FromQuery] GetScheduledTripsQuery query)
+        {
+            var result = await _mediator.Send(query);
             return Ok(result);
         }
 

@@ -1,6 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RakbnyMa_aak.CQRS.Drivers.ChangePassword;
+using RakbnyMa_aak.DTOs.DriverDTOs.UpdateProfileDTOs;
+using System.Security.Claims;
 
 namespace RakbnyMa_aak.Controllers
 {
@@ -14,6 +17,27 @@ namespace RakbnyMa_aak.Controllers
         {
             _mediator = mediator;
         }
+
+
+        [HttpPatch("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var result = await _mediator.Send(new ChangePasswordCommand(userId, dto));
+                return result.IsSucceeded ? Ok(result) : BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An unexpected error occurred while changing the password.",
+                    Error = ex.Message
+                });
+            }
+        }
+
 
         //[HttpPost("register")]
         //public async Task<IActionResult> RegisterDriver([FromForm] RegisterDriverDto dto)

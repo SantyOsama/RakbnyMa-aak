@@ -19,6 +19,12 @@ namespace RakbnyMa_aak.MiddleWares
             }
             catch (Exception ex)
             {
+                var path = context.Request.Path.Value?.ToLower();
+                if (path != null && path.StartsWith("/hangfire"))
+                {
+                    throw; 
+                }
+
                 _logger.LogError(ex, "An unhandled exception occurred.");
 
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;

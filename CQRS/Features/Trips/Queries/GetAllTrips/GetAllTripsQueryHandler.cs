@@ -7,7 +7,7 @@ using RakbnyMa_aak.UOW;
 
 namespace RakbnyMa_aak.CQRS.Features.Trips.Queries.GetAllTrips
 {
-    public class GetAllTripsQueryHandler : IRequestHandler<GetAllTripsQuery, PaginatedResult<TripResponseDto>>
+    public class GetAllTripsQueryHandler : IRequestHandler<GetAllTripsQuery, Response<PaginatedResult<TripResponseDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -18,9 +18,9 @@ namespace RakbnyMa_aak.CQRS.Features.Trips.Queries.GetAllTrips
             _mapper = mapper;
         }
 
-        public async Task<PaginatedResult<TripResponseDto>> Handle(GetAllTripsQuery request, CancellationToken cancellationToken)
+        public async Task<Response<PaginatedResult<TripResponseDto>>>Handle(GetAllTripsQuery request, CancellationToken cancellationToken)
         {
-            return await _unitOfWork.TripRepository
+            var result = await _unitOfWork.TripRepository
                 .GetProjectedPaginatedAsync<TripResponseDto>(
                     predicate: _ => true,
                     page: request.Page,
@@ -28,6 +28,7 @@ namespace RakbnyMa_aak.CQRS.Features.Trips.Queries.GetAllTrips
                     mapper: _mapper,
                     cancellationToken: cancellationToken
                 );
+            return Response<PaginatedResult<TripResponseDto>>.Success(result);
         }
     }
 }

@@ -41,6 +41,10 @@ namespace RakbnyMa_aak.Models
         [ForeignKey("PaymentId")]
         public virtual Payment Payment { get; set; }
 
+        [Required]
+        [Display(Name = "Payment Status")]
+        public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.Pending;
+
         // Update TotalPrice to be stored in DB
         [Display(Name = "Total Price")]
         [Column(TypeName = "decimal(18,2)")]

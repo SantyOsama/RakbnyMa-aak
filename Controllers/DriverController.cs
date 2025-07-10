@@ -1,7 +1,9 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RakbnyMa_aak.CQRS.Drivers.ChangePassword;
+using RakbnyMa_aak.CQRS.Drivers.UpdateDriverCarInfo;
 using RakbnyMa_aak.CQRS.Drivers.UpdateDriverProfile;
 using RakbnyMa_aak.DTOs.DriverDTOs.UpdateProfileDTOs;
 using RakbnyMa_aak.GeneralResponse;
@@ -42,7 +44,7 @@ namespace RakbnyMa_aak.Controllers
 
 
         [HttpPatch("update-profile")]
-        public async Task<IActionResult> UpdateProfile([FromBody] UpdateDriverProfileDto dto)
+        public async Task<IActionResult> UpdateProfile([FromForm] UpdateDriverProfileDto dto)
         {
             try
             {
@@ -52,8 +54,26 @@ namespace RakbnyMa_aak.Controllers
             }
             
             catch (Exception ex)
-    {
+            {
                 return StatusCode(500, Response<string>.Fail($"Unexpected error: {ex.Message}"));
+            }
+        }
+
+
+
+        [Authorize(Roles = "Driver")]
+        [HttpPatch("update-car-info")]
+        public async Task<IActionResult> UpdateCarInfo([FromForm] UpdateDriverCarInfoDto dto)
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var result = await _mediator.Send(new UpdateDriverCarInfoCommand(userId, dto));
+                return result.IsSucceeded ? Ok(result) : BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, Response<string>.Fail("An error occurred: " + ex.Message));
             }
         }
 

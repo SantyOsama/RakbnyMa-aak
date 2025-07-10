@@ -102,14 +102,23 @@ namespace RakbnyMa_aak.Services.Implementations
                 CarColor = dto.CarColor,
                 CarCapacity = dto.CarCapacity,
                 CarModel = dto.CarModel,
+                CarPlateNumber = dto.CarPlateNumber,
                 DriverNationalIdImagePath = nationalIdImgUrl,
                 DriverLicenseImagePath = licenseImgUrl,
                 CarLicenseImagePath = carLicenseImgUrl,
                 SelfieImagePath = selfieImgUrl,
             };
 
-            await _repo.AddAsync(driver);
-            await _repo.CompleteAsync();
+            try
+            {
+                await _repo.AddAsync(driver);
+                await _repo.CompleteAsync();
+            }
+            catch (Exception ex)
+            {
+                return Response<RegisterResponseDto>.Fail($"Unexpected error: {ex.InnerException?.Message ?? ex.Message}");
+            }
+
 
             return Response<RegisterResponseDto>.Success(
                     new RegisterResponseDto { Id = user.Id },

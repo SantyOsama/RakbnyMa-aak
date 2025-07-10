@@ -83,6 +83,10 @@ namespace RakbnyMa_aak.DTOs.Auth.RequestDTOs
         [Range(2, 150, ErrorMessage = "Car capacity must be between 2 and 150.")]
         public int CarCapacity { get; set; }
 
+        [Required(ErrorMessage = "Car plate number is required.")]
+        [StringLength(10, MinimumLength = 2, ErrorMessage = "Car plate number must be between 2 and 10 characters.")]
+        public string CarPlateNumber { get; set; }
+
 
 
         [Display(Name = "National ID Image")]

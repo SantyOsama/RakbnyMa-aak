@@ -362,6 +362,11 @@ namespace RakbnyMa_aak.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("CarPlateNumber")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
                     b.Property<string>("CarType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Hangfire;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -70,6 +71,10 @@ namespace RakbnyMa_aak
             builder.Services.AddScoped<ICityRepository, CityRepository>();
             builder.Services.AddScoped<IRatingRepository, RatingRepository>();
             builder.Services.AddScoped<ITripTrackingRepository, TripTrackingRepository>();
+
+
+            builder.Services.AddScoped<IEmailService, EmailService>();
+            builder.Services.AddScoped<IExcelExportService, ExcelExportService>();
 
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
@@ -175,6 +180,12 @@ namespace RakbnyMa_aak
             builder.Services.AddSignalR();
             builder.Services.AddAuthorization();
 
+            builder.Services.AddHangfire(config =>
+               config.UseSqlServerStorage(builder.Configuration.GetConnectionString("SQLConnectionString")));
+
+            builder.Services.AddHangfireServer();
+
+
             var app = builder.Build();
 
             //Seed the database with initial data
@@ -210,6 +221,10 @@ namespace RakbnyMa_aak
             // 7. Use Authentication and Authorization
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                Authorization = new[] { new Hangfire.Dashboard.LocalRequestsOnlyAuthorizationFilter() }
+            });
 
             app.MapHub<NotificationHub>("/notificationHub");
             app.MapHub<TripTrackingHub>("/tripTrackingHub");

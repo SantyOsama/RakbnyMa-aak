@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.CancelBookingByPassenger;
 using RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.BookTripRequest;
 using RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.UpdateBookingOrchestrator;
-using RakbnyMa_aak.CQRS.Queries.Driver.GetApprovedBookings;
 using RakbnyMa_aak.CQRS.Queries.Driver.GetPendingBooking;
+using RakbnyMa_aak.CQRS.Queries.Driver.GetTripConfirmedBookings;
 using RakbnyMa_aak.DTOs.BookingsDTOs.Requests;
 using RakbnyMa_aak.DTOs.BookingsDTOs.RequestsDTOs;
 using System.Security.Claims;
@@ -52,20 +52,24 @@ namespace RakbnyMa_aak.Controllers
             return result.IsSucceeded ? Ok(result) : BadRequest(result);
         }
         [Authorize(Roles = "Driver")]
-        [HttpGet("Pending")]
-        public async Task<IActionResult> GetPendingBookings([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        [HttpGet("driver/trip/{tripId}/pending-bookings")]
+        public async Task<IActionResult> GetTripPendingBookings(int tripId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            var result = await _mediator.Send(new GetPendingBookingsQuery(page, pageSize));
+            var query = new GetTripPendingBookingsQuery(tripId, page, pageSize);
+            var result = await _mediator.Send(query);
             return Ok(result);
         }
 
+
         [Authorize(Roles = "Driver")]
-        [HttpGet("Confirmed")]
-        public async Task<IActionResult> GetApprovedBookings([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        [HttpGet("driver/trip/{tripId}/confirmed-bookings")]
+        public async Task<IActionResult> GetTripConfirmedBookings(int tripId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            var result = await _mediator.Send(new GetApprovedBookingsQuery(page, pageSize));
+            var query = new GetTripConfirmedBookingsQuery(tripId, page, pageSize);
+            var result = await _mediator.Send(query);
             return Ok(result);
         }
+
 
 
 

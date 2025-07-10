@@ -10,6 +10,7 @@ using RakbnyMa_aak.CQRS.Features.Trip.Orchestrators.UpdateTrip;
 using RakbnyMa_aak.CQRS.Features.Trip.Queries.GetDriverTripBookings;
 using RakbnyMa_aak.CQRS.Features.Trip.Queries.GetMyTrips;
 using RakbnyMa_aak.CQRS.Features.Trips.Queries.GetAllTrips;
+using RakbnyMa_aak.CQRS.Features.Trips.Queries.GetScheduledForDriver;
 using RakbnyMa_aak.CQRS.Features.Trips.Queries.GetScheduledTrips;
 using RakbnyMa_aak.CQRS.Trips.Delete_Trip;
 using RakbnyMa_aak.DTOs.TripDTOs.RequestsDTOs;
@@ -46,7 +47,7 @@ namespace RakbnyMa_aak.Controllers
         [Authorize(Roles = "Driver")]
         public async Task<IActionResult> UpdateTrip(int id, [FromBody] TripRequestDto dto)
         {
-          
+
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var result = await _mediator.Send(new UpdateTripOrchestrator
@@ -54,8 +55,8 @@ namespace RakbnyMa_aak.Controllers
                  id,
                  currentUserId,
                  dto
-              
-               
+
+
             ));
 
             if (!result.IsSucceeded)
@@ -83,7 +84,7 @@ namespace RakbnyMa_aak.Controllers
             return Ok(result);
         }
         [HttpGet("/driver/my-trips")]
-        [Authorize(Roles = "Driver")] 
+        [Authorize(Roles = "Driver")]
         public async Task<ActionResult<Response<PaginatedResult<TripRequestDto>>>> GetMyTrips([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             var result = await _mediator.Send(new GetMyTripsQuery(page, pageSize));
@@ -170,13 +171,33 @@ namespace RakbnyMa_aak.Controllers
             var result = await _mediator.Send(new GetAllTripsQuery(page, pageSize));
             return Ok(result);
         }
+
+
+
         [Authorize(Roles = "User")]
-        [HttpGet("scheduled-trips")]
-        public async Task<IActionResult> GetScheduledTrips([FromQuery] GetScheduledTripsQuery query)
+        [HttpGet("all-scheduled-trips")]
+        public async Task<IActionResult> GetScheduledTrips([FromQuery] GetScheduledForDriverQuery query)
         {
             var result = await _mediator.Send(query);
             return Ok(result);
         }
+
+        [Authorize(Roles = "Driver")]
+        [HttpPost("driver/scheduled")]
+        public async Task<ActionResult<Response<PaginatedResult<TripResponseDto>>>> GetScheduledTripsForDriver(
+                [FromBody] ScheduledTripRequestDto filterDto)
+        {
+            var driverId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(driverId))
+                return Unauthorized("Unauthorized access - missing driver ID");
+
+            var query = new GetScheduledForDriverQuery(filterDto, driverId);
+            var result = await _mediator.Send(query);
+
+            return Ok(result);
+        }
+
 
     }
 }

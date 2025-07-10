@@ -1,20 +1,19 @@
 ﻿using AutoMapper;
 using MediatR;
-using RakbnyMa_aak.CQRS.Features.Trips.Queries.GetScheduledForDriver;
 using RakbnyMa_aak.DTOs.TripDTOs.ResponseDTOs;
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.UOW;
 using System.Linq.Expressions;
 using static RakbnyMa_aak.Utilities.Enums;
 
-namespace RakbnyMa_aak.CQRS.Features.Trips.Queries.GetScheduledTrips
+namespace RakbnyMa_aak.CQRS.Features.Trips.Queries.GetScheduledForDriver
 {
-    public class GetScheduledTripsHandler : IRequestHandler<GetScheduledForDriverQuery, Response<PaginatedResult<TripResponseDto>>>
+    public class GetScheduledForDriverQueryHandler : IRequestHandler<GetScheduledForDriverQuery, Response<PaginatedResult<TripResponseDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public GetScheduledTripsHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public GetScheduledForDriverQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -23,10 +22,12 @@ namespace RakbnyMa_aak.CQRS.Features.Trips.Queries.GetScheduledTrips
         public async Task<Response<PaginatedResult<TripResponseDto>>> Handle(GetScheduledForDriverQuery request, CancellationToken cancellationToken)
         {
             var filterDto = request.Filter;
+            var driverId = request.DriverId;
 
             Expression<Func<RakbnyMa_aak.Models.Trip, bool>> filter = trip =>
                 trip.TripStatus == TripStatus.Scheduled &&
                 !trip.IsDeleted &&
+                trip.DriverId == driverId && 
                 (!filterDto.CreatedAfter.HasValue || trip.CreatedAt >= filterDto.CreatedAfter.Value) &&
                 (!filterDto.CreatedBefore.HasValue || trip.CreatedAt <= filterDto.CreatedBefore.Value);
 

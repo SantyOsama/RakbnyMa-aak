@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using RakbnyMa_aak.CQRS.Drivers.ChangePassword;
 using RakbnyMa_aak.CQRS.Drivers.UpdateDriverCarInfo;
 using RakbnyMa_aak.CQRS.Drivers.UpdateDriverProfile;
+using RakbnyMa_aak.CQRS.Features.Auth.Queries.GetDriverById;
+using RakbnyMa_aak.DTOs.DriverDTOs.ResponseDTOs;
 using RakbnyMa_aak.DTOs.DriverDTOs.UpdateProfileDTOs;
 using RakbnyMa_aak.GeneralResponse;
 using System.Security.Claims;
@@ -52,7 +54,7 @@ namespace RakbnyMa_aak.Controllers
                 var result = await _mediator.Send(new UpdateDriverProfileCommand(userId, dto));
                 return result.IsSucceeded ? Ok(result) : BadRequest(result);
             }
-            
+
             catch (Exception ex)
             {
                 return StatusCode(500, Response<string>.Fail($"Unexpected error: {ex.Message}"));
@@ -77,6 +79,16 @@ namespace RakbnyMa_aak.Controllers
             }
         }
 
+        [HttpGet("{driverId}")]
+        public async Task<ActionResult<Response<DriverResponseDto>>> GetDriverById(string driverId)
+        {
+            var result = await _mediator.Send(new GetDriverByIdQuery ( driverId ));
+
+            if (!result.IsSucceeded)
+                return NotFound(result);
+
+            return Ok(result);
+        }
 
         //[HttpPost("register")]
         //public async Task<IActionResult> RegisterDriver([FromForm] RegisterDriverDto dto)

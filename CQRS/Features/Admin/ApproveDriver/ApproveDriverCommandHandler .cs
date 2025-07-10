@@ -36,8 +36,10 @@ public class ApproveDriverCommandHandler : IRequestHandler<ApproveDriverCommand,
             return Response<bool>.Fail("User not found", statusCode: 404);
 
         var addRoleResult = await _userManager.AddToRoleAsync(user, "Driver");
+        // check user has role Driver or not (if driver make update in his profile)
+        bool isDriver = await _userManager.IsInRoleAsync(user, "Driver");
 
-        if (!addRoleResult.Succeeded)
+        if (!addRoleResult.Succeeded && !isDriver)
             return Response<bool>.Fail("Driver approved but failed to assign role: " +
                 string.Join(", ", addRoleResult.Errors.Select(e => e.Description)));
 

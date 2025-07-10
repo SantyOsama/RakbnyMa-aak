@@ -41,6 +41,11 @@ namespace RakbnyMa_aak.Models
         public int CarCapacity { get; set; } // Added based on ERD discussion
 
 
+        [Required(ErrorMessage = "Car plate number is required.")]
+        [StringLength(10, MinimumLength = 2, ErrorMessage = "Car plate number must be between 2 and 10 characters.")]
+        public string CarPlateNumber { get; set; }
+
+
 
         [Required(ErrorMessage = "National ID image is required.")]
         [Display(Name = "National ID Image")]

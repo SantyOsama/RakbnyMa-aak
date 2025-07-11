@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using OfficeOpenXml;
 using RakbnyMa_aak.Behaviors;
 using RakbnyMa_aak.CQRS.Features.Auth.Commands.RegisterDriver;
 using RakbnyMa_aak.Data;
@@ -28,6 +29,8 @@ namespace RakbnyMa_aak
     {
         public static async Task Main(string[] args)
         {
+            Environment.SetEnvironmentVariable("EPPlusLicenseContext", "NonCommercial");
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial; 
             var builder = WebApplication.CreateBuilder(args);
 
             // 1. Add DbContext
@@ -75,6 +78,7 @@ namespace RakbnyMa_aak
 
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<IExcelExportService, ExcelExportService>();
+            builder.Services.AddScoped<AdminReportService>();
 
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 

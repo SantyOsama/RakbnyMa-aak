@@ -6,6 +6,7 @@ using RakbnyMa_aak.DTOs.Auth.RequestDTOs;
 using RakbnyMa_aak.DTOs.BookingsDTOs.Requests;
 using RakbnyMa_aak.DTOs.BookingsDTOs.ResponseDTOs;
 using RakbnyMa_aak.DTOs.DriverDTOs.ResponseDTOs;
+using RakbnyMa_aak.DTOs.Shared;
 using RakbnyMa_aak.DTOs.TripDTOs.RequestsDTOs;
 using RakbnyMa_aak.DTOs.TripDTOs.ResponseDTOs;
 using RakbnyMa_aak.DTOs.UserDTOs;
@@ -84,6 +85,17 @@ namespace RakbnyMa_aak.Mapping
            .ForMember(dest => dest.TripID, opt => opt.MapFrom(src => src.TripId))
            .ForMember(dest => dest.UserFullName, opt => opt.MapFrom(src => src.User.FullName))
            .ForMember(dest => dest.UserEmail, opt => opt.MapFrom(src => src.User.Email));
+
+
+            CreateMap<Trip, TripReportDto>()
+                 .ForMember(dest => dest.TripId, opt => opt.MapFrom(src => src.Id))
+                 .ForMember(dest => dest.DriverFullName, opt => opt.MapFrom(src => src.Driver.User.FullName))
+                 .ForMember(dest => dest.FromCityName, opt => opt.MapFrom(src => src.FromCity.Name))
+                 .ForMember(dest => dest.FromGovernorateName, opt => opt.MapFrom(src => src.FromGovernorate.Name))
+                 .ForMember(dest => dest.ToCityName, opt => opt.MapFrom(src => src.ToCity.Name))
+                 .ForMember(dest => dest.ToGovernorateName, opt => opt.MapFrom(src => src.ToGovernorate.Name))
+                 .ForMember(dest => dest.TripStatus, opt => opt.MapFrom(src => src.TripStatus.ToString()));
+
 
 
         }

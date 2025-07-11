@@ -3,7 +3,7 @@
     public class TripResponseDto
     {
         public int Id { get; set; }
-        public string DriverId { get; set; }
+        public string DriverFullName { get; set; }
         public string PickupLocation { get; set; }
         public string DestinationLocation { get; set; }
         public DateTime TripDate { get; set; }

@@ -82,20 +82,20 @@ namespace RakbnyMa_aak.Mapping
               .ForMember(dest => dest.TripStatus, opt => opt.MapFrom(src => src.TripStatus.ToString()));
 
             CreateMap<Booking, BookingStatusResponseDto>()
-           .ForMember(dest => dest.BookingId, opt => opt.MapFrom(src => src.Id))
-           .ForMember(dest => dest.TripID, opt => opt.MapFrom(src => src.TripId))
-           .ForMember(dest => dest.UserFullName, opt => opt.MapFrom(src => src.User.FullName))
-           .ForMember(dest => dest.UserEmail, opt => opt.MapFrom(src => src.User.Email));
+               .ForMember(dest => dest.BookingId, opt => opt.MapFrom(src => src.Id))
+               .ForMember(dest => dest.TripID, opt => opt.MapFrom(src => src.TripId))
+               .ForMember(dest => dest.UserFullName, opt => opt.MapFrom(src => src.User.FullName))
+               .ForMember(dest => dest.UserEmail, opt => opt.MapFrom(src => src.User.Email));
 
 
-            CreateMap<Trip, TripReportDto>()
-                 .ForMember(dest => dest.TripId, opt => opt.MapFrom(src => src.Id))
-                 .ForMember(dest => dest.DriverFullName, opt => opt.MapFrom(src => src.Driver.User.FullName))
-                 .ForMember(dest => dest.FromCityName, opt => opt.MapFrom(src => src.FromCity.Name))
-                 .ForMember(dest => dest.FromGovernorateName, opt => opt.MapFrom(src => src.FromGovernorate.Name))
-                 .ForMember(dest => dest.ToCityName, opt => opt.MapFrom(src => src.ToCity.Name))
-                 .ForMember(dest => dest.ToGovernorateName, opt => opt.MapFrom(src => src.ToGovernorate.Name))
-                 .ForMember(dest => dest.TripStatus, opt => opt.MapFrom(src => src.TripStatus.ToString()));
+            CreateMap<Trip, TripResponseDto>()
+              .ForMember(dest => dest.DriverFullName, opt => opt.MapFrom(src => src.Driver.User.FullName))
+              .ForMember(dest => dest.FromCityName, opt => opt.MapFrom(src => src.FromCity.Name))
+              .ForMember(dest => dest.ToCityName, opt => opt.MapFrom(src => src.ToCity.Name))
+              .ForMember(dest => dest.FromGovernorateName, opt => opt.MapFrom(src => src.FromGovernorate.Name))
+              .ForMember(dest => dest.ToGovernorateName, opt => opt.MapFrom(src => src.ToGovernorate.Name))
+              .ForMember(dest => dest.TripStatus, opt => opt.MapFrom(src => src.TripStatus.ToString()));
+
 
 
             CreateMap<(Booking booking, Trip trip), BookingValidationResultDto>()

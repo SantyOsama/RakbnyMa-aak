@@ -83,8 +83,8 @@ namespace RakbnyMa_aak.Controllers
 
             return Ok(result);
         }
-        [HttpGet("/driver/my-trips")]
-        [Authorize(Roles = "Driver")]
+        [HttpGet("/my-trips")]
+        [Authorize]
         public async Task<ActionResult<Response<PaginatedResult<TripRequestDto>>>> GetMyTrips([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             var result = await _mediator.Send(new GetMyTripsQuery(page, pageSize));

@@ -17,18 +17,23 @@ namespace RakbnyMa_aak.Services.Implementations
         private readonly ICloudinaryService _cloudinary;
         private readonly IDriverVerificationService _verificationService;
         private readonly IDriverRepository _repo;
+        private readonly INotificationService _notificationService;
+
 
         public DriverRegistrationService(
-            UserManager<ApplicationUser> userManager,
-            ICloudinaryService cloudinary,
-            IDriverVerificationService verificationService,
-            IDriverRepository repo)
-        {
-            _userManager = userManager;
-            _cloudinary = cloudinary;
-            _verificationService = verificationService;
-            _repo = repo;
-        }
+              UserManager<ApplicationUser> userManager,
+              ICloudinaryService cloudinary,
+              IDriverVerificationService verificationService,
+              IDriverRepository repo,
+              INotificationService notificationService)
+                {
+                    _userManager = userManager;
+                    _cloudinary = cloudinary;
+                    _verificationService = verificationService;
+                    _repo = repo;
+                    _notificationService = notificationService;
+                }
+
 
         public async Task<Response<RegisterResponseDto>> RegisterDriverAsync(RegisterDriverRequestDto dto)
         {
@@ -109,21 +114,27 @@ namespace RakbnyMa_aak.Services.Implementations
                 SelfieImagePath = selfieImgUrl,
             };
 
-            try
-            {
-                await _repo.AddAsync(driver);
-                await _repo.CompleteAsync();
-            }
-            catch (Exception ex)
-            {
-                return Response<RegisterResponseDto>.Fail($"Unexpected error: {ex.InnerException?.Message ?? ex.Message}");
-            }
+            await _repo.AddAsync(driver);
+            await _repo.CompleteAsync();
 
+            // ⬇️ Notify Admins via NotificationService
+            var admins = await _userManager.GetUsersInRoleAsync("Admin");
+
+            foreach (var admin in admins)
+            {
+                await _notificationService.SendNotificationAsync(
+                    recipientUserId: admin.Id,
+                    sender: user,
+                    message: $"Driver {user.FullName} has requested registration.",
+                    type: NotificationType.DriverRegistration,
+                    relatedEntityId: user.Id
+                );
+            }
 
             return Response<RegisterResponseDto>.Success(
-                    new RegisterResponseDto { Id = user.Id },
-                    "Driver registered successfully and become pending to approve"
-                );
+                new RegisterResponseDto { Id = user.Id },
+                "Driver registered successfully and become pending to approve"
+            );
 
         }
     }

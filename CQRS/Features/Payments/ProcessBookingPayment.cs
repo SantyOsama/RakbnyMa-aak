@@ -57,8 +57,8 @@ namespace RakbnyMa_aak.Features.Payments
                         .Include(b => b.User)
                             .ThenInclude(u => u.Wallet)
                                 .ThenInclude(w => w.Transactions)
-                        .Where(b => b.Id == request.BookingId &&
-                                    !b.PaymentId.HasValue)
+                       .Where(b => b.Id == request.BookingId &&
+                            !_context.Payments.Any(p => p.BookingId == b.Id))
                         .Select(b => new
                         {
                             Booking = b,
@@ -116,7 +116,6 @@ namespace RakbnyMa_aak.Features.Payments
                     if (paymentResult.Success)
                     {
                         booking.Booking.RequestStatus = RequestStatus.Confirmed;
-                        booking.Booking.PaymentId = payment.Id;
                     }
 
                     await _context.SaveChangesAsync(cancellationToken);

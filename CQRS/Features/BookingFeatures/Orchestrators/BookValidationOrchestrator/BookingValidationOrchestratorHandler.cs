@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using RakbnyMa_aak.CQRS.Commands.Validations.ValidateBookingExists;
 using RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripExists;
 using RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripOwner;
@@ -11,10 +12,12 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.BookValidatio
     : IRequestHandler<BookingValidationOrchestrator, Response<BookingValidationResultDto>>
     {
         private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public BookingValidationCommandHandler(IMediator mediator)
+        public BookingValidationCommandHandler(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
+            _mapper = mapper;
         }
         public async Task<Response<BookingValidationResultDto>> Handle(BookingValidationOrchestrator request, CancellationToken cancellationToken)
         {
@@ -40,14 +43,9 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.BookValidatio
                 return Response<BookingValidationResultDto>.Fail("Booking cannot exceed available trip seats.");
 
             // Step 5: Return the validated data in a DTO
-            return Response<BookingValidationResultDto>.Success(new BookingValidationResultDto
-            {
-                BookingId = booking.Id,
-                TripId = trip.TripId,
-                PassengerId = booking.UserId,
-                DriverId = trip.DriverId,
-                requestStatus = booking.RequestStatus,
-            });
+            var dto = _mapper.Map<BookingValidationResultDto>((booking, trip));
+            return Response<BookingValidationResultDto>.Success(dto);
+
         }
     }
 

@@ -4,6 +4,7 @@ using RakbnyMa_aak.DTOs.Shared;
 using RakbnyMa_aak.Models;
 using RakbnyMa_aak.Services.Interfaces;
 using RakbnyMa_aak.SignalR;
+using static RakbnyMa_aak.Utilities.Enums;
 
 public class NotificationService : INotificationService
 {
@@ -16,30 +17,37 @@ public class NotificationService : INotificationService
         _hubContext = hubContext;
     }
 
-    public async Task SendNotificationAsync(string recipientUserId, ApplicationUser sender, string message)
+    public async Task SendNotificationAsync(
+        string recipientUserId,
+        ApplicationUser sender,
+        string message,
+        NotificationType type = NotificationType.Custom,
+        string? relatedEntityId = null)
     {
-        // 1. Save to DB
         var notification = new Notification
         {
             UserId = recipientUserId,
             Message = message,
+            IsRead = false,
             CreatedAt = DateTime.UtcNow,
-            IsRead = false
+            Type = type,
+            RelatedEntityId = relatedEntityId
         };
 
         await _context.Notifications.AddAsync(notification);
         await _context.SaveChangesAsync();
 
-        // 2. Send Real-time
         var payload = new NotificationDto
         {
             Message = message,
             SenderId = sender.Id,
             SenderFullName = sender.FullName,
-            SenderPicture = sender.Picture
+            SenderPicture = sender.Picture,
+            Type = type,
+            CreatedAt = notification.CreatedAt.ToString("g")
         };
 
         await _hubContext.Clients.User(recipientUserId)
-            .SendAsync("Receive Notification", payload);
+            .SendAsync("ReceiveNotification", payload);
     }
 }

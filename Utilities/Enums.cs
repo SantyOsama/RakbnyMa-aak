@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace RakbnyMa_aak.Utilities
 {
@@ -147,6 +148,18 @@ namespace RakbnyMa_aak.Utilities
             Pending,
             Completed,
             Failed
+        }
+
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public enum NotificationType
+        {
+            DriverRegistration,
+            TripBooked,
+            BookingApproved,
+            TripCancelled,
+            Payment,
+            ChatMessage,
+            Custom
         }
     }
 }

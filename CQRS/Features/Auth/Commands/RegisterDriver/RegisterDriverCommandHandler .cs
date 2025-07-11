@@ -16,6 +16,7 @@ namespace RakbnyMa_aak.CQRS.Features.Auth.Commands.RegisterDriver
         public async Task<Response<RegisterResponseDto>> Handle(RegisterDriverCommand request, CancellationToken cancellationToken)
         {
             return await _registrationService.RegisterDriverAsync(request.DriverDto);
+
         }
 
     }

@@ -38,7 +38,9 @@ namespace RakbnyMa_aak.Models
 
         public int? PaymentId { get; set; }
 
+        [ForeignKey("PaymentId")]
         public virtual Payment Payment { get; set; }
+
 
         [Required]
         [Display(Name = "Payment Status")]

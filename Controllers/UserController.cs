@@ -1,7 +1,9 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RakbnyMa_aak.CQRS.Features.Auth.Queries.GetUserById;
+using RakbnyMa_aak.CQRS.Features.Trips.Queries.GetMyBookedTrips;
 using RakbnyMa_aak.DTOs.UserDTOs;
 using RakbnyMa_aak.GeneralResponse;
 namespace RakbnyMa_aak.Controllers
@@ -34,5 +36,15 @@ namespace RakbnyMa_aak.Controllers
 
             return Ok(result);
         }
+
+        [Authorize(Roles = "User")]
+        [HttpGet("passenger/booked-trips")]
+        public async Task<IActionResult> GetMyBookedTrips([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        {
+            var query = new GetMyBookedTripsQuery(page, pageSize);
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
+
     }
 }

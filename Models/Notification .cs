@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static RakbnyMa_aak.Utilities.Enums;
 
 namespace RakbnyMa_aak.Models
 {
@@ -16,6 +17,11 @@ namespace RakbnyMa_aak.Models
 
         [Display(Name = "Is Read")]
         public bool IsRead { get; set; } = false;
+        public NotificationType Type { get; set; } = NotificationType.Custom;
+
+
+        public string? RelatedEntityId { get; set; }
+
 
         [ForeignKey("UserId")]
         [Display(Name = "User")]

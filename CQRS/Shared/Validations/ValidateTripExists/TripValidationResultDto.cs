@@ -8,6 +8,8 @@
         public int AvailableSeats { get; set; }
         public decimal PricePerSeat { get; set; }
         public bool IsDeleted { get; set; }
+        public string DriverFullName { get; set; }
+        public string DriverPicture { get; set; }
     }
 
 }

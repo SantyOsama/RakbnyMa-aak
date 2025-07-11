@@ -35,10 +35,6 @@ namespace RakbnyMa_aak.Models
         [Display(Name = "Price per Seat")]
         public decimal PricePerSeat { get; set; }
 
-
-        public int? PaymentId { get; set; }
-
-        [ForeignKey("PaymentId")]
         public virtual Payment Payment { get; set; }
 
 

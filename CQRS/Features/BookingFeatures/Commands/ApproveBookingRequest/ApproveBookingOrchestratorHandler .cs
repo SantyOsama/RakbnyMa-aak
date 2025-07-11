@@ -3,6 +3,8 @@ using RakbnyMa_aak.CQRS.Commands.SendNotification;
 using RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.UpdateBookingStatus;
 using RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.BookValidationOrchestrator;
 using RakbnyMa_aak.GeneralResponse;
+using RakbnyMa_aak.Models;
+using RakbnyMa_aak.Services.Interfaces;
 using static RakbnyMa_aak.Utilities.Enums;
 
 namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.ApproveBookingRequest
@@ -10,11 +12,16 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.ApproveBookingRequ
     public class ApproveBookingOrchestratorHandler : IRequestHandler<ApproveBookingOrchestrator, Response<bool>>
     {
         private readonly IMediator _mediator;
+        private readonly INotificationService _notificationService;
 
-        public ApproveBookingOrchestratorHandler(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
+        public ApproveBookingOrchestratorHandler(
+             IMediator mediator,
+             INotificationService notificationService)
+                {
+                    _mediator = mediator;
+                    _notificationService = notificationService;
+                }
+
 
         public async Task<Response<bool>> Handle(ApproveBookingOrchestrator request, CancellationToken cancellationToken)
         {
@@ -34,12 +41,18 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.ApproveBookingRequ
                 return Response<bool>.Fail(approveResult.Message);
 
 
-            await _mediator.Send(new SendNotificationCommand(new SendNotificationDto
-            {
-                ReceiverId = result.PassengerId,
-                SenderUserId = result.DriverId,
-                Message = "Your booking request has been approved."
-            }));
+            await _notificationService.SendNotificationAsync(
+                  recipientUserId: result.PassengerId,
+                  sender: new ApplicationUser
+                  {
+                      Id = result.DriverId,
+                      FullName = result.DriverFullName,
+                      Picture = result.DriverPicture
+                  },
+                  message: "Your booking request has been approved.",
+                  type: NotificationType.BookingApproved,
+                  relatedEntityId: result.BookingId.ToString()
+              );
 
             return Response<bool>.Success(true, "Booking approved and passenger notified.");
         }

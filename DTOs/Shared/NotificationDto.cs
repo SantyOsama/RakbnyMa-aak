@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using static RakbnyMa_aak.Utilities.Enums;
 
 namespace RakbnyMa_aak.DTOs.Shared
 {
@@ -22,5 +23,14 @@ namespace RakbnyMa_aak.DTOs.Shared
         [Url(ErrorMessage = "Invalid URL format for sender picture.")]
         [Display(Name = "Sender Picture URL")]
         public string SenderPicture { get; set; }
+
+        [Display(Name = "Notification Type")]
+        public NotificationType Type { get; set; } 
+
+        [Display(Name = "Created At")]
+        public string CreatedAt { get; set; } 
+
+        [Display(Name = "Related Entity ID")]
+        public string? RelatedEntityId { get; set; }
     }
 }

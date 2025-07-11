@@ -12,8 +12,8 @@ using RakbnyMa_aak.Data;
 namespace RakbnyMa_aak.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250709124950_AddNewChanges")]
-    partial class AddNewChanges
+    [Migration("20250711214306_Final")]
+    partial class Final
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -264,7 +264,7 @@ namespace RakbnyMa_aak.Migrations
                     b.Property<int>("NumberOfSeats")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PaymentId")
+                    b.Property<int>("PaymentStatus")
                         .HasColumnType("int");
 
                     b.Property<decimal>("PricePerSeat")
@@ -361,6 +361,11 @@ namespace RakbnyMa_aak.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("CarPlateNumber")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("CarType")
                         .IsRequired()
@@ -522,10 +527,16 @@ namespace RakbnyMa_aak.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<string>("RelatedEntityId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");

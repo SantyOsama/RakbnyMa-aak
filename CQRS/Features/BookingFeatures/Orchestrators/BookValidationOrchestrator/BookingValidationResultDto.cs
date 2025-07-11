@@ -10,6 +10,9 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.BookValidatio
         public string DriverId { get; set; }
         public int NumberOfSeats { get; set; }
         public RequestStatus requestStatus { get; set; }
+
+        public string DriverFullName { get; set; }
+        public string DriverPicture { get; set; }
     }
 
 }

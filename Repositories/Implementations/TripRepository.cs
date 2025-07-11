@@ -22,11 +22,15 @@ namespace RakbnyMa_aak.Repositories.Implementations
         public async Task<TripValidationResultDto?> GetTripValidationDtoAsync(int tripId)
         {
             return await _context.Trips
+                .Include(t => t.Driver)
+                    .ThenInclude(d => d.User)
                 .Where(t => t.Id == tripId && !t.IsDeleted && t.TripStatus != TripStatus.Cancelled)
                 .Select(t => new TripValidationResultDto
                 {
                     TripId = t.Id,
                     DriverId = t.DriverId,
+                    DriverFullName = t.Driver.User.FullName,
+                    DriverPicture = t.Driver.User.Picture,
                     TripDate = t.TripDate,
                     AvailableSeats = t.AvailableSeats,
                     PricePerSeat = t.PricePerSeat,

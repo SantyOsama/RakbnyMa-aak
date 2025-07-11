@@ -37,6 +37,7 @@ namespace RakbnyMa_aak.Models
 
         public virtual Payment Payment { get; set; }
 
+
         [Required]
         [Display(Name = "Payment Status")]
         public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.Pending;

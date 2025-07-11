@@ -96,6 +96,19 @@ namespace RakbnyMa_aak.Mapping
               .ForMember(dest => dest.ToGovernorateName, opt => opt.MapFrom(src => src.ToGovernorate.Name))
               .ForMember(dest => dest.TripStatus, opt => opt.MapFrom(src => src.TripStatus.ToString()));
 
+            CreateMap<Trip, TripReportDto>()
+                .ForMember(dest => dest.TripId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.DriverFullName, opt => opt.MapFrom(src => src.Driver.User.FullName))
+                .ForMember(dest => dest.FromCityName, opt => opt.MapFrom(src => src.FromCity.Name))
+                .ForMember(dest => dest.FromGovernorateName, opt => opt.MapFrom(src => src.FromGovernorate.Name))
+                .ForMember(dest => dest.ToCityName, opt => opt.MapFrom(src => src.ToCity.Name))
+                .ForMember(dest => dest.ToGovernorateName, opt => opt.MapFrom(src => src.ToGovernorate.Name))
+                .ForMember(dest => dest.TripDate, opt => opt.MapFrom(src => src.TripDate))
+                .ForMember(dest => dest.AvailableSeats, opt => opt.MapFrom(src => src.AvailableSeats))
+                .ForMember(dest => dest.PricePerSeat, opt => opt.MapFrom(src => src.PricePerSeat))
+                .ForMember(dest => dest.TripStatus, opt => opt.MapFrom(src => src.TripStatus.ToString()))
+                .ForMember(dest => dest.WomenOnly, opt => opt.MapFrom(src => src.WomenOnly))
+                .ForMember(dest => dest.IsRecurring, opt => opt.MapFrom(src => src.IsRecurring));
 
 
             CreateMap<(Booking booking, Trip trip), BookingValidationResultDto>()
@@ -107,8 +120,6 @@ namespace RakbnyMa_aak.Mapping
                .ForMember(dest => dest.requestStatus, opt => opt.MapFrom(src => src.booking.RequestStatus))
                .ForMember(dest => dest.DriverFullName, opt => opt.MapFrom(src => src.trip.Driver.User.FullName))
                .ForMember(dest => dest.DriverPicture, opt => opt.MapFrom(src => src.trip.Driver.User.Picture));
-
-
         }
     }
 }

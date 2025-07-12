@@ -83,7 +83,7 @@ namespace RakbnyMa_aak.Controllers
 
             return Ok(result);
         }
-        [HttpGet("/my-trips")]
+        [HttpGet("my-trips")]
         [Authorize]
         public async Task<ActionResult<Response<PaginatedResult<TripRequestDto>>>> GetMyTrips([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
@@ -175,8 +175,9 @@ namespace RakbnyMa_aak.Controllers
 
         [Authorize(Roles = "Admin,User")]
         [HttpGet("all-scheduled-trips")]
-        public async Task<IActionResult> GetScheduledTrips([FromQuery] GetScheduledTripsQuery query)
+        public async Task<IActionResult> GetScheduledTrips([FromQuery] ScheduledTripRequestDto filter)
         {
+            var query = new GetScheduledTripsQuery(filter);
             var result = await _mediator.Send(query);
             return Ok(result);
         }
@@ -189,17 +190,16 @@ namespace RakbnyMa_aak.Controllers
         
         [Authorize(Roles = "Driver")]
         [HttpGet("driver/scheduled")]
-        public async Task<ActionResult> GetScheduledTripsForDriver([FromQuery] GetScheduledForDriverQuery query)
+        public async Task<ActionResult> GetScheduledTripsForDriver([FromQuery] ScheduledTripRequestDto filter)
         {
-            //var driverId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var driverId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(driverId))
+              return Unauthorized("Unauthorized access - missing driver ID");
 
-            //if (string.IsNullOrEmpty(driverId))
-                //return Unauthorized("Unauthorized access - missing driver ID");
-
-           // var query = new GetScheduledTripsQuery(filterDto);
+            var query = new GetScheduledForDriverQuery(filter, driverId);
             var result = await _mediator.Send(query);
-
             return Ok(result);
+            
         }
 
 

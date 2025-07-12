@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using RakbnyMa_aak.CQRS.Features.Trip.Commands.PersistTrip;
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.UOW;
@@ -26,7 +27,11 @@ namespace RakbnyMa_aak.CQRS.Features.Trips.Commands.PersistTrip
             await _unitOfWork.TripRepository.AddAsync(trip);
             await _unitOfWork.CompleteAsync();
 
-            return Response<int>.Success(trip.Id, $"Trip from {trip.FromCityId} to {trip.ToCityId} created successfully.");
+            var fromCity = await _unitOfWork.CityRepository.GetCityNameByIdAsync(request.TripDto.FromCityId);
+
+            var toCity = await _unitOfWork.CityRepository.GetCityNameByIdAsync(request.TripDto.ToCityId);
+
+            return Response<int>.Success(trip.Id, $"Trip from {fromCity} to {toCity} created successfully.");
         }
     }
 }

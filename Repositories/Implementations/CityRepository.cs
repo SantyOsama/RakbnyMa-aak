@@ -32,6 +32,14 @@ namespace RakbnyMa_aak.Repositories.Implementations
                 .ToListAsync(cancellationToken);
         }
 
+        public async Task<string?> GetCityNameByIdAsync(int cityId)
+        {
+            return await _context.Cities
+                .AsNoTracking()
+                .Where(c => c.Id == cityId)
+                .Select(c => c.Name)
+                .FirstOrDefaultAsync();
+        }
 
     }
 }

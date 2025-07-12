@@ -9,18 +9,18 @@ using static RakbnyMa_aak.Utilities.Enums;
 
 namespace RakbnyMa_aak.CQRS.Features.Trips.Queries.GetScheduledTrips
 {
-    public class GetScheduledTripsHandler : IRequestHandler<GetScheduledForDriverQuery, Response<PaginatedResult<TripResponseDto>>>
+    public class GetScheduledTripsQueryHandler : IRequestHandler<GetScheduledTripsQuery, Response<PaginatedResult<TripResponseDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public GetScheduledTripsHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public GetScheduledTripsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
-        public async Task<Response<PaginatedResult<TripResponseDto>>> Handle(GetScheduledForDriverQuery request, CancellationToken cancellationToken)
+        public async Task<Response<PaginatedResult<TripResponseDto>>> Handle(GetScheduledTripsQuery request, CancellationToken cancellationToken)
         {
             var filterDto = request.Filter;
 

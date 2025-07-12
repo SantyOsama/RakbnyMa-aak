@@ -7,6 +7,7 @@ namespace RakbnyMa_aak.Repositories.Interfaces
     {
         Task<IEnumerable<City>> GetAllAsync(Expression<Func<City, bool>> filter);
         Task<City> GetCityWithGovernorateNameByIdAsync(int cityId);
+        Task<string?> GetCityNameByIdAsync(int cityId);
 
 
     }

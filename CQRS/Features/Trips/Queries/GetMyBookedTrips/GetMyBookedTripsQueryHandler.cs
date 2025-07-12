@@ -35,13 +35,26 @@ namespace RakbnyMa_aak.CQRS.Features.Trips.Queries.GetMyBookedTrips
 
             var totalCount = await tripsQuery.CountAsync(cancellationToken);
 
+            //var pagedTrips = await tripsQuery
+            //    .Skip((request.Page - 1) * request.PageSize)
+            //    .Take(request.PageSize)
+            //    .Include(t => t.Driver)
+            //    .Include(t => t.FromCity)
+            //    .Include(t => t.ToCity)
+            //    .ToListAsync(cancellationToken);
+
             var pagedTrips = await tripsQuery
+                .Include(t => t.Driver)
+                   .ThenInclude(d => d.User)
+                      .ThenInclude(u => u.RatingsReceived)
+                .Include(t => t.FromCity)
+                   .ThenInclude(c => c.Governorate)
+                .Include(t => t.ToCity)
+                   .ThenInclude(c => c.Governorate)
                 .Skip((request.Page - 1) * request.PageSize)
                 .Take(request.PageSize)
-                .Include(t => t.Driver)
-                .Include(t => t.FromCity)
-                .Include(t => t.ToCity)
                 .ToListAsync(cancellationToken);
+
 
             var tripDtos = _mapper.Map<List<TripResponseDto>>(pagedTrips);
 

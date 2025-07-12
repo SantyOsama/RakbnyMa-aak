@@ -25,22 +25,16 @@ namespace RakbnyMa_aak.CQRS.Users.UpdateUserProfile
             if (user == null)
                 return Response<string>.Fail("User not found");
 
-            if (!string.IsNullOrWhiteSpace(dto.Email))
-            {
+
                 var emailOwner = await _userManager.FindByEmailAsync(dto.Email);
                 if (emailOwner != null && emailOwner.Id != user.Id)
                     return Response<string>.Fail("Email is already in use.");
-                user.Email = dto.Email;
-            }
 
-            if (!string.IsNullOrWhiteSpace(dto.PhoneNumber))
-                user.PhoneNumber = dto.PhoneNumber;
-
-            if (!string.IsNullOrWhiteSpace(dto.FullName))
-            {
+                user.Email = dto.Email;           
+                user.PhoneNumber = dto.PhoneNumber;                    
                 user.FullName = dto.FullName;
                 user.UserName = dto.FullName;
-            }
+            
 
             if (dto.Picture != null)
             {

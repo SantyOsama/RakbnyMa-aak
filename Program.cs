@@ -33,7 +33,8 @@ namespace RakbnyMa_aak
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial; 
             var builder = WebApplication.CreateBuilder(args);
 
-            // 1. Add DbContext
+           
+
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("SQLConnectionString")));
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -193,6 +194,12 @@ namespace RakbnyMa_aak
             var app = builder.Build();
 
             //Seed the database with initial data
+            // 1. Add DbContext
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                db.Database.Migrate();
+            }
             using (var scope = app.Services.CreateScope())
             {
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -207,11 +214,12 @@ namespace RakbnyMa_aak
             }
 
             // 5. Use Swagger
-            if (app.Environment.IsDevelopment())
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Rakbny Maak API V1");
+                c.RoutePrefix = "swagger";
+            });
 
             app.UseHttpsRedirection();
 
@@ -233,6 +241,8 @@ namespace RakbnyMa_aak
             app.MapHub<NotificationHub>("/notificationHub");
             app.MapHub<TripTrackingHub>("/tripTrackingHub");
             app.MapHub<ChatHub>("/chatHub");
+
+            app.MapGet("/", () => Results.Ok("API is running..."));
 
             // 8. Map Controllers
             app.MapControllers();

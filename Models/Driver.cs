@@ -4,8 +4,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RakbnyMa_aak.Models
 {
-    public class Driver:BaseEntity
+    public class Driver
     {
+        [Required]
+        public int Id { get; set; }
+
+        [Display(Name = "Is Deleted")]
+        [Required]
+        public bool IsDeleted { get; set; } = false;
+
+        [Timestamp]
+        [Display(Name = "Row Version")]
+        public byte[]? RowVersion { get; set; }
         [Key]
         [ForeignKey("ApplicationUser")] // UserId is PK and FK to ApplicationUser
         public string UserId { get; set; }

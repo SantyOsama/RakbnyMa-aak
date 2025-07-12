@@ -9,7 +9,7 @@
         public string Picture { get; set; } = null!;
         public string Gender { get; set; } = null!;
         public string UserType { get; set; } = null!;
-
+        public DateTime CreatedAt { get; set; }
         public int TotalTrips { get; set; }
         public double AverageRating { get; set; }
     }

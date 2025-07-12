@@ -36,7 +36,12 @@ namespace RakbnyMa_aak.Models
         [Column(TypeName = "nvarchar(20)")]
         public Gender Gender { get; set; }
 
+        [Display(Name = "Created At")]
+        [Required]
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+        [Display(Name = "Updated At")]
+        public DateTime? UpdatedAt { get; set; }    
         public virtual Driver? Driver { get; set; }
         public virtual ICollection<Rating>? RatingsGiven { get; set; }
         public virtual ICollection<Rating>? RatingsReceived { get; set; }

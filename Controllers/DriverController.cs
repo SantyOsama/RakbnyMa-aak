@@ -98,7 +98,7 @@ namespace RakbnyMa_aak.Controllers
 
 
         [Authorize(Roles = "Driver")]
-        [HttpGet("driver/dashboard/total-earnings")]
+        [HttpGet("dashboard/total-earnings")]
         public async Task<IActionResult> GetDriverTotalEarnings()
         {
             var result = await _mediator.Send(new GetDriverTotalEarningsQuery());
@@ -106,7 +106,7 @@ namespace RakbnyMa_aak.Controllers
         }
 
         [Authorize(Roles = "Driver")]
-        [HttpGet("driver/dashboard/completion-rate")]
+        [HttpGet("dashboard/completion-rate")]
         public async Task<IActionResult> GetDriverCompletionRate()
         {
             var result = await _mediator.Send(new GetDriverCompletionStatsQuery());
@@ -114,7 +114,7 @@ namespace RakbnyMa_aak.Controllers
         }
 
         [Authorize(Roles = "Driver")]
-        [HttpGet("driver/dashboard/trip-count")]
+        [HttpGet("dashboard/trip-count")]
         public async Task<IActionResult> GetDriverTripCount()
         {
             var result = await _mediator.Send(new GetDriverTripCountQuery());
@@ -122,7 +122,7 @@ namespace RakbnyMa_aak.Controllers
         }
 
         [Authorize(Roles = "Driver")]
-        [HttpGet("driver/dashboard/monthly-stats")]
+        [HttpGet("dashboard/monthly-stats")]
         public async Task<IActionResult> GetDriverMonthlyStats()
         {
             var result = await _mediator.Send(new GetDriverMonthlyStatsQuery());

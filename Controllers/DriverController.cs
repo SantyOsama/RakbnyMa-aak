@@ -6,6 +6,10 @@ using RakbnyMa_aak.CQRS.Drivers.ChangePassword;
 using RakbnyMa_aak.CQRS.Drivers.UpdateDriverCarInfo;
 using RakbnyMa_aak.CQRS.Drivers.UpdateDriverProfile;
 using RakbnyMa_aak.CQRS.Features.Auth.Queries.GetDriverById;
+using RakbnyMa_aak.CQRS.Queries.Driver.GetDriverCompletionRate;
+using RakbnyMa_aak.CQRS.Queries.Driver.GetDriverMonthlyStats;
+using RakbnyMa_aak.CQRS.Queries.Driver.GetDriverTotalEarnings.RakbnyMa_aak.CQRS.Queries.Driver.GetDriverTotalEarnings;
+using RakbnyMa_aak.CQRS.Queries.Driver.GetDriverTripCount;
 using RakbnyMa_aak.DTOs.DriverDTOs.ResponseDTOs;
 using RakbnyMa_aak.DTOs.DriverDTOs.UpdateProfileDTOs;
 using RakbnyMa_aak.GeneralResponse;
@@ -90,6 +94,43 @@ namespace RakbnyMa_aak.Controllers
 
             return Ok(result);
         }
+
+
+
+        [Authorize(Roles = "Driver")]
+        [HttpGet("driver/dashboard/total-earnings")]
+        public async Task<IActionResult> GetDriverTotalEarnings()
+        {
+            var result = await _mediator.Send(new GetDriverTotalEarningsQuery());
+            return Ok(result);
+        }
+
+        [Authorize(Roles = "Driver")]
+        [HttpGet("driver/dashboard/completion-rate")]
+        public async Task<IActionResult> GetDriverCompletionRate()
+        {
+            var result = await _mediator.Send(new GetDriverCompletionStatsQuery());
+            return result.IsSucceeded ? Ok(result) : BadRequest(result);
+        }
+
+        [Authorize(Roles = "Driver")]
+        [HttpGet("driver/dashboard/trip-count")]
+        public async Task<IActionResult> GetDriverTripCount()
+        {
+            var result = await _mediator.Send(new GetDriverTripCountQuery());
+            return Ok(result);
+        }
+
+        [Authorize(Roles = "Driver")]
+        [HttpGet("driver/dashboard/monthly-stats")]
+        public async Task<IActionResult> GetDriverMonthlyStats()
+        {
+            var result = await _mediator.Send(new GetDriverMonthlyStatsQuery());
+            return result.IsSucceeded ? Ok(result) : BadRequest(result);
+        }
+
+
+
 
         //[HttpPost("register")]
         //public async Task<IActionResult> RegisterDriver([FromForm] RegisterDriverDto dto)

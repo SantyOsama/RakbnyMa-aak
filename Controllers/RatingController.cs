@@ -22,7 +22,7 @@ namespace RakbnyMa_aak.Controllers
         {
             _mediator = mediator;
         }
-        //[Authorize(Roles = "Driver")]
+        [Authorize(Roles = "Driver")]
         [HttpGet("driver/{driverId}")]
         public async Task<IActionResult> GetDriverRatings([FromRoute] string driverId, [FromQuery] int page , [FromQuery] int pageSize)
         {

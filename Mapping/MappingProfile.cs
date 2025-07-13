@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripExists;
 using RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.BookValidationOrchestrator;
 using RakbnyMa_aak.CQRS.Features.Cities;
 using RakbnyMa_aak.CQRS.Features.Governorates;
@@ -131,15 +132,26 @@ namespace RakbnyMa_aak.Mapping
                 .ForMember(dest => dest.IsRecurring, opt => opt.MapFrom(src => src.IsRecurring));
 
 
-            CreateMap<(Booking booking, Trip trip), BookingValidationResultDto>()
-               .ForMember(dest => dest.BookingId, opt => opt.MapFrom(src => src.booking.Id))
-               .ForMember(dest => dest.TripId, opt => opt.MapFrom(src => src.trip.Id))
-               .ForMember(dest => dest.PassengerId, opt => opt.MapFrom(src => src.booking.UserId))
-               .ForMember(dest => dest.DriverId, opt => opt.MapFrom(src => src.trip.DriverId))
-               .ForMember(dest => dest.NumberOfSeats, opt => opt.MapFrom(src => src.booking.NumberOfSeats))
-               .ForMember(dest => dest.requestStatus, opt => opt.MapFrom(src => src.booking.RequestStatus))
-               .ForMember(dest => dest.DriverFullName, opt => opt.MapFrom(src => src.trip.Driver.User.FullName))
-               .ForMember(dest => dest.DriverPicture, opt => opt.MapFrom(src => src.trip.Driver.User.Picture));
+            //CreateMap<(Booking booking, Trip trip), BookingValidationResultDto>()
+            //   .ForMember(dest => dest.BookingId, opt => opt.MapFrom(src => src.booking.Id))
+            //   .ForMember(dest => dest.TripId, opt => opt.MapFrom(src => src.trip.Id))
+            //   .ForMember(dest => dest.PassengerId, opt => opt.MapFrom(src => src.booking.UserId))
+            //   .ForMember(dest => dest.DriverId, opt => opt.MapFrom(src => src.trip.DriverId))
+            //   .ForMember(dest => dest.NumberOfSeats, opt => opt.MapFrom(src => src.booking.NumberOfSeats))
+            //   .ForMember(dest => dest.requestStatus, opt => opt.MapFrom(src => src.booking.RequestStatus))
+            //   .ForMember(dest => dest.DriverFullName, opt => opt.MapFrom(src => src.trip.Driver.User.FullName))
+            //   .ForMember(dest => dest.DriverPicture, opt => opt.MapFrom(src => src.trip.Driver.User.Picture));
+
+            CreateMap<(Booking booking, TripValidationResultDto validation), BookingValidationResultDto>()
+                .ForMember(dest => dest.BookingId, opt => opt.MapFrom(src => src.booking.Id))
+                .ForMember(dest => dest.TripId, opt => opt.MapFrom(src => src.booking.TripId))
+                .ForMember(dest => dest.PassengerId, opt => opt.MapFrom(src => src.booking.UserId))
+                .ForMember(dest => dest.DriverId, opt => opt.MapFrom(src => src.booking.Trip.DriverId))
+                .ForMember(dest => dest.NumberOfSeats, opt => opt.MapFrom(src => src.booking.NumberOfSeats))
+                .ForMember(dest => dest.requestStatus, opt => opt.MapFrom(src => src.booking.RequestStatus))
+                .ForMember(dest => dest.DriverFullName, opt => opt.MapFrom(src => src.booking.Trip.Driver.User.FullName))
+                .ForMember(dest => dest.DriverPicture, opt => opt.MapFrom(src => src.booking.Trip.Driver.User.Picture));
+
         }
     }
 }

@@ -26,7 +26,7 @@ namespace RakbnyMa_aak.Controllers
 
 
         [HttpPatch("change-password")]
-        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
+        public async Task<IActionResult> ChangePassword([FromForm] ChangePasswordDto dto)
         {
             try
             {
@@ -44,7 +44,7 @@ namespace RakbnyMa_aak.Controllers
             }
         }
 
-
+        [Authorize(Roles = "Driver")]
         [HttpPatch("update-profile")]
         public async Task<IActionResult> UpdateProfile([FromForm] UpdateDriverProfileDto dto)
         {
@@ -78,6 +78,7 @@ namespace RakbnyMa_aak.Controllers
                 return StatusCode(500, Response<string>.Fail("An error occurred: " + ex.Message));
             }
         }
+
 
         [HttpGet("{driverId}")]
         public async Task<ActionResult<Response<DriverResponseDto>>> GetDriverById(string driverId)

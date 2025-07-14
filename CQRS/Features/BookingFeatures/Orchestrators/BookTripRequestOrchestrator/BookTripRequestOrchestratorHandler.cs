@@ -26,6 +26,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.BookTripReque
 
         public async Task<Response<int>> Handle(BookTripRequestOrchestrator request, CancellationToken cancellationToken)
         {
+            request.BookingDto.UserId=request.userId;
             var bookingDto = request.BookingDto;
 
             // Step 1: Validate Trip Exists
@@ -71,6 +72,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.BookTripReque
             }
             else // first time booking → create
             {
+
                 var createBookingDto = _mapper.Map<CreateBookingRequestDto>(bookingDto);
 
                 createBookingDto.PricePerSeat = trip.PricePerSeat;

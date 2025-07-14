@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RakbnyMa_aak.CQRS.Features.Admin.ApproveDriver;
+using RakbnyMa_aak.CQRS.Features.Admin.RejectDriver;
 using RakbnyMa_aak.CQRS.Features.Auth.Queries.GetPendingDrivers;
 
 namespace RakbnyMa_aak.Controllers
@@ -22,6 +23,13 @@ namespace RakbnyMa_aak.Controllers
         public async Task<IActionResult> ApproveDriver(string driverId)
         {
             var result = await _mediator.Send(new ApproveDriverCommand (driverId ));
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpPost("{driverId}/reject")]
+        public async Task<IActionResult> RejectDriver(string driverId, [FromBody] string? reason = null)
+        {
+            var result = await _mediator.Send(new RejectDriverCommand(driverId, reason));
             return StatusCode(result.StatusCode, result);
         }
 

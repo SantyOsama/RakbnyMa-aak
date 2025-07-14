@@ -26,7 +26,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.UpdateBooking
 
             var bookingInfo = await _unitOfWork.BookingRepository
                 .GetAllQueryable()
-                .Where(b => b.Id == dto.BookingId && b.UserId == dto.UserId)
+                .Where(b => b.Id == dto.BookingId && b.UserId == request.userId)
                 .Select(b => new { OldSeats = b.NumberOfSeats, b.RequestStatus })
                 .FirstOrDefaultAsync(cancellationToken);
 
@@ -39,11 +39,11 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.UpdateBooking
 
             if (bookingInfo.RequestStatus == RequestStatus.Confirmed)
             {
-                return await _mediator.Send(new UpdateConfirmedBookingCommand(dto, bookingInfo.OldSeats));
+                return await _mediator.Send(new UpdateConfirmedBookingCommand(dto, bookingInfo.OldSeats, request.userId));
             }
             else
             {
-                return await _mediator.Send(new UpdatePendingBookingCommand(dto,bookingInfo.OldSeats));
+                return await _mediator.Send(new UpdatePendingBookingCommand(dto,bookingInfo.OldSeats, request.userId));
             }
         }
     }

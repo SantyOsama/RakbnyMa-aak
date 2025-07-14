@@ -30,7 +30,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.UpdateConfirmedBoo
             var difference = dto.NewNumberOfSeats - request.OldSeats;
 
             var booking = await _unitOfWork.BookingRepository.GetByIdAsync(dto.BookingId);
-            if (booking is null || booking.UserId != dto.UserId)
+            if (booking is null || booking.UserId != request.userId)
                 return Response<UpdateBookingSeatsResponseDto>.Fail("Booking not found or access denied");
 
             if (difference > 0)

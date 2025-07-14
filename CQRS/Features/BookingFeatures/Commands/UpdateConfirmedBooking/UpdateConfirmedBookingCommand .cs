@@ -6,6 +6,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.UpdateConfirmedBoo
 {
     public record UpdateConfirmedBookingCommand(
             UpdateBookingRequestDto BookingDto,
-            int OldSeats
+            int OldSeats,
+            string userId
         ) : IRequest<Response<UpdateBookingSeatsResponseDto>>;
 }

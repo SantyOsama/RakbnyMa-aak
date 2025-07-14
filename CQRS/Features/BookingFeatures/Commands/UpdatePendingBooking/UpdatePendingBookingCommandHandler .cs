@@ -23,7 +23,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.UpdatePendingBooki
                 return Response<UpdateBookingSeatsResponseDto>.Fail("Cannot decrease seats before approval");
 
             var booking = await _unitOfWork.BookingRepository.GetByIdAsync(dto.BookingId);
-            if (booking is null || booking.UserId != dto.UserId)
+            if (booking is null || booking.UserId != request.userId)
                 return Response<UpdateBookingSeatsResponseDto>.Fail("Booking not found or access denied");
 
             booking.NumberOfSeats = dto.NewNumberOfSeats;

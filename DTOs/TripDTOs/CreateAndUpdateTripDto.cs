@@ -1,11 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace RakbnyMa_aak.DTOs.TripDTOs.RequestsDTOs
+namespace RakbnyMa_aak.DTOs.TripDTOs
 {
-    public class TripRequestDto
+    public class CreateAndUpdateTripDto
     {
-        public string? DriverId { get; set; }
-
         [Required]
         [Display(Name = "From City")]
         public int FromCityId { get; set; }

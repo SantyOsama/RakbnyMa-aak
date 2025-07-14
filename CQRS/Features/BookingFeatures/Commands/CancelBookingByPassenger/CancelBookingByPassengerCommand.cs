@@ -4,5 +4,5 @@ using RakbnyMa_aak.GeneralResponse;
 
 namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.CancelBookingByPassenger
 {
-    public record CancelBookingByPassengerCommand(HandleBookingRequestDto Dto) : IRequest<Response<bool>>;
+    public record CancelBookingByPassengerCommand(int bookingId, string userId) : IRequest<Response<bool>>;
 }

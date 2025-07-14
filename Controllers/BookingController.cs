@@ -49,7 +49,7 @@ namespace RakbnyMa_aak.Controllers
 
 
         [Authorize(Roles = "User")]
-        [HttpDelete("cancel/{bookingId}")]
+        [HttpDelete("cancel")]
         public async Task<IActionResult> CancelBooking([FromQuery] int BookingId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

@@ -75,12 +75,12 @@ namespace RakbnyMa_aak.Mapping
             CreateMap<BookTripRequestDto, CreateBookingRequestDto>()
             .ForMember(dest => dest.PricePerSeat, opt => opt.Ignore());
 
-            CreateMap<Trip, TripResponseDto>()
-              .ForMember(dest => dest.FromCityName, opt => opt.MapFrom(src => src.FromCity.Name))
-              .ForMember(dest => dest.ToCityName, opt => opt.MapFrom(src => src.ToCity.Name))
-              .ForMember(dest => dest.FromGovernorateName, opt => opt.MapFrom(src => src.FromGovernorate.Name))
-              .ForMember(dest => dest.ToGovernorateName, opt => opt.MapFrom(src => src.ToGovernorate.Name))
-              .ForMember(dest => dest.TripStatus, opt => opt.MapFrom(src => src.TripStatus.ToString()));
+            //CreateMap<Trip, TripResponseDto>()
+            //  .ForMember(dest => dest.FromCityName, opt => opt.MapFrom(src => src.FromCity.Name))
+            //  .ForMember(dest => dest.ToCityName, opt => opt.MapFrom(src => src.ToCity.Name))
+            //  .ForMember(dest => dest.FromGovernorateName, opt => opt.MapFrom(src => src.FromGovernorate.Name))
+            //  .ForMember(dest => dest.ToGovernorateName, opt => opt.MapFrom(src => src.ToGovernorate.Name))
+            //  .ForMember(dest => dest.TripStatus, opt => opt.MapFrom(src => src.TripStatus.ToString()));
 
             CreateMap<Booking, BookingStatusResponseDto>()
                .ForMember(dest => dest.BookingId, opt => opt.MapFrom(src => src.Id))
@@ -112,7 +112,9 @@ namespace RakbnyMa_aak.Mapping
                 .ForMember(dest => dest.FromGovernorateName, opt => opt.MapFrom(src => src.FromCity.Governorate.Name))
                 .ForMember(dest => dest.ToGovernorateName, opt => opt.MapFrom(src => src.ToCity.Governorate.Name))
                 .ForMember(dest => dest.TripStatus,opt => opt.MapFrom(src => src.TripStatus.ToString()))
-                .ForMember(dest => dest.IsRecurring,opt => opt.MapFrom(src => src.IsRecurring)).ForMember(dest => dest.WomenOnly,opt => opt.MapFrom(src => src.WomenOnly));
+                .ForMember(dest => dest.CarModel, opt => opt.MapFrom(src => src.Driver.CarModel))
+                .ForMember(dest => dest.IsRecurring,opt => opt.MapFrom(src => src.IsRecurring))
+                .ForMember(dest => dest.WomenOnly,opt => opt.MapFrom(src => src.WomenOnly));
 
 
 

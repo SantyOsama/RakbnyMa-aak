@@ -21,7 +21,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.CancelBookingByPas
         public async Task<Response<bool>> Handle(CancelBookingByPassengerCommand request, CancellationToken cancellationToken)
         {
             //Step 1: Validate and get info
-            var validationResult = await _mediator.Send(new CancelBookingValidationOrchestrator(request.Dto.BookingId, request.Dto.CurrentUserId));
+            var validationResult = await _mediator.Send(new CancelBookingValidationOrchestrator(request.bookingId, request.userId));
             if (!validationResult.IsSucceeded)
                 return Response<bool>.Fail(validationResult.Message);
 

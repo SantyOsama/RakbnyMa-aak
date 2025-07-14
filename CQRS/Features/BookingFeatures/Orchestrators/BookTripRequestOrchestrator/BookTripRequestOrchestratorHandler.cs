@@ -36,7 +36,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.BookTripReque
             var trip = validateTripResponse.Data;
 
             // Step 2: prevent Driver From Booking From himself 
-            var preventBookingResponse = await _mediator.Send(new PreventDriverSelfBookingCommand(trip.DriverId, bookingDto.UserId));
+            var preventBookingResponse = await _mediator.Send(new PreventDriverSelfBookingCommand(trip.DriverId, request.userId));
             if (!preventBookingResponse.IsSucceeded)
                 return Response<int>.Fail(preventBookingResponse.Message);
 
@@ -48,7 +48,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.BookTripReque
                 new CheckUserAlreadyBookedCommand(
                     new CheckUserAlreadyBookedDto
                     {
-                        UserId = bookingDto.UserId,
+                        UserId =request.userId,
                         TripId = bookingDto.TripId
                     }));
 
@@ -61,7 +61,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.BookTripReque
             {
                 // Get booking by user and trip
                 var existingBooking = await _unitOfWork.BookingRepository
-                    .GetBookingByUserAndTripAsync(bookingDto.UserId, bookingDto.TripId);
+                    .GetBookingByUserAndTripAsync(request.userId, bookingDto.TripId);
 
                 if (existingBooking == null)
                     return Response<int>.Fail("Existing booking not found.");
@@ -92,7 +92,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.BookTripReque
             await _mediator.Send(new SendNotificationCommand(new SendNotificationDto
             {
                 ReceiverId = driverId,
-                SenderUserId = bookingDto.UserId,
+                SenderUserId = request.userId,
                 Message = "You have a new booking request."
             }));
 

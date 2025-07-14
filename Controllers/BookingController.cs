@@ -30,7 +30,9 @@ namespace RakbnyMa_aak.Controllers
         [HttpPost("book")]
         public async Task<IActionResult> BookTrip([FromBody] BookTripRequestDto dto)
         {
-            var result = await _mediator.Send(new BookTripRequestOrchestrator(dto));
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var result = await _mediator.Send(new BookTripRequestOrchestrator(dto, userId));
             return result.IsSucceeded ? Ok(result) : BadRequest(result);
         }
 
@@ -38,7 +40,9 @@ namespace RakbnyMa_aak.Controllers
         [HttpPut("update-booking")]
         public async Task<IActionResult> UpdateBooking([FromBody] UpdateBookingRequestDto dto)
         {
-            var command = new UpdateBookingOrchestrator(dto);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var command = new UpdateBookingOrchestrator(dto, userId );
             var result = await _mediator.Send(command);
             return result.IsSucceeded ? Ok(result) : BadRequest(result);
         }
@@ -46,11 +50,15 @@ namespace RakbnyMa_aak.Controllers
 
         [Authorize(Roles = "User")]
         [HttpDelete("cancel/{bookingId}")]
-        public async Task<IActionResult> CancelBooking([FromBody] HandleBookingRequestDto dto)
+        public async Task<IActionResult> CancelBooking([FromQuery] int BookingId)
         {
-            var result = await _mediator.Send(new CancelBookingByPassengerCommand(dto));
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var result = await _mediator.Send(new CancelBookingByPassengerCommand(BookingId, userId));
             return result.IsSucceeded ? Ok(result) : BadRequest(result);
         }
+
+
         [Authorize(Roles = "Driver")]
         [HttpGet("driver/trip/{tripId}/pending-bookings")]
         public async Task<IActionResult> GetTripPendingBookings(int tripId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)

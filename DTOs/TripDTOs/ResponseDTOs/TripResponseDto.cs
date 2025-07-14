@@ -16,6 +16,7 @@
         public string FromGovernorateName { get; set; }
         public string ToGovernorateName { get; set; }
         public string TripStatus { get; set; }
+        public string CarModel { get; set; }
         public bool IsRecurring { get; set; }
         public bool WomenOnly { get; set; }
     }

@@ -6,6 +6,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.UpdatePendingBooki
 {
     public record UpdatePendingBookingCommand(
          UpdateBookingRequestDto BookingDto,
-         int OldSeats
+         int OldSeats,
+         string userId
      ) : IRequest<Response<UpdateBookingSeatsResponseDto>>;
 }

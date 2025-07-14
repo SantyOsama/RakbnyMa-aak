@@ -35,7 +35,8 @@ namespace RakbnyMa_aak.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateTrip([FromBody] TripRequestDto dto)
         {
-            var command = new CreateTripOrchestrator(dto);
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var command = new CreateTripOrchestrator(dto, currentUserId);
             var result = await _mediator.Send(command);
 
             if (!result.IsSucceeded)

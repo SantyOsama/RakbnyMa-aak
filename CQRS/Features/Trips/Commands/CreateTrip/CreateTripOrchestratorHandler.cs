@@ -16,6 +16,7 @@ namespace RakbnyMa_aak.CQRS.Features.Trip.Commands.CreateTrip
 
         public async Task<Response<int>> Handle(CreateTripOrchestrator request, CancellationToken cancellationToken)
         {
+            request.TripDto.DriverId = request.driverId;
             var dto = request.TripDto;
 
             // Step 1: Validate common validations for the trip DTO

@@ -4,9 +4,7 @@ namespace RakbnyMa_aak.DTOs.BookingsDTOs.Requests
 {
     public class BookTripRequestDto
     {
-        [Required(ErrorMessage = "User ID is required.")]
-        [Display(Name = "User ID")]
-        public string UserId { get; set; }
+        //public string? UserId { get; set; }
 
         [Required(ErrorMessage = "Trip ID is required.")]
         [Display(Name = "Trip ID")]

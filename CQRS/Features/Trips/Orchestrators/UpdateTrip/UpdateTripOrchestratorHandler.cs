@@ -18,6 +18,7 @@ namespace RakbnyMa_aak.CQRS.Features.Trip.Orchestrators.UpdateTrip
 
         public async Task<Response<int>> Handle(UpdateTripOrchestrator request, CancellationToken cancellationToken)
         {
+            request.TripDto.DriverId=request.CurrentUserId;
             var dto = request.TripDto;
             // Step 1: Validate that the trip exists and is updatable
             var tripResult = await _mediator.Send(new ValidateTripIsUpdatableCommand(request.TripId));

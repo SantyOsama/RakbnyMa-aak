@@ -5,7 +5,7 @@ using RakbnyMa_aak.GeneralResponse;
 
 namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.UpdateBookingOrchestrator
 {
-    public record UpdateBookingOrchestrator(UpdateBookingRequestDto BookingDto)
+    public record UpdateBookingOrchestrator(UpdateBookingRequestDto BookingDto, string userId)
     : IRequest<Response<UpdateBookingSeatsResponseDto>>;
 
 }

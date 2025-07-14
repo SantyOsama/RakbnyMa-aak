@@ -13,6 +13,7 @@ using RakbnyMa_aak.CQRS.Features.Trips.Queries.GetAllTrips;
 using RakbnyMa_aak.CQRS.Features.Trips.Queries.GetScheduledForDriver;
 using RakbnyMa_aak.CQRS.Features.Trips.Queries.GetScheduledTrips;
 using RakbnyMa_aak.CQRS.Features.Trips.Queries.GetTripById;
+using RakbnyMa_aak.CQRS.Queries.Driver.GetPendingBookingsForDriver;
 using RakbnyMa_aak.CQRS.Trips.Delete_Trip;
 using RakbnyMa_aak.DTOs.TripDTOs.RequestsDTOs;
 using RakbnyMa_aak.DTOs.TripDTOs.ResponseDTOs;
@@ -204,8 +205,7 @@ namespace RakbnyMa_aak.Controllers
             
         }
 
-
-      
+    
         [Authorize(Roles = "Admin,Driver,User")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTripById(int id)
@@ -213,6 +213,22 @@ namespace RakbnyMa_aak.Controllers
             var result = await _mediator.Send(new GetTripByIdQuery(id));
             return StatusCode(result.StatusCode, result);
         }
+
+        [Authorize(Roles = "Driver")]
+        [HttpGet("pending-bookings")]
+        public async Task<IActionResult> GetPendingBookingsForDriver()
+        {
+            var driverUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var query = new GetPendingBookingsForDriverQuery(driverUserId);
+
+            var result = await _mediator.Send(query);
+
+            if (!result.IsSucceeded)
+                return BadRequest(result.Message);
+
+            return Ok(result);
+        }
+
 
 
     }

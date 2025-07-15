@@ -14,7 +14,9 @@ namespace RakbnyMa_aak.DTOs.DriverDTOs.ResponseDTOs
         public CarType CarType { get; set; }
         public CarColor CarColor { get; set; }
         public int CarCapacity { get; set; }
-
+        public string CarPlateNumber { get; set; }
+        public string DriverLicenseImage { get; set; }
+        public string CarLicenseImage { get; set; }
         public int TotalTrips { get; set; }
         public double AverageRating { get; set; }
     }

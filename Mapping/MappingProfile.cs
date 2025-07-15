@@ -57,6 +57,9 @@ namespace RakbnyMa_aak.Mapping
             .ForMember(dest => dest.CarType, opt => opt.MapFrom(src => src.Driver.CarType))
             .ForMember(dest => dest.CarColor, opt => opt.MapFrom(src => src.Driver.CarColor))
             .ForMember(dest => dest.CarCapacity, opt => opt.MapFrom(src => src.Driver.CarCapacity))
+            .ForMember(dest => dest.CarPlateNumber, opt => opt.MapFrom(src => src.Driver.CarPlateNumber))
+            .ForMember(dest => dest.CarLicenseImage, opt => opt.MapFrom(src => src.Driver.CarLicenseImagePath))
+            .ForMember(dest => dest.DriverLicenseImage, opt => opt.MapFrom(src => src.Driver.DriverNationalIdImagePath))
 
             .ForMember(dest => dest.TotalTrips, opt => opt.MapFrom(src =>
                 src.Driver.Trips != null ? src.Driver.Trips.Count : 0))

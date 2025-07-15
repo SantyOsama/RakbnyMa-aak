@@ -23,7 +23,7 @@ namespace RakbnyMa_aak.Models
         [Display(Name = "Timestamp")]
         public DateTime Timestamp { get; set; }
 
-        // Navigation property
+ 
         [ForeignKey("TripId")]
         [Display(Name = "Trip")]
         public virtual Trip Trip { get; set; }

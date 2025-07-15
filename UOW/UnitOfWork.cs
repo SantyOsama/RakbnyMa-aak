@@ -49,6 +49,7 @@ namespace RakbnyMa_aak.UOW
             GovernorateRepository = new GovernorateRepository(_context);
             CityRepository = new CityRepository(_context);
             RatingRepository= new RatingRepository(_context);
+            TripTrackingRepository = new TripTrackingRepository(_context);
         }
 
         public async Task<int> CompleteAsync()

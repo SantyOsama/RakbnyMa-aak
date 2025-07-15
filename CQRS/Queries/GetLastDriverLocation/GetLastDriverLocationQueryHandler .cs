@@ -1,12 +1,12 @@
 ﻿using MediatR;
+using RakbnyMa_aak.DTOs.TripTrackingDTOs;
 using RakbnyMa_aak.GeneralResponse;
 using RakbnyMa_aak.Models;
 using RakbnyMa_aak.UOW;
 
 namespace RakbnyMa_aak.CQRS.Queries.GetLastDriverLocation
 {
-    public class GetLastDriverLocationQueryHandler
-        : IRequestHandler<GetLastDriverLocationQuery, Response<TripTracking>>
+    public class GetLastDriverLocationQueryHandler: IRequestHandler<GetLastDriverLocationQuery, Response<DriverLocationDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -15,14 +15,22 @@ namespace RakbnyMa_aak.CQRS.Queries.GetLastDriverLocation
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Response<TripTracking>> Handle(GetLastDriverLocationQuery request, CancellationToken cancellationToken)
+        public async Task<Response<DriverLocationDto>> Handle(GetLastDriverLocationQuery request, CancellationToken cancellationToken)
         {
             var tracking = await _unitOfWork.TripTrackingRepository.GetLastLocationAsync(request.TripId);
 
             if (tracking == null)
-                return Response<TripTracking>.Fail("No location found for this trip.", null, 404);
+                return Response<DriverLocationDto>.Fail("No location found for this trip.", null, statusCode: 404);
 
-            return Response<TripTracking>.Success(tracking, "Latest location retrieved successfully.");
+            var dto = new DriverLocationDto
+            {
+                Lat = tracking.CurrentLat,
+                Lng = tracking.CurrentLong,
+                Timestamp = tracking.Timestamp
+            };
+
+            return Response<DriverLocationDto>.Success(dto, "Latest location retrieved successfully.");
         }
     }
+
 }

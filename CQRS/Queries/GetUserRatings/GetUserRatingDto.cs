@@ -4,8 +4,7 @@ namespace RakbnyMa_aak.CQRS.Queries.GetUserRatings
 {
     public class GetUserRatingDto
     {
-        [Required(ErrorMessage = "Rater ID is required.")]
-        public string RaterId { get; set; }
+        public string? RaterId { get; set; }
 
         [Range(1, 5, ErrorMessage = "Stars filter must be between 1 and 5.")]
         public int? StarsFilter { get; set; }

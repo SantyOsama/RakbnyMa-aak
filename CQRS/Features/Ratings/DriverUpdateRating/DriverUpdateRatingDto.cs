@@ -7,8 +7,7 @@ namespace RakbnyMa_aak.CQRS.Features.Ratings.DriverUpdateRating
         [Required(ErrorMessage = "Rating ID is required.")]
         public int RatingId { get; set; }
 
-        [Required(ErrorMessage = "Rater ID is required.")]
-        public string RaterId { get; set; }
+        public string? RaterId { get; set; }
 
         [Range(1, 5, ErrorMessage = "Rating value must be between 1 and 5.")]
         public int? RatingValue { get; set; }

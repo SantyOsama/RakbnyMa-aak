@@ -7,8 +7,7 @@ namespace RakbnyMa_aak.CQRS.Features.Ratings.UserAddRating
         [Required(ErrorMessage = "Trip ID is required.")]
         public int TripId { get; set; }
 
-        [Required(ErrorMessage = "Rater ID is required.")]
-        public string RaterId { get; set; }
+        public string? RaterId { get; set; }
 
         [MaxLength(500, ErrorMessage = "Comment must not exceed 500 characters.")]
         public string? Comment { get; set; }

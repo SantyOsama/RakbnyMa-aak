@@ -9,6 +9,7 @@ using RakbnyMa_aak.CQRS.Features.Ratings.UserAddRating;
 using RakbnyMa_aak.CQRS.Features.Ratings.UserUpdateRating;
 using RakbnyMa_aak.CQRS.Features.Ratings.UserDeleteRating;
 using RakbnyMa_aak.CQRS.Features.Ratings.DriverDeleteRating;
+using System.Security.Claims;
 
 namespace RakbnyMa_aak.Controllers
 {
@@ -23,9 +24,11 @@ namespace RakbnyMa_aak.Controllers
             _mediator = mediator;
         }
         [Authorize(Roles = "Driver")]
-        [HttpGet("driver/{driverId}")]
-        public async Task<IActionResult> GetDriverRatings([FromRoute] string driverId, [FromQuery] int page , [FromQuery] int pageSize)
+        [HttpGet("{driver}")]
+        public async Task<IActionResult> GetDriverRatings([FromQuery] int page , [FromQuery] int pageSize)
         {
+            string driverId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            
             var result = await _mediator.Send(new GetDriverRatingsQuery(driverId, page, pageSize));
             return Ok(result);
         }
@@ -34,6 +37,9 @@ namespace RakbnyMa_aak.Controllers
         [HttpGet("user/{driverId}")]
         public async Task<IActionResult> GetDUserRatings([FromBody] GetUserRatingDto Filter)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Filter.RaterId = userId;
+
             var result = await _mediator.Send(new GetUserRatingsQuery(Filter));
             return Ok(result);
         }
@@ -43,6 +49,9 @@ namespace RakbnyMa_aak.Controllers
         [HttpPost("add-user")]
         public async Task<IActionResult> AddRating([FromBody] UserAddRatingDto dto)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            dto.RaterId= userId;
+
             var result = await _mediator.Send(new UserAddRatingCommand(dto));
             return StatusCode(result.StatusCode, result);
         }
@@ -52,6 +61,9 @@ namespace RakbnyMa_aak.Controllers
         [HttpPut("update-user")]
         public async Task<IActionResult> UpdateRating([FromBody] UserUpdateRatingDto dto)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            dto.RaterId = userId;
+
             var result = await _mediator.Send(new UserUpdateRatingCommand(dto));
             return StatusCode(result.StatusCode, result);
         }
@@ -59,8 +71,10 @@ namespace RakbnyMa_aak.Controllers
         /// Delete existing rating <summary>
         [Authorize(Roles = "User")]
         [HttpDelete("delete-user/{ratingId}")]
-        public async Task<IActionResult> DeleteRating([FromRoute] int ratingId, [FromQuery] string raterId)
+        public async Task<IActionResult> DeleteRating([FromRoute] int ratingId)
         {
+            string raterId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var result = await _mediator.Send(new UserDeleteRatingCommand(ratingId, raterId));
             return StatusCode(result.StatusCode, result);
         }
@@ -68,6 +82,9 @@ namespace RakbnyMa_aak.Controllers
         [HttpPost("driver")]
         public async Task<IActionResult> RatePassenger([FromBody] DriverAddRatingDto dto)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            dto.RaterId = userId;
+
             var result = await _mediator.Send(new DriverAddRatingCommand(dto));
 
             if (!result.IsSucceeded)
@@ -75,11 +92,15 @@ namespace RakbnyMa_aak.Controllers
 
             return Ok(result);
         }
+
+
         [Authorize(Roles = "Driver")]
         [HttpPut("driver")]
         public async Task<IActionResult> UpdateDriverRating([FromBody] DriverUpdateRatingDto dto)
         {
             var result = await _mediator.Send(new DriverUpdateRatingCommand(dto));
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            dto.RaterId = userId;
 
             if (!result.IsSucceeded)
                 return BadRequest(result);
@@ -89,8 +110,10 @@ namespace RakbnyMa_aak.Controllers
 
         [Authorize(Roles = "Driver")]
         [HttpDelete("driver")]
-        public async Task<IActionResult> DeleteDriverRating([FromQuery] int ratingId, [FromQuery] string raterId)
+        public async Task<IActionResult> DeleteDriverRating([FromQuery] int ratingId )
         {
+            string raterId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var result = await _mediator.Send(new DriverDeleteRatingCommand(ratingId, raterId));
 
             if (!result.IsSucceeded)

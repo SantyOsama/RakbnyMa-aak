@@ -7,8 +7,7 @@ namespace RakbnyMa_aak.CQRS.Features.Ratings.DriverAddRating
         [Required(ErrorMessage = "Trip ID is required.")]
         public int TripId { get; set; }
 
-        [Required(ErrorMessage = "Rater ID is required.")]
-        public string RaterId { get; set; }
+        public string? RaterId { get; set; }
 
         [Required(ErrorMessage = "Passenger ID to be rated is required.")]
         public string RatedPassengerId { get; set; }

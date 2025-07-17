@@ -12,9 +12,11 @@ using RakbnyMa_aak.CQRS.Features.Trip.Queries.GetMyTrips;
 using RakbnyMa_aak.CQRS.Features.Trips.Queries.GetAllTrips;
 using RakbnyMa_aak.CQRS.Features.Trips.Queries.GetScheduledForDriver;
 using RakbnyMa_aak.CQRS.Features.Trips.Queries.GetScheduledTrips;
+using RakbnyMa_aak.CQRS.Features.Trips.Queries.GetTripByBookingId;
 using RakbnyMa_aak.CQRS.Features.Trips.Queries.GetTripById;
 using RakbnyMa_aak.CQRS.Features.Trips.Queries.GetTripPassengers;
 using RakbnyMa_aak.CQRS.Queries.Driver.GetPendingBookingsForDriver;
+using RakbnyMa_aak.CQRS.Queries.GetTripCoordinates;
 using RakbnyMa_aak.CQRS.Trips.Delete_Trip;
 using RakbnyMa_aak.DTOs.TripDTOs.RequestsDTOs;
 using RakbnyMa_aak.DTOs.TripDTOs.ResponseDTOs;
@@ -242,6 +244,24 @@ namespace RakbnyMa_aak.Controllers
         }
 
 
+        [HttpGet("by-booking/{bookingId}")]
+        public async Task<IActionResult> GetTripByBookingId(int bookingId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var result = await _mediator.Send(new GetTripByBookingIdQuery(bookingId, userId));
+            return Ok(result);
+        }
+
+
+
+        [HttpGet("coordinates/{tripId}")]
+        [Authorize(Roles = "Driver,Admin")]
+        public async Task<IActionResult> GetTripCoordinates(int tripId)
+        {
+            var result = await _mediator.Send(new GetTripCoordinatesQuery(tripId));
+            return StatusCode(result.StatusCode, result);
+        }
 
 
     }

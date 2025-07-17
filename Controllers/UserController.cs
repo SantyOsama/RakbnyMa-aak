@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RakbnyMa_aak.CQRS.Features.Auth.Queries.GetUserById;
+using RakbnyMa_aak.CQRS.Features.Auth.Queries.GetUserByName;
 using RakbnyMa_aak.CQRS.Features.Trips.Queries.GetMyBookedTrips;
 using RakbnyMa_aak.CQRS.Queries.GetUserBookings;
 using RakbnyMa_aak.CQRS.Users.UpdateUserProfile;
@@ -35,6 +36,17 @@ namespace RakbnyMa_aak.Controllers
         public async Task<ActionResult<Response<UserResponseDto>>> GetUserById(string id)
         {
             var result = await _mediator.Send(new GetUserByIdQuery ( id ));
+
+            if (!result.IsSucceeded)
+                return NotFound(result);
+
+            return Ok(result);
+        }
+
+        [HttpGet("name")]
+        public async Task<ActionResult<Response<UserResponseDto>>> GetUserByName([FromQuery]string name)
+        {
+            var result = await _mediator.Send(new GetUserByNameQuery(name));
 
             if (!result.IsSucceeded)
                 return NotFound(result);

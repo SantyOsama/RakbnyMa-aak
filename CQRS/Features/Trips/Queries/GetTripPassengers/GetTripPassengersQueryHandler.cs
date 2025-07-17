@@ -11,17 +11,15 @@ namespace RakbnyMa_aak.CQRS.Features.Trips.Queries.GetTripPassengers
     public class GetTripPassengersQueryHandler : IRequestHandler<GetTripPassengersQuery, Response<TripPassengersDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public GetTripPassengersQueryHandler(IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
+        public GetTripPassengersQueryHandler(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<Response<TripPassengersDto>> Handle(GetTripPassengersQuery request, CancellationToken cancellationToken)
         {
-            var currentUserId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var currentUserId = request.DriverUserId;
 
             var trip = await _unitOfWork.TripRepository
                 .GetAllQueryable()

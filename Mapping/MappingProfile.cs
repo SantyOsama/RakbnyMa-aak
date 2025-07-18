@@ -26,7 +26,9 @@ namespace RakbnyMa_aak.Mapping
             CreateMap<CreateBookingRequestDto, Booking>().ReverseMap();
             CreateMap<GovernorateDto, Governorate>().ReverseMap();
             CreateMap<CityDto, City>().ReverseMap();
-            CreateMap<Message, MessageDto>();
+            CreateMap<Message, MessageDto>()
+                .ForMember(dest => dest.SenderName, opt => opt.MapFrom(src => src.Sender.FullName));
+
             CreateMap<City, CityResponseDTO>()
                 .ForMember(dest => dest.GovernorateName, opt => opt.MapFrom(src => src.Governorate.Name));
             CreateMap<City, CityDto>()

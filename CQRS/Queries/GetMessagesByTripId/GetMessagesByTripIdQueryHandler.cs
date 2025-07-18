@@ -27,11 +27,11 @@ namespace RakbnyMa_aak.CQRS.Queries.GetMessagesByTripId
             var userRole = user?.FindFirst(ClaimTypes.Role)?.Value;
 
             if (string.IsNullOrEmpty(userId))
-                return Response<List<MessageDto>>.Fail("Unauthorized");
+                return Response<List<MessageDto>>.Fail("غير مصرح لك بالوصول.");
 
             var trip = await _unitOfWork.TripRepository.GetByIdAsync(request.TripId);
             if (trip == null)
-                return Response<List<MessageDto>>.Fail("Trip not found.");
+                return Response<List<MessageDto>>.Fail("لم يتم العثور على الرحلة.");
 
             var approvedPassengerIds = await _unitOfWork.BookingRepository
                 .FindAllAsync(b => b.TripId == request.TripId && b.RequestStatus == RequestStatus.Confirmed);
@@ -42,7 +42,7 @@ namespace RakbnyMa_aak.CQRS.Queries.GetMessagesByTripId
             var isAdmin = userRole == "Admin"; 
 
             if (!isDriver && !isPassenger && !isAdmin)
-                return Response<List<MessageDto>>.Fail("You are not authorized to view messages of this trip.");
+                return Response<List<MessageDto>>.Fail("غير مصرح لك بعرض رسائل هذه الرحلة.");
 
             var messages = await _unitOfWork.MessageRepository.GetMessagesByTripIdAsync(request.TripId);
             var messageDtos = _mapper.Map<List<MessageDto>>(messages);

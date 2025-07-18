@@ -14,10 +14,10 @@ namespace RakbnyMa_aak.Repositories.Implementations
             _context = context;
         }
 
-        public async Task<List<Message>> GetMessagesByTripIdAsync(int tripId)
+        public async Task<IEnumerable<Message>> GetMessagesByTripIdAsync(int tripId)
         {
             return await _context.Messages
-                .Where(m => m.TripId == tripId && !m.IsDeleted)
+                .Where(m => m.TripId == tripId)
                 .OrderBy(m => m.SentAt)
                 .ToListAsync();
         }

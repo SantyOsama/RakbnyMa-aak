@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using RakbnyMa_aak.Models;
 using RakbnyMa_aak.UOW;
 using System.Security.Claims;
 using static RakbnyMa_aak.Utilities.Enums;
@@ -60,6 +61,7 @@ namespace RakbnyMa_aak.Hubs
         public async Task SendMessage(string tripId, string userName, string message)
         {
             var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId)) return;
 
             var trip = await _unitOfWork.TripRepository.GetByIdAsync(int.Parse(tripId));
             var isDriver = trip.DriverId == userId;
@@ -71,8 +73,20 @@ namespace RakbnyMa_aak.Hubs
 
             if (isDriver || isPassengerConfirmed)
             {
-                await Clients.Group(tripId).SendAsync("ReceiveMessage", userName, message);
+                var newMessage = new Message
+                {
+                    TripId = trip.Id,
+                    SenderId = userId,
+                    Content = message,
+                    SentAt = DateTime.UtcNow
+                };
+
+                await _unitOfWork.MessageRepository.AddAsync(newMessage);
+                await _unitOfWork.CompleteAsync();
+
+                await Clients.Group(tripId).SendAsync("ReceiveMessage", userName, message, newMessage.SentAt);
             }
         }
+
     }
 }

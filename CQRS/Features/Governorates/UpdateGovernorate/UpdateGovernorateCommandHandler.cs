@@ -22,13 +22,13 @@ namespace RakbnyMa_aak.CQRS.Features.Governorates.UpdateGovernorate
             var entity = await _unitOfWork.GovernorateRepository.GetByIdAsync(request.Dto.Id);
 
             if (entity is null || entity.IsDeleted)
-                return Response<GovernorateDto>.Fail("Governorate not found.");
+                return Response<GovernorateDto>.Fail("لم يتم العثور على المحافظة.");
 
             var isDuplicate = await _unitOfWork.GovernorateRepository.AnyAsync(
                 g => g.Id != request.Dto.Id && g.Name.ToLower() == request.Dto.Name.ToLower());
 
             if (isDuplicate)
-                return Response<GovernorateDto>.Fail("Another governorate with the same name already exists.");
+                return Response<GovernorateDto>.Fail("توجد محافظة أخرى بنفس الاسم بالفعل.");
 
             _mapper.Map(request.Dto, entity);
             entity.UpdatedAt = DateTime.UtcNow;
@@ -38,7 +38,7 @@ namespace RakbnyMa_aak.CQRS.Features.Governorates.UpdateGovernorate
 
             var dto = _mapper.Map<GovernorateDto>(entity);
 
-            return Response<GovernorateDto>.Success(dto, "Governorate updated successfully.");
+            return Response<GovernorateDto>.Success(dto, "تم تحديث بيانات المحافظة بنجاح.");
         }
     }
 }

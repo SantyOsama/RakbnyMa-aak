@@ -21,7 +21,7 @@ public class NotificationService : INotificationService
         string recipientUserId,
         ApplicationUser sender,
         string message,
-        NotificationType type = NotificationType.Custom,
+        NotificationType type = NotificationType.إشعار_مخصص,
         string? relatedEntityId = null)
     {
         var notification = new Notification

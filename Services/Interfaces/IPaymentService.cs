@@ -16,6 +16,6 @@ namespace RakbnyMa_aak.Services.Interfaces
         string? FailureReason = null,
         string? Message = null)
     {
-        public bool Success => Status == PaymentStatus.Completed;
+        public bool Success => Status == PaymentStatus.مكتمل;
     }
 }

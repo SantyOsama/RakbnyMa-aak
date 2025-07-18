@@ -25,11 +25,11 @@ namespace RakbnyMa_aak.CQRS.Commands.SendNotification
 
             var user = await _userManager.FindByIdAsync(dto.SenderUserId);
             if (user == null)
-                return Response<bool>.Fail("User not found.");
+                return Response<bool>.Fail("المستخدم غير موجود.");
 
             await _notificationService.SendNotificationAsync(dto.ReceiverId, user, dto.Message);
 
-            return Response<bool>.Success(true, "Notification sent successfully.");
+            return Response<bool>.Success(true, "تم إرسال الإشعار بنجاح.");
         }
     }
 }

@@ -12,15 +12,15 @@ namespace RakbnyMa_aak.CQRS.Features.Trip.Queries.GetDriverTripBookings
         public int TripId { get; set; }
 
         [Required]
-        [Display(Name = "Passenger Name")]
-        [StringLength(100, ErrorMessage = "Name must not exceed 100 characters.")]
+        [Display(Name = "اسم الراكب")]
+        [StringLength(100, ErrorMessage = "يجب ألا يزيد الاسم عن 100 حرف.")]
         public string UserName { get; set; }
 
         [Required]
-        [Display(Name = "Booking Status")]
+        [Display(Name = "حالة الحجز")]
         public string Status { get; set; }
 
-        [Display(Name = "Booking Request Date")]
+        [Display(Name = "تاريخ طلب الحجز")]
         public DateTime RequestDate { get; set; }
 
         [Required]

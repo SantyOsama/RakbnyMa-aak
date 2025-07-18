@@ -5,107 +5,91 @@ using static RakbnyMa_aak.Utilities.Enums;
 
 namespace RakbnyMa_aak.Models
 {
-    public class Trip:BaseEntity
+    public class Trip : BaseEntity
     {
         // Id is inherited from BaseEntity (int PK)
-        [Required(ErrorMessage = "Driver ID is required.")]
-        [Display(Name = "Driver ID")]
+        [Required(ErrorMessage = "معرف السائق مطلوب.")]
+        [Display(Name = "معرف السائق")]
         public string DriverId { get; set; } // FK to Driver (string, as Driver.UserId is string)
 
         // City and Governorate can be strings or separate lookup entities
         // Keeping them as strings for now as per the ERD's attributes
 
         [Required]
-        [Display(Name = "From City")]
+        [Display(Name = "من المدينة")]
         public int FromCityId { get; set; }
 
-
         [Required]
-        [Display(Name = "To City")]
+        [Display(Name = "إلى المدينة")]
         public int ToCityId { get; set; }
 
-
         [Required]
-        [Display(Name = "From Governorate")]
+        [Display(Name = "من المحافظة")]
         public int FromGovernorateId { get; set; }
 
-
         [Required]
-        [Display(Name = "To Governorate")]
+        [Display(Name = "إلى المحافظة")]
         public int ToGovernorateId { get; set; }
 
-
-        [Required(ErrorMessage = "Pickup location is required.")]
-        [Display(Name = "Pickup Location")]
+        [Required(ErrorMessage = "موقع الالتقاء مطلوب.")]
+        [Display(Name = "موقع الالتقاء")]
         public string PickupLocation { get; set; }
 
-
-        [Required(ErrorMessage = "Destination location is required.")]
-        [Display(Name = "Destination Location")]
+        [Required(ErrorMessage = "موقع الوصول مطلوب.")]
+        [Display(Name = "موقع الوصول")]
         public string DestinationLocation { get; set; }
 
-
-        [Required(ErrorMessage = "Trip date is required.")]
-        [Display(Name = "Trip Date")]
+        [Required(ErrorMessage = "تاريخ الرحلة مطلوب.")]
+        [Display(Name = "تاريخ الرحلة")]
         public DateTime TripDate { get; set; }
 
-
-        [Required(ErrorMessage = "Available seats are required.")]
-        [Range(1, 150, ErrorMessage = "Available seats must be at least 1.")]
-        [Display(Name = "Available Seats")]
+        [Required(ErrorMessage = "عدد المقاعد المتاحة مطلوب.")]
+        [Range(1, 150, ErrorMessage = "يجب أن يكون عدد المقاعد المتاحة على الأقل 1.")]
+        [Display(Name = "المقاعد المتاحة")]
         public int AvailableSeats { get; set; }
 
-
-        [Required(ErrorMessage = "Price per seat is required.")]
-        [Range(1, double.MaxValue, ErrorMessage = "Price must be greater than 0.")]
-        [Display(Name = "Price per Seat")]
+        [Required(ErrorMessage = "سعر المقعد مطلوب.")]
+        [Range(1, double.MaxValue, ErrorMessage = "يجب أن يكون السعر أكبر من 0.")]
+        [Display(Name = "سعر المقعد")]
         public decimal PricePerSeat { get; set; }
 
-
         [Required]
-        [Display(Name = "Trip Status")]
+        [Display(Name = "حالة الرحلة")]
         public TripStatus TripStatus { get; set; }
 
-
-        [Display(Name = "Is Recurring?")]
+        [Display(Name = "هل الرحلة متكررة؟")]
         public bool IsRecurring { get; set; } = false;
 
-
-        [Display(Name = "Women Only?")]
+        [Display(Name = "هل للنساء فقط؟")]
         public bool WomenOnly { get; set; } = false;
 
-
-        [Display(Name = "From City")]
+        [Display(Name = "من المدينة")]
         public City FromCity { get; set; }
 
-
-        [Display(Name = "To City")]
+        [Display(Name = "إلى المدينة")]
         public City ToCity { get; set; }
 
-
-        [Display(Name = "From Governorate")]
+        [Display(Name = "من المحافظة")]
         public Governorate FromGovernorate { get; set; }
 
-
-        [Display(Name = "To Governorate")]
+        [Display(Name = "إلى المحافظة")]
         public Governorate ToGovernorate { get; set; }
-
 
         // Navigation property to Driver
         [ForeignKey("DriverId")]
-        [Display(Name = "Driver")]
+        [Display(Name = "السائق")]
         public virtual Driver Driver { get; set; }
 
         // Trip has many Bookings
-        [Display(Name = "Bookings")]
+        [Display(Name = "الحجوزات")]
         public virtual ICollection<Booking> Bookings { get; set; }
 
         // Trip has many Ratings (ratings for this specific trip)
-        [Display(Name = "Ratings")]
+        [Display(Name = "التقييمات")]
         public virtual ICollection<Rating> Ratings { get; set; }
 
         // Trip has many Tracking points
-        [Display(Name = "Trip Trackings")]
+        [Display(Name = "تتبع الرحلة")]
         public virtual ICollection<TripTracking> TripTrackings { get; set; }
 
         public Trip()
@@ -114,6 +98,5 @@ namespace RakbnyMa_aak.Models
             Ratings = new HashSet<Rating>();
             TripTrackings = new HashSet<TripTracking>();
         }
-
     }
 }

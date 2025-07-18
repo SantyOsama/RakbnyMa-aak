@@ -27,7 +27,7 @@ namespace RakbnyMa_aak.CQRS.Features.Governorates.CreateGovernorate
 
             if (isExist)
             {
-                return Response<GovernorateResponseDTO>.Fail("This governorate already exists");
+                return Response<GovernorateResponseDTO>.Fail("هذه المحافظة موجودة بالفعل");
             }
 
             var entity = _mapper.Map<Governorate>(request.Dto);
@@ -37,7 +37,7 @@ namespace RakbnyMa_aak.CQRS.Features.Governorates.CreateGovernorate
             await _unitOfWork.CompleteAsync();
 
             var responseDto = _mapper.Map<GovernorateResponseDTO>(entity);
-            return Response<GovernorateResponseDTO>.Success(responseDto, "Governorate created");
+            return Response<GovernorateResponseDTO>.Success(responseDto, "تم إنشاء المحافظة بنجاح");
         }
     }
 }

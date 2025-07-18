@@ -26,7 +26,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.BookTripReque
 
         public async Task<Response<int>> Handle(BookTripRequestOrchestrator request, CancellationToken cancellationToken)
         {
-            request.BookingDto.UserId=request.userId;
+            request.BookingDto.UserId = request.userId;
             var bookingDto = request.BookingDto;
 
             // Step 1: Validate Trip Exists
@@ -42,14 +42,14 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.BookTripReque
                 return Response<int>.Fail(preventBookingResponse.Message);
 
             if (bookingDto.NumberOfSeats > trip.AvailableSeats)
-                return Response<int>.Fail($"Not enough available seats. Only {trip.AvailableSeats} seats left.");
+                return Response<int>.Fail($"عدد المقاعد المتاحة غير كافٍ. المتبقي فقط {trip.AvailableSeats} مقعداً.");
 
             // Step 3: Check if user already booked the same trip
             var checkBookingResponse = await _mediator.Send(
                 new CheckUserAlreadyBookedCommand(
                     new CheckUserAlreadyBookedDto
                     {
-                        UserId =request.userId,
+                        UserId = request.userId,
                         TripId = bookingDto.TripId
                     }));
 
@@ -65,14 +65,12 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.BookTripReque
                     .GetBookingByUserAndTripAsync(request.userId, bookingDto.TripId);
 
                 if (existingBooking == null)
-                    return Response<int>.Fail("Existing booking not found.");
+                    return Response<int>.Fail("الحجز الحالي غير موجود.");
 
-                return Response<int>.Fail("You Can Only Make One Booking, Please try to Update your Booking.");
-
+                return Response<int>.Fail("يمكنك إجراء حجز واحد فقط، يرجى تعديل الحجز الحالي.");
             }
             else // first time booking → create
             {
-
                 var createBookingDto = _mapper.Map<CreateBookingRequestDto>(bookingDto);
 
                 createBookingDto.PricePerSeat = trip.PricePerSeat;
@@ -86,7 +84,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.BookTripReque
             // Step 4: Get DriverId by TripId
             var driverIdResponse = await _mediator.Send(new GetDriverIdByTripIdQuery(bookingDto.TripId));
             if (!driverIdResponse.IsSucceeded || string.IsNullOrEmpty(driverIdResponse.Data))
-                return Response<int>.Fail("Driver not found for this trip.");
+                return Response<int>.Fail("لم يتم العثور على السائق لهذه الرحلة.");
 
             var driverId = driverIdResponse.Data;
 
@@ -95,7 +93,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.BookTripReque
             {
                 ReceiverId = driverId,
                 SenderUserId = request.userId,
-                Message = "You have a new booking request."
+                Message = "لديك طلب حجز جديد."
             }));
 
             return bookingResponse;

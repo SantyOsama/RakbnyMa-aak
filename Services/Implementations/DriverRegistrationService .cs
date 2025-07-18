@@ -19,46 +19,34 @@ namespace RakbnyMa_aak.Services.Implementations
         private readonly IDriverRepository _repo;
         private readonly INotificationService _notificationService;
 
-
         public DriverRegistrationService(
               UserManager<ApplicationUser> userManager,
               ICloudinaryService cloudinary,
               IDriverVerificationService verificationService,
               IDriverRepository repo,
               INotificationService notificationService)
-                {
-                    _userManager = userManager;
-                    _cloudinary = cloudinary;
-                    _verificationService = verificationService;
-                    _repo = repo;
-                    _notificationService = notificationService;
-                }
-
+        {
+            _userManager = userManager;
+            _cloudinary = cloudinary;
+            _verificationService = verificationService;
+            _repo = repo;
+            _notificationService = notificationService;
+        }
 
         public async Task<Response<RegisterResponseDto>> RegisterDriverAsync(RegisterDriverRequestDto dto)
         {
             if (await _userManager.FindByEmailAsync(dto.Email) != null ||
                 await _userManager.FindByNameAsync(dto.FullName) != null)
             {
-                return Response<RegisterResponseDto>.Fail("Email or Username already exists.");
+                return Response<RegisterResponseDto>.Fail("البريد الإلكتروني أو اسم المستخدم موجود بالفعل.");
             }
-            //var uploadTasks = new[]
-            //    {
-            //        _cloudinary.UploadImageAsync(dto.NationalIdImage, "drivers/nationalId"),
-            //        _cloudinary.UploadImageAsync(dto.DriverLicenseImage, "drivers/license"),
-            //        _cloudinary.UploadImageAsync(dto.CarLicenseImage, "drivers/carlicense"),
-            //        _cloudinary.UploadImageAsync(dto.SelfieImage, "drivers/selfie")
-            //    };
 
-            //var uploadResults = await Task.WhenAll(uploadTasks);
-            //if (uploadResults.Any(url => string.IsNullOrEmpty(url)))
-            //    return Response<string>.Fail("Failed to upload one or more images.");
-
-            //Upload images
+            // رفع الصور
             var nationalIdImgUrl = await _cloudinary.UploadImageAsync(dto.NationalIdImage, "drivers/nationalId");
             var licenseImgUrl = await _cloudinary.UploadImageAsync(dto.DriverLicenseImage, "drivers/license");
             var carLicenseImgUrl = await _cloudinary.UploadImageAsync(dto.CarLicenseImage, "drivers/carlicense");
             var selfieImgUrl = await _cloudinary.UploadImageAsync(dto.SelfieImage, "drivers/selfie");
+
             string profileImageUrl;
             if (dto.Picture != null && dto.Picture.Length > 0)
             {
@@ -68,18 +56,8 @@ namespace RakbnyMa_aak.Services.Implementations
             {
                 profileImageUrl = "https://res.cloudinary.com/dbrz7pbsa/image/upload/v1751624539/default-profile_zo7m6z.png";
             }
-            // Optional: Face verification
-            /*
-            bool isFaceValid = await _verificationService.MatchFaceAsync(selfieImgUrl, nationalIdImgUrl);
-            if (!isFaceValid)
-                return Response<string>.Fail("Face verification failed.");
-            */
 
-            //var nationalIdImgUrl = uploadResults[0];
-            //var licenseImgUrl = uploadResults[1];
-            //var carLicenseImgUrl = uploadResults[2];
-            //var selfieImgUrl = uploadResults[3];
-            // Create Identity User
+            // إنشاء مستخدم جديد
             var user = new ApplicationUser
             {
                 FullName = dto.FullName,
@@ -95,10 +73,7 @@ namespace RakbnyMa_aak.Services.Implementations
             if (!result.Succeeded)
                 return Response<RegisterResponseDto>.Fail(string.Join(", ", result.Errors.Select(e => e.Description)));
 
-            //var roleResult = await _userManager.AddToRoleAsync(user, "Driver");
-            //if (!roleResult.Succeeded)
-            //    return Response<string>.Fail("User created, but failed to assign role: " + string.Join(", ", roleResult.Errors.Select(e => e.Description)));
-            // Create Driver entity
+            // إنشاء كيان السائق
             var driver = new Driver
             {
                 UserId = user.Id,
@@ -117,25 +92,23 @@ namespace RakbnyMa_aak.Services.Implementations
             await _repo.AddAsync(driver);
             await _repo.CompleteAsync();
 
-            // ⬇️ Notify Admins via NotificationService
+            // إشعار المشرفين بطلب تسجيل السائق
             var admins = await _userManager.GetUsersInRoleAsync("Admin");
-
             foreach (var admin in admins)
             {
                 await _notificationService.SendNotificationAsync(
                     recipientUserId: admin.Id,
                     sender: user,
-                    message: $"Driver {user.FullName} has requested registration.",
-                    type: NotificationType.DriverRegistration,
+                    message: $"السائق {user.FullName} قدم طلب تسجيل.",
+                    type: NotificationType.تسجيل_السائق,
                     relatedEntityId: user.Id
                 );
             }
 
             return Response<RegisterResponseDto>.Success(
                 new RegisterResponseDto { Id = user.Id },
-                "Driver registered successfully and become pending to approve"
+                "تم تسجيل السائق بنجاح ويحتاج إلى الموافقة"
             );
-
         }
     }
 }

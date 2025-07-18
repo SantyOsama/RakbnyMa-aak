@@ -26,10 +26,9 @@ namespace RakbnyMa_aak.CQRS.Features.Auth.Queries.GetUserById
                 cancellationToken);
 
             if (userDto == null)
-                return Response<UserResponseDto>.Fail("User not found");
+                return Response<UserResponseDto>.Fail("لم يتم العثور على المستخدم");
 
             return Response<UserResponseDto>.Success(userDto);
         }
     }
-
 }

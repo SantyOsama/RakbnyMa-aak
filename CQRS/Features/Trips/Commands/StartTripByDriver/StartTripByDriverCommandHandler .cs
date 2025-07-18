@@ -22,16 +22,16 @@ namespace RakbnyMa_aak.CQRS.Features.Trip.Commands.StartTripByDriver
         {
             var trip = await _unitOfWork.TripRepository.GetByIdAsync(request.TripId);
 
-            if (trip == null || trip.IsDeleted || trip.DriverId != request.DriverId || trip.TripStatus == TripStatus.Cancelled)
-                return Response<bool>.Fail("Unauthorized or trip not found.");
+            if (trip == null || trip.IsDeleted || trip.DriverId != request.DriverId || trip.TripStatus == TripStatus.ملغاة)
+                return Response<bool>.Fail("غير مصرح أو لم يتم العثور على الرحلة.");
 
-            if (trip.TripStatus != TripStatus.Scheduled)
-                return Response<bool>.Fail("Trip is already started or completed.");
+            if (trip.TripStatus != TripStatus.مجدولة)
+                return Response<bool>.Fail("الرحلة قد بدأت بالفعل أو تم إنهاؤها.");
 
             if (DateTime.UtcNow < trip.TripDate)
-                return Response<bool>.Fail("Cannot start the trip before its scheduled start time.");
+                return Response<bool>.Fail("لا يمكن بدء الرحلة قبل موعد انطلاقها المحدد.");
 
-            trip.TripStatus = TripStatus.Ongoing;
+            trip.TripStatus = TripStatus.قيد_التنفيذ;
             trip.UpdatedAt = DateTime.UtcNow;
 
             _unitOfWork.TripRepository.Update(trip);
@@ -40,7 +40,7 @@ namespace RakbnyMa_aak.CQRS.Features.Trip.Commands.StartTripByDriver
             await _chatHub.Clients.Group(request.TripId.ToString())
                 .SendAsync("TripStarted", request.TripId);
 
-            return Response<bool>.Success(true, "Trip started successfully.");
+            return Response<bool>.Success(true, "تم بدء الرحلة بنجاح.");
         }
     }
 }

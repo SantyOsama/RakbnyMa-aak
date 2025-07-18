@@ -6,45 +6,38 @@ namespace RakbnyMa_aak.Models
     public class Rating : BaseEntity
     {
         // Id is inherited from BaseEntity (int PK)
-        [Required(ErrorMessage = "Trip ID is required.")]
-        [Display(Name = "Trip")]
+        [Required(ErrorMessage = "رقم الرحلة مطلوب.")]
+        [Display(Name = "الرحلة")]
         public int TripId { get; set; }
 
-        [Required(ErrorMessage = "Rater ID is required.")]
-        [Display(Name = "Rater")]
+        [Required(ErrorMessage = "رقم المقيّم مطلوب.")]
+        [Display(Name = "المقيّم")]
         public string RaterId { get; set; }
 
+        [Required(ErrorMessage = "رقم المُقيّم عليه مطلوب.")]
+        [Display(Name = "المُقيّم عليه")]
+        public string RatedId { get; set; }
 
-
-        [Required(ErrorMessage = "Rated ID is required.")]
-        [Display(Name = "Rated")]
-        public string RatedId { get; set; } 
-
-
-
-        [Required(ErrorMessage = "Rating value is required.")]
-        [Range(1, 5, ErrorMessage = "Rating must be between 1 and 5.")]
-        [Display(Name = "Rating Value")]
+        [Required(ErrorMessage = "قيمة التقييم مطلوبة.")]
+        [Range(1, 5, ErrorMessage = "يجب أن يكون التقييم بين 1 و 5.")]
+        [Display(Name = "قيمة التقييم")]
         public int RatingValue { get; set; }
 
-
-
-        [MaxLength(1000, ErrorMessage = "Comment must not exceed 1000 characters.")]
-        [Display(Name = "Comment")]
+        [MaxLength(1000, ErrorMessage = "يجب ألا يتجاوز التعليق 1000 حرف.")]
+        [Display(Name = "التعليق")]
         public string Comment { get; set; }
-
 
         // Navigation properties
         [ForeignKey("TripId")]
-        [Display(Name = "Trip")]
+        [Display(Name = "الرحلة")]
         public virtual Trip Trip { get; set; }
 
         [ForeignKey("RaterId")]
-        [Display(Name = "Rater")]
+        [Display(Name = "المقيّم")]
         public virtual ApplicationUser Rater { get; set; }
 
         [ForeignKey("RatedId")]
-        [Display(Name = "Rated")]
+        [Display(Name = "المُقيّم عليه")]
         public virtual ApplicationUser Rated { get; set; }
 
         // Business Logic Constraint Support:

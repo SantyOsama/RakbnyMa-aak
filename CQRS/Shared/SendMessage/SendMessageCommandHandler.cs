@@ -24,18 +24,18 @@ namespace RakbnyMa_aak.CQRS.Shared.SendMessage
         {
             var trip = await _unitOfWork.TripRepository.GetByIdAsync(request.Dto.TripId);
 
-            if (trip == null || trip.TripStatus != TripStatus.Ongoing)
-                return Response<string>.Fail("Trip does not exist or has not started yet.");
+            if (trip == null || trip.TripStatus != TripStatus.قيد_التنفيذ)
+                return Response<string>.Fail("الرحلة غير موجودة أو لم تبدأ بعد.");
 
             var isPassengerConfirmed = await _unitOfWork.BookingRepository.AnyAsync(
                 b => b.TripId == trip.Id &&
                      b.UserId == request.SenderId &&
-                     b.RequestStatus == RequestStatus.Confirmed);
+                     b.RequestStatus == RequestStatus.مؤكدة);
 
             var isDriver = trip.DriverId == request.SenderId;
 
             if (!isPassengerConfirmed && !isDriver)
-                return Response<string>.Fail("You are not allowed to participate in this trip chat.");
+                return Response<string>.Fail("غير مسموح لك بالمشاركة في دردشة هذه الرحلة.");
 
             var message = new Message
             {
@@ -63,7 +63,7 @@ namespace RakbnyMa_aak.CQRS.Shared.SendMessage
 
             await _hub.Clients.Group(trip.Id.ToString()).SendAsync("ReceiveGroupMessage", result);
 
-            return Response<string>.Success("Message sent successfully.");
+            return Response<string>.Success("تم إرسال الرسالة بنجاح.");
         }
 
     }

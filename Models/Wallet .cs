@@ -10,12 +10,12 @@ namespace RakbnyMa_aak.Models
         public string UserId { get; set; }
 
         [Required]
-        [Range(0, double.MaxValue, ErrorMessage = "Balance must be positive.")]
+        [Range(0, double.MaxValue, ErrorMessage = "يجب أن يكون الرصيد إيجابيًا.")]
         [Column(TypeName = "decimal(18,2)")]
-        [Display(Name = "Current Balance")]
+        [Display(Name = "الرصيد الحالي")]
         public decimal Balance { get; set; } = 0;
 
-        [Display(Name = "Last Updated")]
+        [Display(Name = "آخر تحديث")]
         public DateTime LastUpdated { get; set; } = DateTime.UtcNow;
 
         // Navigation property

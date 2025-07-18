@@ -30,7 +30,7 @@ namespace RakbnyMa_aak.CQRS.Features.Cities.GetCitiesByGovernorateId
                     );
 
             if (!citiesDto.Any())
-                return Response<List<CityResponseDTO>>.Fail("No cities found for this governorate.");
+                return Response<List<CityResponseDTO>>.Fail("لم يتم العثور على مدن لهذه المحافظة.");
 
             return Response<List<CityResponseDTO>>.Success(citiesDto);
 

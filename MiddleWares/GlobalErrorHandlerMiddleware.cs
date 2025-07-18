@@ -22,15 +22,15 @@ namespace RakbnyMa_aak.MiddleWares
                 var path = context.Request.Path.Value?.ToLower();
                 if (path != null && path.StartsWith("/hangfire"))
                 {
-                    throw; 
+                    throw;
                 }
 
-                _logger.LogError(ex, "An unhandled exception occurred.");
+                _logger.LogError(ex, "حدث استثناء غير معالج.");
 
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 context.Response.ContentType = "application/json";
 
-                var response = Response<string>.Fail($"Unexpected Error {ex.Message}", statusCode: 500);
+                var response = Response<string>.Fail($"حدث خطأ غير متوقع: {ex.Message}", statusCode: 500);
 
                 await context.Response.WriteAsJsonAsync(response);
             }

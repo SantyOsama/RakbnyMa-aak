@@ -28,7 +28,7 @@ namespace RakbnyMa_aak.CQRS.Features.Admin.RejectDriver
             var driver = await _unitOfWork.DriverRepository.GetByUserIdAsync(request.DriverId);
 
             if (driver == null)
-                return Response<bool>.Fail("Driver not found", statusCode:404);
+                return Response<bool>.Fail("لم يتم العثور على السائق", statusCode: 404);
 
             _unitOfWork.DriverRepository.Delete(driver);
 
@@ -38,7 +38,7 @@ namespace RakbnyMa_aak.CQRS.Features.Admin.RejectDriver
                 var result = await _userManager.DeleteAsync(user);
                 if (!result.Succeeded)
                 {
-                    return Response<bool>.Fail("Failed to delete user: " + string.Join(", ", result.Errors.Select(e => e.Description)));
+                    return Response<bool>.Fail("فشل في حذف المستخدم: " + string.Join(", ", result.Errors.Select(e => e.Description)));
                 }
 
                 await _emailService.SendEmailAsync(
@@ -70,7 +70,7 @@ namespace RakbnyMa_aak.CQRS.Features.Admin.RejectDriver
             }
 
             await _unitOfWork.CompleteAsync();
-            return Response<bool>.Success(true, "Driver registration rejected and account deleted.");
+            return Response<bool>.Success(true, "تم رفض تسجيل السائق وتم حذف الحساب.");
         }
     }
 }

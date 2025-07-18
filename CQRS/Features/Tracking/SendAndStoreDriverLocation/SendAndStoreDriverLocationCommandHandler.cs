@@ -31,10 +31,10 @@ namespace RakbnyMa_aak.CQRS.Commands.Tracking.SendAndStoreDriverLocation
 
             var trip = await _unitOfWork.TripRepository.GetByIdAsync(request.TripId);
             if (trip == null)
-                return Response<bool>.Fail("Trip not found", statusCode: 404);
+                return Response<bool>.Fail("لم يتم العثور على الرحلة", statusCode: 404);
 
             if (trip.DriverId != userId)
-                return Response<bool>.Fail("Access denied: You are not the owner of this trip", statusCode: 403);
+                return Response<bool>.Fail("تم الرفض: لا تملك صلاحية الوصول إلى هذه الرحلة", statusCode: 403);
 
             // Store in DB
             var tracking = new TripTracking
@@ -52,7 +52,7 @@ namespace RakbnyMa_aak.CQRS.Commands.Tracking.SendAndStoreDriverLocation
             await _hubContext.Clients.Group(request.TripId.ToString())
                 .SendAsync("ReceiveLocation", request.Lat, request.Lng);
 
-            return Response<bool>.Success(true, "Location stored and broadcasted.");
+            return Response<bool>.Success(true, "تم حفظ الموقع وإرساله.");
         }
     }
 }

@@ -15,7 +15,7 @@ namespace RakbnyMa_aak.CQRS.Features.Cities.DeleteCity
 
             var city = await _unitOfWork.CityRepository.GetByIdAsync(request.Id);
             if (city == null || city.IsDeleted)
-                return Response<string>.Fail("City not found.");
+                return Response<string>.Fail("لم يتم العثور على المدينة.");
 
             city.IsDeleted = true;
             city.UpdatedAt = DateTime.UtcNow;
@@ -23,7 +23,7 @@ namespace RakbnyMa_aak.CQRS.Features.Cities.DeleteCity
             _unitOfWork.CityRepository.Update(city);
             await _unitOfWork.CompleteAsync();
 
-            return Response<string>.Success("City soft-deleted successfully.");
+            return Response<string>.Success("تم حذف المدينة حذفاً منطقياً بنجاح.");
         }
     }
 }

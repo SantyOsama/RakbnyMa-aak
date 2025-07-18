@@ -28,7 +28,7 @@ namespace RakbnyMa_aak.CQRS.Features.Governorates.GetGovernorateById
                 );
 
             if (dto is null)
-                return Response<GovernorateDto>.Fail("Governorate not found.");
+                return Response<GovernorateDto>.Fail("لم يتم العثور على المحافظة.");
 
             return Response<GovernorateDto>.Success(dto);
         }

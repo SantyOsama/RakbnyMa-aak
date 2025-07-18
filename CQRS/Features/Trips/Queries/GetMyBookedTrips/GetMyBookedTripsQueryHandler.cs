@@ -25,7 +25,7 @@ namespace RakbnyMa_aak.CQRS.Features.Trips.Queries.GetMyBookedTrips
         {
             var userId = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
-                return Response<PaginatedResult<TripResponseDto>>.Fail("Unauthorized");
+                return Response<PaginatedResult<TripResponseDto>>.Fail("غير مصرح لك");
 
             var tripsQuery = _unitOfWork.BookingRepository.GetAllQueryable()
                 .Where(b => b.UserId == userId && !b.Trip.IsDeleted)

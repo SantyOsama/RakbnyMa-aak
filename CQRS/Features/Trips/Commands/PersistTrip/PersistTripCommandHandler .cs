@@ -23,7 +23,7 @@ namespace RakbnyMa_aak.CQRS.Features.Trips.Commands.PersistTrip
         public async Task<Response<int>> Handle(PersistTripCommand request, CancellationToken cancellationToken)
         {
             var trip = _mapper.Map<TripModel>(request.TripDto);
-            trip.TripStatus = TripStatus.Scheduled;
+            trip.TripStatus = TripStatus.مجدولة;
             await _unitOfWork.TripRepository.AddAsync(trip);
             await _unitOfWork.CompleteAsync();
 
@@ -31,7 +31,7 @@ namespace RakbnyMa_aak.CQRS.Features.Trips.Commands.PersistTrip
 
             var toCity = await _unitOfWork.CityRepository.GetCityNameByIdAsync(request.TripDto.ToCityId);
 
-            return Response<int>.Success(trip.Id, $"Trip from {fromCity} to {toCity} created successfully.");
+            return Response<int>.Success(trip.Id, $"تم إنشاء رحلة من {fromCity} إلى {toCity} بنجاح.");
         }
     }
 }

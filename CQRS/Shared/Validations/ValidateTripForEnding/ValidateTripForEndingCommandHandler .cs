@@ -31,12 +31,12 @@ namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripForEnding
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (tripProjection == null || tripProjection.IsDeleted || tripProjection.DriverId != request.DriverId)
-                return Response<Trip>.Fail("Unauthorized or trip not found.");
+                return Response<Trip>.Fail("غير مصرح أو لم يتم العثور على الرحلة.");
 
-            if (tripProjection.TripStatus != TripStatus.Ongoing)
-                return Response<Trip>.Fail("Trip has not started yet.");
+            if (tripProjection.TripStatus != TripStatus.قيد_التنفيذ)
+                return Response<Trip>.Fail("الرحلة لم تبدأ بعد.");
 
-            return Response<Trip>.Success(tripProjection, "Valid trip");
+            return Response<Trip>.Success(tripProjection, "رحلة صالحة");
         }
     }
 }

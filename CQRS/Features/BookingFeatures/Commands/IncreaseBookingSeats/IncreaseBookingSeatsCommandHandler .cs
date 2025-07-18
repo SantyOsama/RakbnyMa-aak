@@ -17,7 +17,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.IncreaseBookingSea
         {
             var booking = await _unitOfWork.BookingRepository.GetByIdAsync(request.Dto.BookingId);
             if (booking == null || booking.IsDeleted)
-                return Response<int>.Fail("Booking not found.");
+                return Response<int>.Fail("لم يتم العثور على الحجز.");
 
             // Update trip and booking
             booking.NumberOfSeats += request.Dto.SeatsToChange;
@@ -28,7 +28,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.IncreaseBookingSea
 
             await _unitOfWork.CompleteAsync();
 
-            return Response<int>.Success(booking.Id, "Booking seats increased successfully.");
+            return Response<int>.Success(booking.Id, "تم زيادة عدد مقاعد الحجز بنجاح.");
         }
     }
 }

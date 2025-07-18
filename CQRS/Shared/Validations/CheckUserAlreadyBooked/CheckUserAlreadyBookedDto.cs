@@ -4,12 +4,12 @@ namespace RakbnyMa_aak.CQRS.Commands.Validations.CheckUserAlreadyBooked
 {
     public class CheckUserAlreadyBookedDto
     {
-        [Required(ErrorMessage = "Trip ID is required.")]
-        [Display(Name = "Trip ID")]
+        [Required(ErrorMessage = "معرّف الرحلة مطلوب.")]
+        [Display(Name = "معرّف الرحلة")]
         public int TripId { get; set; }
 
-        [Required(ErrorMessage = "User ID is required.")]
-        [Display(Name = "User ID")]
+        [Required(ErrorMessage = "معرّف المستخدم مطلوب.")]
+        [Display(Name = "معرّف المستخدم")]
         public string UserId { get; set; }
     }
 }

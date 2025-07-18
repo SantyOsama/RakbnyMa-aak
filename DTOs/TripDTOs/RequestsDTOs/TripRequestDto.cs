@@ -7,49 +7,48 @@ namespace RakbnyMa_aak.DTOs.TripDTOs.RequestsDTOs
         public string? DriverId { get; set; }
 
         [Required]
-        [Display(Name = "From City")]
+        [Display(Name = "المدينة من")]
         public int FromCityId { get; set; }
 
         [Required]
-        [Display(Name = "To City")]
+        [Display(Name = "المدينة إلى")]
         public int ToCityId { get; set; }
 
         [Required]
-        [Display(Name = "From Governorate")]
+        [Display(Name = "المحافظة من")]
         public int FromGovernorateId { get; set; }
 
         [Required]
-        [Display(Name = "To Governorate")]
+        [Display(Name = "المحافظة إلى")]
         public int ToGovernorateId { get; set; }
 
-        [Required(ErrorMessage = "Pickup location is required.")]
-        [Display(Name = "Pickup Location")]
+        [Required(ErrorMessage = "موقع الانطلاق مطلوب.")]
+        [Display(Name = "موقع الانطلاق")]
         public string PickupLocation { get; set; }
 
-        [Required(ErrorMessage = "Destination location is required.")]
-        [Display(Name = "Destination Location")]
+        [Required(ErrorMessage = "موقع الوصول مطلوب.")]
+        [Display(Name = "موقع الوصول")]
         public string DestinationLocation { get; set; }
 
-        [Required(ErrorMessage = "Trip date is required.")]
+        [Required(ErrorMessage = "تاريخ الرحلة مطلوب.")]
         [DataType(DataType.DateTime)]
-        [Display(Name = "Trip Date")]
+        [Display(Name = "تاريخ الرحلة")]
         public DateTime TripDate { get; set; }
 
-
-        [Required(ErrorMessage = "Available seats is required.")]
-        [Range(1, 150, ErrorMessage = "Available seats must be between 1 and 150.")]
-        [Display(Name = "Available Seats")]
+        [Required(ErrorMessage = "عدد المقاعد المتاحة مطلوب.")]
+        [Range(1, 150, ErrorMessage = "عدد المقاعد المتاحة يجب أن يكون بين 1 و150.")]
+        [Display(Name = "عدد المقاعد المتاحة")]
         public int AvailableSeats { get; set; }
 
-        [Required(ErrorMessage = "Price per seat is required.")]
-        [Range(1, 10000, ErrorMessage = "Price must be greater than 0.")]
-        [Display(Name = "Price Per Seat")]
+        [Required(ErrorMessage = "سعر المقعد مطلوب.")]
+        [Range(1, 10000, ErrorMessage = "يجب أن يكون السعر أكبر من 0.")]
+        [Display(Name = "سعر المقعد")]
         public decimal PricePerSeat { get; set; }
 
-        [Display(Name = "Is Recurring?")]
+        [Display(Name = "هل الرحلة متكررة؟")]
         public bool IsRecurring { get; set; }
 
-        [Display(Name = "Women Only?")]
+        [Display(Name = "للنساء فقط؟")]
         public bool WomenOnly { get; set; }
     }
 }

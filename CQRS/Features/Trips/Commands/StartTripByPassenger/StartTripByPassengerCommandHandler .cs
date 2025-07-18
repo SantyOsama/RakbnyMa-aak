@@ -25,23 +25,23 @@ namespace RakbnyMa_aak.CQRS.Features.Trip.Commands.StartTripByPassenger
             var booking = result.Data;
 
             if (booking.UserId != request.CurrentUserId)
-                return Response<bool>.Fail("Unauthorized passenger.");
+                return Response<bool>.Fail("راكب غير مصرح له.");
 
             if (booking.HasStarted)
-                return Response<bool>.Fail("Trip already started by this passenger.");
+                return Response<bool>.Fail("بدأ هذا الراكب الرحلة مسبقًا.");
 
             var trip = await _unitOfWork.TripRepository.GetByIdAsync(booking.TripId);
             if (trip == null || trip.IsDeleted)
-                return Response<bool>.Fail("Trip not found.");
+                return Response<bool>.Fail("لم يتم العثور على الرحلة.");
 
-            if (trip.TripStatus != TripStatus.Ongoing)
-                return Response<bool>.Fail("You can only start your trip when it's Ongoing.");
+            if (trip.TripStatus != TripStatus.قيد_التنفيذ)
+                return Response<bool>.Fail("يمكنك بدء رحلتك فقط عندما تكون الرحلة في حالة جارية.");
 
             booking.HasStarted = true;
             _unitOfWork.BookingRepository.Update(booking);
             await _unitOfWork.CompleteAsync();
 
-            return Response<bool>.Success(true, "Passenger started trip.");
+            return Response<bool>.Success(true, "بدأ الراكب الرحلة.");
         }
     }
 }

@@ -19,36 +19,36 @@ namespace RakbnyMa_aak.CQRS.Features.Ratings.DriverAddRating
         {
             var dto = request.RatingDto;
 
-            // Step 1: Check trip
+            // الخطوة 1: التحقق من الرحلة
             var trip = await _unitOfWork.TripRepository.GetByIdAsync(dto.TripId);
             if (trip == null || trip.IsDeleted)
-                return Response<bool>.Fail("Trip not found.");
+                return Response<bool>.Fail("لم يتم العثور على الرحلة.");
 
-            // Step 2: Verify the driver owns the trip
+            // الخطوة 2: التحقق من أن السائق هو صاحب الرحلة
             if (trip.DriverId != dto.RaterId)
-                return Response<bool>.Fail("You are not authorized to rate passengers on this trip.");
+                return Response<bool>.Fail("غير مسموح لك بتقييم الركاب في هذه الرحلة.");
 
             if (dto.RaterId == dto.RatedPassengerId)
-                return Response<bool>.Fail("You cannot rate yourself.");
+                return Response<bool>.Fail("لا يمكنك تقييم نفسك.");
 
-            // Step 3: Check if the passenger has completed the trip
+            // الخطوة 3: التحقق من أن الراكب أكمل الرحلة
             var booking = await _unitOfWork.BookingRepository
                 .GetConfirmedFinishedBookingQueryable(dto.TripId, dto.RatedPassengerId)
                 .FirstOrDefaultAsync();
 
             if (booking == null)
-                return Response<bool>.Fail("This passenger has not completed this trip.");
+                return Response<bool>.Fail("هذا الراكب لم يُكمل هذه الرحلة.");
 
-            // Step 4: Check if already rated
+            // الخطوة 4: التحقق من أنه تم التقييم مسبقاً
             bool alreadyRated = await _unitOfWork.RatingRepository
                 .AnyAsync(r => r.TripId == dto.TripId &&
                                r.RaterId == dto.RaterId &&
                                r.RatedId == dto.RatedPassengerId);
 
             if (alreadyRated)
-                return Response<bool>.Fail("You have already rated this passenger for this trip.");
+                return Response<bool>.Fail("لقد قمت بالفعل بتقييم هذا الراكب لهذه الرحلة.");
 
-            // Step 5: Add rating
+            // الخطوة 5: إضافة التقييم
             var rating = new Rating
             {
                 TripId = dto.TripId,
@@ -61,7 +61,7 @@ namespace RakbnyMa_aak.CQRS.Features.Ratings.DriverAddRating
             await _unitOfWork.RatingRepository.AddAsync(rating);
             await _unitOfWork.CompleteAsync();
 
-            return Response<bool>.Success(true, "Passenger rated successfully.");
+            return Response<bool>.Success(true, "تم تقييم الراكب بنجاح.");
         }
     }
 }

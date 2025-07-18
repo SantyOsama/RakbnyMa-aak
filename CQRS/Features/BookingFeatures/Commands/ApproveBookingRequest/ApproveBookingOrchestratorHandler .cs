@@ -17,11 +17,10 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.ApproveBookingRequ
         public ApproveBookingOrchestratorHandler(
              IMediator mediator,
              INotificationService notificationService)
-                {
-                    _mediator = mediator;
-                    _notificationService = notificationService;
-                }
-
+        {
+            _mediator = mediator;
+            _notificationService = notificationService;
+        }
 
         public async Task<Response<bool>> Handle(ApproveBookingOrchestrator request, CancellationToken cancellationToken)
         {
@@ -36,10 +35,9 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.ApproveBookingRequ
                 new UpdateBookingStatusCommand(
                     result.BookingId,
                     result.TripId,
-                    RequestStatus.Confirmed));
+                    RequestStatus.مؤكدة));
             if (!approveResult.IsSucceeded)
                 return Response<bool>.Fail(approveResult.Message);
-
 
             await _notificationService.SendNotificationAsync(
                   recipientUserId: result.PassengerId,
@@ -49,12 +47,12 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.ApproveBookingRequ
                       FullName = result.DriverFullName,
                       Picture = result.DriverPicture
                   },
-                  message: "Your booking request has been approved.",
-                  type: NotificationType.BookingApproved,
+                  message: "تمت الموافقة على طلب الحجز الخاص بك.",
+                  type: NotificationType.تمت_الموافقة_على_الحجز,
                   relatedEntityId: result.BookingId.ToString()
               );
 
-            return Response<bool>.Success(true, "Booking approved and passenger notified.");
+            return Response<bool>.Success(true, "تمت الموافقة على الحجز وتم إشعار الراكب.");
         }
     }
 }

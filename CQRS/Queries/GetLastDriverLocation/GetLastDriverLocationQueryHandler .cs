@@ -20,7 +20,7 @@ namespace RakbnyMa_aak.CQRS.Queries.GetLastDriverLocation
             var tracking = await _unitOfWork.TripTrackingRepository.GetLastLocationAsync(request.TripId);
 
             if (tracking == null)
-                return Response<DriverLocationDto>.Fail("No location found for this trip.", null, statusCode: 404);
+                return Response<DriverLocationDto>.Fail("لا توجد موقع لهذه الرحلة.", null, statusCode: 404);
 
             var dto = new DriverLocationDto
             {
@@ -29,7 +29,7 @@ namespace RakbnyMa_aak.CQRS.Queries.GetLastDriverLocation
                 Timestamp = tracking.Timestamp
             };
 
-            return Response<DriverLocationDto>.Success(dto, "Latest location retrieved successfully.");
+            return Response<DriverLocationDto>.Success(dto, "تم استرجاع الموقع الأخير بنجاح.");
         }
     }
 

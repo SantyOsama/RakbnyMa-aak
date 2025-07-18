@@ -7,7 +7,6 @@ using RakbnyMa_aak.SignalR;
 using RakbnyMa_aak.UOW;
 using BookingModel = RakbnyMa_aak.Models.Booking;
 
-
 namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.CreateBooking
 {
     public class CreateBookingCommandHandler : IRequestHandler<CreateBookingCommand, Response<int>>
@@ -16,10 +15,8 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.CreateBooking
         private readonly IMapper _mapper;
         private readonly IHubContext<NotificationHub> _hubContext;
 
-
         public CreateBookingCommandHandler(IUnitOfWork unitOfWork, IMapper mapper,
             IHubContext<NotificationHub> hubContext)
-
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -38,8 +35,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.CreateBooking
 
             var responseDto = _mapper.Map<CreateBookingResponseDto>(booking);
 
-            return Response<int>.Success(responseDto.BookingId, "Booking request sent to driver.");
+            return Response<int>.Success(responseDto.BookingId, "تم إرسال طلب الحجز إلى السائق.");
         }
-
     }
 }

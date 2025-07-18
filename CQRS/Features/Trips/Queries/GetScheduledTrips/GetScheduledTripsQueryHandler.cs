@@ -25,7 +25,7 @@ namespace RakbnyMa_aak.CQRS.Features.Trips.Queries.GetScheduledTrips
             var filterDto = request.Filter;
 
             Expression<Func<RakbnyMa_aak.Models.Trip, bool>> filter = trip =>
-                trip.TripStatus == TripStatus.Scheduled &&
+                trip.TripStatus == TripStatus.مجدولة &&
                 !trip.IsDeleted &&
                 (!filterDto.CreatedAfter.HasValue || trip.CreatedAt >= filterDto.CreatedAfter.Value) &&
                 (!filterDto.CreatedBefore.HasValue || trip.CreatedAt <= filterDto.CreatedBefore.Value);

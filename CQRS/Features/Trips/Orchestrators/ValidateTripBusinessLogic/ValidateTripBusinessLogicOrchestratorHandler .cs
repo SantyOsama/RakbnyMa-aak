@@ -29,10 +29,10 @@ namespace RakbnyMa_aak.CQRS.Features.Trip.Orchestrators.ValidateTripBusinessLogi
             // Check driver IsApproved
             var driver = await _unitOfWork.DriverRepository.GetByUserIdAsync(dto.DriverId);
             if (driver == null)
-                return Response<bool>.Fail("Driver not found", statusCode: 404);
+                return Response<bool>.Fail("لم يتم العثور على السائق", statusCode: 404);
 
             if (!driver.IsApproved)
-                return Response<bool>.Fail("Driver is not approved by admin yet", statusCode: 403);
+                return Response<bool>.Fail("السائق لم تتم الموافقة عليه من قبل المسؤول بعد", statusCode: 403);
 
             // Step 2: Ensure the "FromCity" actually belongs to the "FromGovernorate"
             var fromCityValidation = await _mediator.Send(new ValidateCityInGovernorateCommand

@@ -20,13 +20,13 @@ namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripIsUpdatable
             var trip = await _unitOfWork.TripRepository.GetByIdAsync(request.TripId);
 
             if (trip == null)
-                return Response<Trip>.Fail("Trip not found.");
+                return Response<Trip>.Fail("لم يتم العثور على الرحلة.");
 
             if (trip.IsDeleted)
-                return Response<Trip>.Fail("Trip is deleted.");
+                return Response<Trip>.Fail("تم حذف الرحلة.");
 
-            if (trip.TripStatus != TripStatus.Scheduled)
-                return Response<Trip>.Fail("Only scheduled trips can be updated.");
+            if (trip.TripStatus != TripStatus.مجدولة)
+                return Response<Trip>.Fail("يمكن فقط تعديل الرحلات المجدولة.");
 
             ///لو فه بوكينج كونفيرميد ممنوع التعديل
 

@@ -23,10 +23,10 @@ namespace RakbnyMa_aak.CQRS.Features.Governorates.RestoreGovernorate
                 .FirstOrDefaultAsync(g => g.Id == request.Id, cancellationToken);
 
             if (governorate == null)
-                return Response<string>.Fail("Governorate not found.");
+                return Response<string>.Fail("لم يتم العثور على المحافظة.");
 
             if (!governorate.IsDeleted)
-                return Response<string>.Fail("Governorate is already active.");
+                return Response<string>.Fail("المحافظة نشطة بالفعل.");
 
 
             governorate.IsDeleted = false;
@@ -49,7 +49,7 @@ namespace RakbnyMa_aak.CQRS.Features.Governorates.RestoreGovernorate
 
             await _unitOfWork.CompleteAsync();
 
-            return Response<string>.Success("Governorate and its cities restored successfully.");
+            return Response<string>.Success("تمت استعادة المحافظة ومدنها بنجاح.");
         }
     }
 }

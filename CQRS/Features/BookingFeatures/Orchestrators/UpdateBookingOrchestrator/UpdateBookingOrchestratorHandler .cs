@@ -31,19 +31,19 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.UpdateBooking
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (bookingInfo == null)
-                return Response<UpdateBookingSeatsResponseDto>.Fail("Booking not found or access denied");
+                return Response<UpdateBookingSeatsResponseDto>.Fail("لم يتم العثور على الحجز أو ليس لديك صلاحية الوصول");
 
             var difference = dto.NewNumberOfSeats - bookingInfo.OldSeats;
             if (difference == 0)
-                return Response<UpdateBookingSeatsResponseDto>.Fail("No change in seat count");
+                return Response<UpdateBookingSeatsResponseDto>.Fail("لم يتم تعديل عدد المقاعد");
 
-            if (bookingInfo.RequestStatus == RequestStatus.Confirmed)
+            if (bookingInfo.RequestStatus == RequestStatus.مؤكدة)
             {
                 return await _mediator.Send(new UpdateConfirmedBookingCommand(dto, bookingInfo.OldSeats, request.userId));
             }
             else
             {
-                return await _mediator.Send(new UpdatePendingBookingCommand(dto,bookingInfo.OldSeats, request.userId));
+                return await _mediator.Send(new UpdatePendingBookingCommand(dto, bookingInfo.OldSeats, request.userId));
             }
         }
     }

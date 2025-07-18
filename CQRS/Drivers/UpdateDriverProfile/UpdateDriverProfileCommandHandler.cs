@@ -24,11 +24,11 @@ namespace RakbnyMa_aak.CQRS.Drivers.UpdateDriverProfile
         {
             var user = await _userManager.FindByIdAsync(request.DriverUserId);
             if (user == null)
-                return Response<string>.Fail("User not found", statusCode:404);
+                return Response<string>.Fail("المستخدم غير موجود", statusCode: 404);
 
             var driver = await _unitOfWork.DriverRepository.GetByUserIdAsync(user.Id);
             if (driver == null)
-                return Response<string>.Fail("Driver not found", statusCode: 404);
+                return Response<string>.Fail("السائق غير موجود", statusCode: 404);
 
             user.FullName = request.Dto.FullName;
             user.Email = request.Dto.Email;
@@ -62,16 +62,12 @@ namespace RakbnyMa_aak.CQRS.Drivers.UpdateDriverProfile
                 driver.DriverNationalIdImagePath = nationalIdUrl;
             }
 
-            
             driver.IsApproved = false;
 
             _unitOfWork.DriverRepository.Update(driver);
             await _unitOfWork.CompleteAsync();
 
-
-            return Response<string>.Success("Profile updated successfully. Please wait for admin approval.");
+            return Response<string>.Success("تم تحديث الملف الشخصي بنجاح. الرجاء انتظار موافقة المسؤول.");
         }
     }
-
-
 }

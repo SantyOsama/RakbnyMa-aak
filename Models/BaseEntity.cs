@@ -6,19 +6,20 @@ namespace RakbnyMa_aak.Models
     {
         [Required]
         public int Id { get; set; }
-        [Display(Name = "Created At")]
+
+        [Display(Name = "تاريخ الإنشاء")]
         [Required]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        [Display(Name = "Updated At")]
+        [Display(Name = "تاريخ التعديل")]
         public DateTime? UpdatedAt { get; set; }
 
-        [Display(Name = "Is Deleted")]
+        [Display(Name = "تم الحذف")]
         [Required]
         public bool IsDeleted { get; set; } = false;
 
         [Timestamp]
-        [Display(Name = "Row Version")]
+        [Display(Name = "إصدار السطر")]
         public byte[]? RowVersion { get; set; }
     }
 }

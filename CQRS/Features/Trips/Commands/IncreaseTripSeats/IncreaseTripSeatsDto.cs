@@ -4,13 +4,13 @@ namespace RakbnyMa_aak.CQRS.Features.Trip.Commands.IncreaseTripSeats
 {
     public class IncreaseTripSeatsDto
     {
-        [Required(ErrorMessage = "Trip ID is required.")]
-        [Display(Name = "Trip ID")]
+        [Required(ErrorMessage = "معرف الرحلة مطلوب.")]
+        [Display(Name = "معرف الرحلة")]
         public int TripId { get; set; }
 
-        [Required(ErrorMessage = "Number of seats is required.")]
-        [Range(1, 150, ErrorMessage = "Number of seats must be at least 1.")]
-        [Display(Name = "Number of Seats to Increse")]
+        [Required(ErrorMessage = "عدد المقاعد مطلوب.")]
+        [Range(1, 150, ErrorMessage = "يجب أن يكون عدد المقاعد على الأقل 1.")]
+        [Display(Name = "عدد المقاعد المطلوب زيادتها")]
         public int NumberOfSeats { get; set; }
     }
 }

@@ -22,7 +22,7 @@ namespace RakbnyMa_aak.CQRS.Features.Trip.Queries.GetDriverTripBookings
 
             var driver = await _unitOfWork.DriverRepository.GetByUserIdAsync(request.DriverUserId);
             if (driver == null)
-                return Response<List<BookingForDriverDto>>.Fail("You are not registered as a driver.");
+                return Response<List<BookingForDriverDto>>.Fail("أنت لست مسجلاً كسائق.");
 
 
             var trips = await _unitOfWork.TripRepository

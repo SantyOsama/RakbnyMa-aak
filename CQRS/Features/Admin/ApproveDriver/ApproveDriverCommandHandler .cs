@@ -30,7 +30,7 @@ public class ApproveDriverCommandHandler : IRequestHandler<ApproveDriverCommand,
         var driver = await driverRepo.GetByUserIdAsync(request.DriverId);
 
         if (driver == null)
-            return Response<bool>.Fail("Driver not found", statusCode: 404);
+            return Response<bool>.Fail("لم يتم العثور على السائق", statusCode: 404);
 
         driver.IsApproved = true;
         driver.ApprovedAt = DateTime.UtcNow;
@@ -41,14 +41,14 @@ public class ApproveDriverCommandHandler : IRequestHandler<ApproveDriverCommand,
         var user = await _userManager.FindByIdAsync(driver.UserId);
 
         if (user == null)
-            return Response<bool>.Fail("User not found", statusCode: 404);
+            return Response<bool>.Fail("لم يتم العثور على المستخدم", statusCode: 404);
 
         var addRoleResult = await _userManager.AddToRoleAsync(user, "Driver");
         // check user has role Driver or not (if driver make update in his profile)
         bool isDriver = await _userManager.IsInRoleAsync(user, "Driver");
 
         if (!addRoleResult.Succeeded && !isDriver)
-            return Response<bool>.Fail("Driver approved but failed to assign role: " +
+            return Response<bool>.Fail("تمت الموافقة على السائق ولكن فشل في إسناد الدور: " +
                 string.Join(", ", addRoleResult.Errors.Select(e => e.Description)));
 
         _backgroundJobClient.Enqueue<IEmailService>(emailService =>
@@ -83,6 +83,6 @@ public class ApproveDriverCommandHandler : IRequestHandler<ApproveDriverCommand,
             </div>"
        ));
 
-        return Response<bool>.Success(true, "Driver approved and role assigned successfully.");
+        return Response<bool>.Success(true, "تمت الموافقة على السائق وإسناد الدور بنجاح.");
     }
 }

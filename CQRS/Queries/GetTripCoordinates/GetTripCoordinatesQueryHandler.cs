@@ -25,26 +25,26 @@ namespace RakbnyMa_aak.CQRS.Queries.GetTripCoordinates
                 .FirstOrDefaultAsync(t => t.Id == request.TripId && !t.IsDeleted);
 
             if (trip is null)
-                return Response<TripCoordinatesResponseDto>.Fail("Trip not found.");
+                return Response<TripCoordinatesResponseDto>.Fail("الرحلة غير موجودة.");
 
             var fromCityName = trip.FromCity?.Name;
             var toCityName = trip.ToCity?.Name;
 
             if (string.IsNullOrEmpty(fromCityName) || string.IsNullOrEmpty(toCityName))
-                return Response<TripCoordinatesResponseDto>.Fail("One or both city names are missing.");
+                return Response<TripCoordinatesResponseDto>.Fail("اسم إحدى المدينتين أو كليهما مفقود.");
 
             if (!CityCoordinates.Coordinates.TryGetValue(fromCityName, out var fromCoordinates))
-                return Response<TripCoordinatesResponseDto>.Fail($"Coordinates for '{fromCityName}' not found.");
+                return Response<TripCoordinatesResponseDto>.Fail($"الإحداثيات الخاصة بـ '{fromCityName}' غير موجودة.");
 
             if (!CityCoordinates.Coordinates.TryGetValue(toCityName, out var toCoordinates))
-                return Response<TripCoordinatesResponseDto>.Fail($"Coordinates for '{toCityName}' not found.");
+                return Response<TripCoordinatesResponseDto>.Fail($"الإحداثيات الخاصة بـ '{toCityName}' غير موجودة.");
 
             var result = new TripCoordinatesResponseDto
             {
-                FromCity= fromCityName,
+                FromCity = fromCityName,
                 FromLatitude = fromCoordinates.Latitude,
                 FromLongitude = fromCoordinates.Longitude,
-                ToCity= toCityName,
+                ToCity = toCityName,
                 ToLatitude = toCoordinates.Latitude,
                 ToLongitude = toCoordinates.Longitude
             };
@@ -52,6 +52,4 @@ namespace RakbnyMa_aak.CQRS.Queries.GetTripCoordinates
             return Response<TripCoordinatesResponseDto>.Success(result);
         }
     }
-
-
 }

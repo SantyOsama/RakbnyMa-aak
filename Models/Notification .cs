@@ -6,25 +6,24 @@ namespace RakbnyMa_aak.Models
 {
     public class Notification : BaseEntity
     {
-        [Required(ErrorMessage = "User ID is required.")]
-        [Display(Name = "User ID")]
+        [Required(ErrorMessage = "معرف المستخدم مطلوب.")]
+        [Display(Name = "معرف المستخدم")]
         public string UserId { get; set; }
 
-        [Required(ErrorMessage = "Notification message is required.")]
-        [MaxLength(500, ErrorMessage = "Notification message must not exceed 500 characters.")]
-        [Display(Name = "Message")]
+        [Required(ErrorMessage = "رسالة الإشعار مطلوبة.")]
+        [MaxLength(500, ErrorMessage = "يجب ألا تتجاوز رسالة الإشعار 500 حرف.")]
+        [Display(Name = "الرسالة")]
         public string Message { get; set; }
 
-        [Display(Name = "Is Read")]
+        [Display(Name = "تمت قراءتها")]
         public bool IsRead { get; set; } = false;
-        public NotificationType Type { get; set; } = NotificationType.Custom;
 
+        public NotificationType Type { get; set; } = NotificationType.إشعار_مخصص;
 
         public string? RelatedEntityId { get; set; }
 
-
         [ForeignKey("UserId")]
-        [Display(Name = "User")]
+        [Display(Name = "المستخدم")]
         public virtual ApplicationUser User { get; set; }
     }
 }

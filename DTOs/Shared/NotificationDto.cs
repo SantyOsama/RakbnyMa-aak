@@ -5,32 +5,32 @@ namespace RakbnyMa_aak.DTOs.Shared
 {
     public class NotificationDto
     {
-        [Required(ErrorMessage = "Message is required.")]
-        [MaxLength(500, ErrorMessage = "Message must not exceed 500 characters.")]
-        [Display(Name = "Notification Message")]
+        [Required(ErrorMessage = "الرسالة مطلوبة.")]
+        [MaxLength(500, ErrorMessage = "يجب ألا تتجاوز الرسالة 500 حرف.")]
+        [Display(Name = "نص الإشعار")]
         public string Message { get; set; }
 
-        [Required(ErrorMessage = "Sender ID is required.")]
-        [Display(Name = "Sender ID")]
+        [Required(ErrorMessage = "معرّف المرسل مطلوب.")]
+        [Display(Name = "معرّف المرسل")]
         public string SenderId { get; set; }
 
-        [Required(ErrorMessage = "Sender full name is required.")]
-        [MaxLength(100, ErrorMessage = "Sender full name must not exceed 100 characters.")]
-        [Display(Name = "Sender Full Name")]
+        [Required(ErrorMessage = "الاسم الكامل للمرسل مطلوب.")]
+        [MaxLength(100, ErrorMessage = "يجب ألا يتجاوز الاسم الكامل للمرسل 100 حرف.")]
+        [Display(Name = "الاسم الكامل للمرسل")]
         public string SenderFullName { get; set; }
 
-        [Required(ErrorMessage = "Sender picture URL is required.")]
-        [Url(ErrorMessage = "Invalid URL format for sender picture.")]
-        [Display(Name = "Sender Picture URL")]
+        [Required(ErrorMessage = "رابط صورة المرسل مطلوب.")]
+        [Url(ErrorMessage = "تنسيق رابط صورة المرسل غير صالح.")]
+        [Display(Name = "رابط صورة المرسل")]
         public string SenderPicture { get; set; }
 
-        [Display(Name = "Notification Type")]
-        public NotificationType Type { get; set; } 
+        [Display(Name = "نوع الإشعار")]
+        public NotificationType Type { get; set; }
 
-        [Display(Name = "Created At")]
-        public string CreatedAt { get; set; } 
+        [Display(Name = "تاريخ الإنشاء")]
+        public string CreatedAt { get; set; }
 
-        [Display(Name = "Related Entity ID")]
+        [Display(Name = "معرّف الكيان المرتبط")]
         public string? RelatedEntityId { get; set; }
     }
 }

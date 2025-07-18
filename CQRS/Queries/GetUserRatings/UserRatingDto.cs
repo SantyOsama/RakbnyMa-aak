@@ -10,17 +10,17 @@ namespace RakbnyMa_aak.CQRS.Queries.GetUserRatings
         [Required]
         public int TripId { get; set; }
 
-        [Required(ErrorMessage = "Driver name is required.")]
-        [MaxLength(100, ErrorMessage = "Driver name must not exceed 100 characters.")]
+        [Required(ErrorMessage = "اسم السائق مطلوب.")]
+        [MaxLength(100, ErrorMessage = "يجب ألا يتجاوز اسم السائق 100 حرف.")]
         public string DriverName { get; set; }
 
-        [Range(1, 5, ErrorMessage = "Rating must be between 1 and 5.")]
+        [Range(1, 5, ErrorMessage = "يجب أن تكون القيمة بين 1 و 5.")]
         public int RatingValue { get; set; }
 
-        [MaxLength(500, ErrorMessage = "Comment must not exceed 500 characters.")]
+        [MaxLength(500, ErrorMessage = "يجب ألا يتجاوز التعليق 500 حرف.")]
         public string? Comment { get; set; }
 
-        [Display(Name = "Created At")]
+        [Display(Name = "تاريخ الإنشاء")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

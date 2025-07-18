@@ -22,7 +22,7 @@ namespace RakbnyMa_aak.CQRS.Features.Auth.Queries.GetUserByName
         public async Task<Response<UserResponseDto>> Handle(GetUserByNameQuery request, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(request.Name))
-                return Response<UserResponseDto>.Fail("User name is required.");
+                return Response<UserResponseDto>.Fail("اسم المستخدم مطلوب.");
 
             var userDto = await _userRepo.GetProjectedSingleAsync<UserResponseDto>(
               u => u.FullName != null && u.FullName.ToUpper() == request.Name.ToUpper(),
@@ -31,7 +31,7 @@ namespace RakbnyMa_aak.CQRS.Features.Auth.Queries.GetUserByName
 
 
             if (userDto == null)
-                return Response<UserResponseDto>.Fail("No user found with the given name.");
+                return Response<UserResponseDto>.Fail("لم يتم العثور على مستخدم بهذا الاسم.");
 
             return Response<UserResponseDto>.Success(userDto);
         }

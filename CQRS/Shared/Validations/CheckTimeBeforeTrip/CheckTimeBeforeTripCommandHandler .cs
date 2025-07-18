@@ -10,7 +10,7 @@ namespace RakbnyMa_aak.CQRS.Commands.Validations.CheckTimeBeforeTrip
             var isAllowed = request.StartDateTime > DateTime.UtcNow.AddHours(request.MinimumHours);
             return Task.FromResult(isAllowed
                 ? Response<bool>.Success(true)
-                : Response<bool>.Fail($"Must cancel at least {request.MinimumHours} hours before trip."));
+                : Response<bool>.Fail($"يجب الإلغاء قبل موعد الرحلة على الأقل بـ {request.MinimumHours} ساعة."));
         }
     }
 

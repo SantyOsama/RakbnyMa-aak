@@ -22,7 +22,7 @@ namespace RakbnyMa_aak.CQRS.Queries.Driver.GetDriverMonthlyStats
         {
             var userId = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
-                return Response<DriverMonthlyStatsDto>.Fail("Unauthorized");
+                return Response<DriverMonthlyStatsDto>.Fail("غير مصرح");
 
             var today = DateTime.UtcNow;
             var firstDayOfMonth = new DateTime(today.Year, today.Month, 1);

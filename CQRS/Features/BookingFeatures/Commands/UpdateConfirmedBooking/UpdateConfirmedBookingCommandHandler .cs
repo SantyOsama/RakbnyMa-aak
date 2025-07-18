@@ -31,27 +31,25 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.UpdateConfirmedBoo
 
             var booking = await _unitOfWork.BookingRepository.GetByIdAsync(dto.BookingId);
             if (booking is null || booking.UserId != request.userId)
-                return Response<UpdateBookingSeatsResponseDto>.Fail("Booking not found or access denied");
+                return Response<UpdateBookingSeatsResponseDto>.Fail("لم يتم العثور على الحجز أو ليس لديك صلاحية الوصول إليه");
 
             if (difference > 0)
-              {
+            {
                 var bookingResult = await _mediator.Send(new IncreaseBookingSeatsCommand(new UpdateBookingSeatsRequestDto
                 {
                     BookingId = dto.BookingId,
                     SeatsToChange = difference
                 }));
                 if (!bookingResult.IsSucceeded)
-                    return Response<UpdateBookingSeatsResponseDto>.Fail($"Failed to increase booking seats: {bookingResult.Message}");
-
+                    return Response<UpdateBookingSeatsResponseDto>.Fail($"فشل في زيادة عدد مقاعد الحجز: {bookingResult.Message}");
 
                 var tripResult = await _mediator.Send(new DecreaseTripSeatsCommand(new DecreaseTripSeatsDto
                 {
                     TripId = dto.TripId,
-                    NumberOfSeats= difference
+                    NumberOfSeats = difference
                 }));
                 if (!tripResult.IsSucceeded)
-                    return Response<UpdateBookingSeatsResponseDto>.Fail($"Failed to decrease trip seats: {tripResult.Message}");
-
+                    return Response<UpdateBookingSeatsResponseDto>.Fail($"فشل في تقليل عدد مقاعد الرحلة: {tripResult.Message}");
             }
             else
             {
@@ -61,8 +59,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.UpdateConfirmedBoo
                     SeatsToChange = difference
                 }));
                 if (!bookingResult.IsSucceeded)
-                    return Response<UpdateBookingSeatsResponseDto>.Fail($"Failed to decrease booking seats: {bookingResult.Message}");
-
+                    return Response<UpdateBookingSeatsResponseDto>.Fail($"فشل في تقليل عدد مقاعد الحجز: {bookingResult.Message}");
 
                 var tripResult = await _mediator.Send(new IncreaseTripSeatsCommand(new IncreaseTripSeatsDto
                 {
@@ -70,7 +67,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.UpdateConfirmedBoo
                     NumberOfSeats = -difference
                 }));
                 if (!tripResult.IsSucceeded)
-                    return Response<UpdateBookingSeatsResponseDto>.Fail($"Failed to increase trip seats: {tripResult.Message}");
+                    return Response<UpdateBookingSeatsResponseDto>.Fail($"فشل في زيادة عدد مقاعد الرحلة: {tripResult.Message}");
             }
 
             await _unitOfWork.CompleteAsync();
@@ -80,7 +77,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.UpdateConfirmedBoo
                 OldSeats = request.OldSeats,
                 NewSeats = dto.NewNumberOfSeats,
                 UpdatedAt = DateTime.UtcNow
-            }, "Booking updated successfully");   
+            }, "تم تحديث الحجز بنجاح");
         }
     }
 }

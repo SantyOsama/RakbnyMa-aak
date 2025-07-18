@@ -30,7 +30,7 @@ namespace RakbnyMa_aak.Services.Implementations
         public async Task<WalletTransaction> AddFundsAsync(string userId, decimal amount, string description)
         {
             if (amount <= 0)
-                throw new ArgumentException("Amount must be positive", nameof(amount));
+                throw new ArgumentException("يجب أن يكون المبلغ أكبر من الصفر", nameof(amount));
 
             using var transaction = await _context.Database.BeginTransactionAsync();
 
@@ -57,9 +57,9 @@ namespace RakbnyMa_aak.Services.Implementations
                 {
                     WalletUserId = userId,
                     Amount = amount,
-                    TransactionType = TransactionType.Credit,
+                    TransactionType = TransactionType.ائتمان,
                     Description = description,
-                    Status = TransactionStatus.Completed
+                    Status = TransactionStatus.مكتمل
                 };
 
                 wallet.Transactions.Add(transactionRecord);
@@ -72,7 +72,7 @@ namespace RakbnyMa_aak.Services.Implementations
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                _logger.LogError(ex, "Failed to add funds to wallet for user {UserId}", userId);
+                _logger.LogError(ex, "فشل في إضافة الأموال إلى المحفظة للمستخدم {UserId}", userId);
                 throw;
             }
         }
@@ -80,7 +80,7 @@ namespace RakbnyMa_aak.Services.Implementations
         public async Task<WalletTransaction> DeductFundsAsync(string userId, decimal amount, string description)
         {
             if (amount <= 0)
-                throw new ArgumentException("Amount must be positive", nameof(amount));
+                throw new ArgumentException("يجب أن يكون المبلغ أكبر من الصفر", nameof(amount));
 
             using var transaction = await _context.Database.BeginTransactionAsync();
 
@@ -91,7 +91,7 @@ namespace RakbnyMa_aak.Services.Implementations
                     .FirstOrDefaultAsync(w => w.UserId == userId);
 
                 if (wallet == null || wallet.Balance < amount)
-                    throw new InvalidOperationException("Insufficient funds");
+                    throw new InvalidOperationException("الرصيد غير كافٍ");
 
                 wallet.Balance -= amount;
                 wallet.LastUpdated = DateTime.UtcNow;
@@ -100,9 +100,9 @@ namespace RakbnyMa_aak.Services.Implementations
                 {
                     WalletUserId = userId,
                     Amount = amount,
-                    TransactionType = TransactionType.Debit,
+                    TransactionType = TransactionType.خصم,
                     Description = description,
-                    Status = TransactionStatus.Completed
+                    Status = TransactionStatus.مكتمل
                 };
 
                 wallet.Transactions.Add(transactionRecord);
@@ -115,7 +115,7 @@ namespace RakbnyMa_aak.Services.Implementations
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                _logger.LogError(ex, "Failed to deduct funds from wallet for user {UserId}", userId);
+                _logger.LogError(ex, "فشل في خصم الأموال من المحفظة للمستخدم {UserId}", userId);
                 throw;
             }
         }

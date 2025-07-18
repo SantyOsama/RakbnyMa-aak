@@ -26,7 +26,7 @@ public class GetCityByNameHandler : IRequestHandler<GetCityByNameQuery, Response
             cancellationToken); 
 
         if (cityDto == null)
-            return Response<CityResponseDTO>.Fail("City not found");
+            return Response<CityResponseDTO>.Fail("لم يتم العثور على المدينة.");
 
         return Response<CityResponseDTO>.Success(cityDto);
     }

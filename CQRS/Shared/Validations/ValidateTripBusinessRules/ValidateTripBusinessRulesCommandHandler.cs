@@ -20,10 +20,10 @@ namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripBusinessRules
             var dto = request.Trip;
 
             if (dto.AvailableSeats <= 0)
-                return Response<bool>.Fail("Available seats must be greater than 0.");
+                return Response<bool>.Fail("يجب أن يكون عدد المقاعد المتاحة أكبر من صفر.");
 
             if (dto.TripDate < DateTime.UtcNow.Date)
-                return Response<bool>.Fail("Trip date must be in the future.");
+                return Response<bool>.Fail("يجب أن يكون تاريخ الرحلة في المستقبل.");
 
             var carSeats = await _unitOfWork.DriverRepository
                     .GetAllQueryable()  
@@ -32,10 +32,10 @@ namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripBusinessRules
                     .FirstOrDefaultAsync();
 
             if (carSeats == 0)
-                return Response<bool>.Fail("Driver not found.");
+                return Response<bool>.Fail("لم يتم العثور على السائق.");
 
             if (dto.AvailableSeats > carSeats)
-                return Response<bool>.Fail($"Available seats cannot exceed the car seat count ({carSeats}).");
+                return Response<bool>.Fail($"لا يمكن أن يتجاوز عدد المقاعد المتاحة عدد مقاعد السيارة ({carSeats}).");
 
             return Response<bool>.Success(true);
         }

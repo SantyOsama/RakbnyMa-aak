@@ -60,7 +60,7 @@ namespace RakbnyMa_aak.Repositories.Implementations
                 .Where(b => b.TripId == tripId &&
                             b.UserId == userId &&
                             b.HasEnded &&
-                            b.RequestStatus == RequestStatus.Confirmed &&
+                            b.RequestStatus == RequestStatus.مؤكدة &&
                             !b.IsDeleted);
         }
         public async Task<Booking?> GetBookingByUserAndTripAsync(string userId, int tripId)

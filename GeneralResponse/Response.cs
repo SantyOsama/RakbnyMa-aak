@@ -14,7 +14,7 @@
             {
                 Data = data,
                 IsSucceeded = true,
-                Message = message ?? "Succeeded",
+                Message = message ?? "تمت العملية بنجاح",
                 StatusCode = statusCode
             };
 
@@ -23,9 +23,8 @@
             {
                 Data = data,
                 IsSucceeded = false,
-                Message = message ?? "Failed",
+                Message = message ?? "فشلت العملية",
                 StatusCode = statusCode
             };
-
     }
 }

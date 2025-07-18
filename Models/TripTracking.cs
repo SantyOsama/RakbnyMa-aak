@@ -3,29 +3,28 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RakbnyMa_aak.Models
 {
-    public class TripTracking :BaseEntity
+    public class TripTracking : BaseEntity
     {
-        [Required(ErrorMessage = "Trip ID is required.")]
-        [Display(Name = "Trip")]
+        [Required(ErrorMessage = "معرف الرحلة مطلوب.")]
+        [Display(Name = "الرحلة")]
         public int TripId { get; set; }
 
-        [Required(ErrorMessage = "Current latitude is required.")]
-        [Range(-90, 90, ErrorMessage = "Latitude must be between -90 and 90.")]
-        [Display(Name = "Current Latitude")]
+        [Required(ErrorMessage = "خط العرض الحالي مطلوب.")]
+        [Range(-90, 90, ErrorMessage = "يجب أن يكون خط العرض بين -90 و 90.")]
+        [Display(Name = "خط العرض الحالي")]
         public double CurrentLat { get; set; }
 
-        [Required(ErrorMessage = "Current longitude is required.")]
-        [Range(-180, 180, ErrorMessage = "Longitude must be between -180 and 180.")]
-        [Display(Name = "Current Longitude")]
+        [Required(ErrorMessage = "خط الطول الحالي مطلوب.")]
+        [Range(-180, 180, ErrorMessage = "يجب أن يكون خط الطول بين -180 و 180.")]
+        [Display(Name = "خط الطول الحالي")]
         public double CurrentLong { get; set; }
 
-        [Required(ErrorMessage = "Timestamp is required.")]
-        [Display(Name = "Timestamp")]
+        [Required(ErrorMessage = "الطابع الزمني مطلوب.")]
+        [Display(Name = "الطابع الزمني")]
         public DateTime Timestamp { get; set; }
 
- 
         [ForeignKey("TripId")]
-        [Display(Name = "Trip")]
+        [Display(Name = "الرحلة")]
         public virtual Trip Trip { get; set; }
     }
 }

@@ -23,13 +23,14 @@ namespace RakbnyMa_aak.CQRS.Queries.Driver.GetDriverTotalEarnings
         public async Task<Response<List<MonthlyEarningsDto>>> Handle(GetDriverTotalEarningsQuery request, CancellationToken cancellationToken)
         {
             var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userId)) return Response<List<MonthlyEarningsDto>>.Fail("Unauthorized");
+            if (string.IsNullOrEmpty(userId))
+                return Response<List<MonthlyEarningsDto>>.Fail("غير مصرح");
 
             var now = DateTime.UtcNow;
             var fromDate = now.AddMonths(-5);
 
             var bookings = await _unitOfWork.BookingRepository.GetAllQueryable()
-                .Where(b => b.Trip.DriverId == userId && b.RequestStatus == RequestStatus.Confirmed && b.PaymentStatus == PaymentStatus.Completed && b.CreatedAt >= fromDate)
+                .Where(b => b.Trip.DriverId == userId && b.RequestStatus == RequestStatus.مؤكدة && b.PaymentStatus == PaymentStatus.مكتمل && b.CreatedAt >= fromDate)
                 .ToListAsync(cancellationToken);
 
             var result = bookings

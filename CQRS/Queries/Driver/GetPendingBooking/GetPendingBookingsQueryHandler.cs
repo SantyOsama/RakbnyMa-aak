@@ -34,21 +34,21 @@ namespace RakbnyMa_aak.CQRS.Queries.Driver.GetPendingBooking
         {
             var driverId = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(driverId))
-                return Response<PaginatedResult<BookingStatusResponseDto>>.Fail("Unauthorized");
+                return Response<PaginatedResult<BookingStatusResponseDto>>.Fail("غير مصرح");
 
-           
+
             var trip = await _unitOfWork.TripRepository.GetByIdAsync(request.TripId);
             if (trip is null || trip.IsDeleted)
-                return Response<PaginatedResult<BookingStatusResponseDto>>.Fail("Trip not found");
+                return Response<PaginatedResult<BookingStatusResponseDto>>.Fail("الرحلة غير موجودة");
 
             if (trip.DriverId != driverId)
-                return Response<PaginatedResult<BookingStatusResponseDto>>.Fail("You are not the owner of this trip");
+                return Response<PaginatedResult<BookingStatusResponseDto>>.Fail("أنت لست مالك هذه الرحلة");
 
             Expression<Func<Booking, bool>> filter = b =>
                 b.TripId == request.TripId &&
-                b.RequestStatus == Utilities.Enums.RequestStatus.Pending;
+                b.RequestStatus == Utilities.Enums.RequestStatus.قيد_الانتظار;
 
-           
+
             var result = await _unitOfWork.BookingRepository.GetProjectedPaginatedAsync<BookingStatusResponseDto>(
                 predicate: filter,
                 page: request.Page,

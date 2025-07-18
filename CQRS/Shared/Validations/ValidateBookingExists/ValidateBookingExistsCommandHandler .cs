@@ -23,9 +23,9 @@ namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateBookingExists
                      .FirstOrDefaultAsync();
 
             if (booking == null)
-                return Response<Booking>.Fail("Booking not found.");
-            if (booking.IsDeleted || booking.RequestStatus == RequestStatus.Cancelled)
-                return Response<Booking>.Fail("Booking is invalid (deleted or canceled).");
+                return Response<Booking>.Fail("لم يتم العثور على الحجز.");
+            if (booking.IsDeleted || booking.RequestStatus == RequestStatus.ملغاة)
+                return Response<Booking>.Fail("الحجز غير صالح (محذوف أو ملغى).");
 
             return Response<Booking>.Success(booking);
         }

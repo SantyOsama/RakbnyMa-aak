@@ -23,15 +23,15 @@ namespace RakbnyMa_aak.CQRS.Features.Trip.Commands.UpdateTrip
             var existingTrip = await _unitOfWork.TripRepository.GetByIdAsync(request.TripId);
 
             if (existingTrip == null || existingTrip.IsDeleted)
-                return Response<int>.Fail("Trip not found.");
+                return Response<int>.Fail("لم يتم العثور على الرحلة.");
 
             var hasConfirmedBookings = await _unitOfWork.BookingRepository
                 .GetAllQueryable()
-                .AnyAsync(b => b.TripId == request.TripId && b.RequestStatus == RequestStatus.Confirmed, cancellationToken);
+                .AnyAsync(b => b.TripId == request.TripId && b.RequestStatus == RequestStatus.مؤكدة, cancellationToken);
 
             if (hasConfirmedBookings)
             {
-                return Response<int>.Fail("Cannot update trip with confirmed bookings.");
+                return Response<int>.Fail("لا يمكن تعديل الرحلة لوجود حجوزات مؤكدة.");
             }
 
             _mapper.Map(request.TripDto, existingTrip);
@@ -40,8 +40,7 @@ namespace RakbnyMa_aak.CQRS.Features.Trip.Commands.UpdateTrip
             _unitOfWork.TripRepository.Update(existingTrip);
             await _unitOfWork.CompleteAsync();
 
-            return Response<int>.Success(existingTrip.Id, "Trip updated successfully.");
+            return Response<int>.Success(existingTrip.Id, "تم تعديل الرحلة بنجاح.");
         }
     }
-
 }

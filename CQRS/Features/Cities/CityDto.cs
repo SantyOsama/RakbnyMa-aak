@@ -6,16 +6,16 @@ namespace RakbnyMa_aak.CQRS.Features.Cities
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "City name is required.")]
-        [StringLength(50, ErrorMessage = "City name must not exceed 50 characters.")]
-        [Display(Name = "City Name")]
+        [Required(ErrorMessage = "اسم المدينة مطلوب.")]
+        [StringLength(50, ErrorMessage = "يجب ألا يزيد اسم المدينة عن 50 حرفًا.")]
+        [Display(Name = "اسم المدينة")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Governorate ID is required.")]
-        [Display(Name = "Governorate ID")]
+        [Required(ErrorMessage = "معرّف المحافظة مطلوب.")]
+        [Display(Name = "معرّف المحافظة")]
         public int GovernorateId { get; set; }
 
-        [Display(Name = "Governorate Name")]
+        [Display(Name = "اسم المحافظة")]
         public string? GovernorateName { get; internal set; }
     }
 }

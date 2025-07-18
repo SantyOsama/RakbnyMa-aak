@@ -19,15 +19,15 @@ namespace RakbnyMa_aak.CQRS.Features.Trip.Commands.CompleteTrip
             var trip = await _unitOfWork.TripRepository.GetByIdAsync(request.TripId);
 
             if (trip == null || trip.IsDeleted)
-                return Response<bool>.Fail("Trip not found or deleted.");
+                return Response<bool>.Fail("لم يتم العثور على الرحلة أو تم حذفها.");
 
-            trip.TripStatus = TripStatus.Completed;
+            trip.TripStatus = TripStatus.مكتملة;
             trip.UpdatedAt = DateTime.UtcNow;
 
             _unitOfWork.TripRepository.Update(trip);
             await _unitOfWork.CompleteAsync();
 
-            return Response<bool>.Success(true, "Trip ended successfully");
+            return Response<bool>.Success(true, "تم إنهاء الرحلة بنجاح");
         }
     }
 

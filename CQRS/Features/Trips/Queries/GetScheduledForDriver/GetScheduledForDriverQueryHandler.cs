@@ -25,7 +25,7 @@ namespace RakbnyMa_aak.CQRS.Features.Trips.Queries.GetScheduledForDriver
             var driverId = request.DriverId;
 
             Expression<Func<RakbnyMa_aak.Models.Trip, bool>> filter = trip =>
-                trip.TripStatus == TripStatus.Scheduled &&
+                trip.TripStatus == TripStatus.مجدولة &&
                 !trip.IsDeleted &&
                 trip.DriverId == driverId && 
                 (!filterDto.CreatedAfter.HasValue || trip.CreatedAt >= filterDto.CreatedAfter.Value) &&

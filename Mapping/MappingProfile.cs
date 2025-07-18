@@ -39,7 +39,7 @@ namespace RakbnyMa_aak.Mapping
             CreateMap<ApplicationUser, UserResponseDto>()
                 .ForMember(dest => dest.TotalTrips,
                     opt => opt.MapFrom(src => src.Bookings
-                        .Count(b => b.RequestStatus == RequestStatus.Confirmed)))
+                        .Count(b => b.RequestStatus == RequestStatus.مؤكدة)))
 
                 .ForMember(dest => dest.AverageRating,
                     opt => opt.MapFrom(src =>

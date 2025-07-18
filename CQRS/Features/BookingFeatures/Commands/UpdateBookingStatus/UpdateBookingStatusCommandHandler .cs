@@ -28,7 +28,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.UpdateBookingStatu
             var booking = bookingResult.Data!; // Now booking is tracked in DbContext
 
             // Step 2: If confirming, validate trip and available seats
-            if (request.NewStatus == RequestStatus.Confirmed)
+            if (request.NewStatus == RequestStatus.مؤكدة)
             {
                 //Decrease Trip Seats
                 var seatsDto = new DecreaseTripSeatsDto
@@ -51,7 +51,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.UpdateBookingStatu
             //Step 4: Save changes
             await _unitOfWork.CompleteAsync();
 
-            return Response<bool>.Success(true, $"Booking status updated to {request.NewStatus}");
+            return Response<bool>.Success(true, $"تم تحديث حالة الحجز إلى {request.NewStatus}");
         }
     }
 }

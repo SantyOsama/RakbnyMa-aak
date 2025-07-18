@@ -21,9 +21,9 @@ namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateAllPassengersEnded
                 .AnyAsync(b => !b.HasEnded);
 
             if (anyActive)
-                return Response<bool>.Fail("All passengers must end the trip first.", false);
+                return Response<bool>.Fail("يجب أن يُنهي جميع الركاب الرحلة أولاً.", false);
 
-            return Response<bool>.Success(true, "All passengers ended");
+            return Response<bool>.Success(true, "جميع الركاب أنهوا الرحلة.");
         }
     }
 }

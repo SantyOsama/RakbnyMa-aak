@@ -44,9 +44,9 @@ namespace RakbnyMa_aak.Services.Implementations
                 if (!response.IsSuccessStatusCode)
                 {
                     return new PaymentResult(
-                        PaymentStatus.Failed,
+                        PaymentStatus.فشل,
                         FailureReason: $"HTTP {response.StatusCode}",
-                        Message: $"Payment failed: {content}");
+                        Message: $"فشل الدفع: {content}");
                 }
 
                 using var doc = JsonDocument.Parse(content);
@@ -54,17 +54,17 @@ namespace RakbnyMa_aak.Services.Implementations
 
                 return new PaymentResult(
                     root.GetProperty("success").GetBoolean()
-                        ? PaymentStatus.Completed
-                        : PaymentStatus.Failed,
+                        ? PaymentStatus.مكتمل
+                        : PaymentStatus.فشل,
                     TransactionId: root.GetProperty("id").GetString(),
                     Message: root.GetProperty("message").GetString());
             }
             catch (Exception ex)
             {
                 return new PaymentResult(
-                    PaymentStatus.Failed,
-                    FailureReason: "Gateway error",
-                    Message: $"Payment processing error: {ex.Message}");
+                    PaymentStatus.فشل,
+                    FailureReason: "خطأ في بوابة الدفع",
+                    Message: $"خطأ في معالجة الدفع: {ex.Message}");
             }
         }
 
@@ -91,9 +91,9 @@ namespace RakbnyMa_aak.Services.Implementations
                 if (!response.IsSuccessStatusCode)
                 {
                     return new PaymentResult(
-                        PaymentStatus.Failed,
+                        PaymentStatus.فشل,
                         FailureReason: $"HTTP {response.StatusCode}",
-                        Message: $"Payment failed: {content}");
+                        Message: $"فشل الدفع: {content}");
                 }
 
                 using var doc = JsonDocument.Parse(content);
@@ -101,17 +101,17 @@ namespace RakbnyMa_aak.Services.Implementations
 
                 return new PaymentResult(
                     root.GetProperty("success").GetBoolean()
-                        ? PaymentStatus.Completed
-                        : PaymentStatus.Failed,
+                        ? PaymentStatus.مكتمل
+                        : PaymentStatus.فشل,
                     TransactionId: root.GetProperty("transaction_id").GetString(),
                     Message: root.GetProperty("message").GetString());
             }
             catch (Exception ex)
             {
                 return new PaymentResult(
-                    PaymentStatus.Failed,
-                    FailureReason: "Gateway error",
-                    Message: $"Payment processing error: {ex.Message}");
+                    PaymentStatus.فشل,
+                    FailureReason: "خطأ في بوابة الدفع",
+                    Message: $"خطأ في معالجة الدفع: {ex.Message}");
             }
         }
     }

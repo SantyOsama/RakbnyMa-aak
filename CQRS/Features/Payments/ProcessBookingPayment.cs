@@ -12,11 +12,11 @@ namespace RakbnyMa_aak.Features.Payments
     {
         public class Command : IRequest<Result>
         {
-            [Required]
+            [Required(ErrorMessage = "رقم الحجز مطلوب.")]
             public int BookingId { get; set; }
 
-            [Required]
-            [EnumDataType(typeof(PaymentMethod))]
+            [Required(ErrorMessage = "طريقة الدفع مطلوبة.")]
+            [EnumDataType(typeof(PaymentMethod), ErrorMessage = "طريقة الدفع غير صحيحة.")]
             public PaymentMethod PaymentMethod { get; set; }
 
             public string? CardToken { get; set; }
@@ -71,7 +71,7 @@ namespace RakbnyMa_aak.Features.Payments
 
                     if (booking == null)
                     {
-                        throw new Exception("Booking not found or already paid");
+                        throw new Exception("لم يتم العثور على الحجز أو تم الدفع مسبقًا");
                     }
 
                     var payment = new Payment
@@ -81,7 +81,7 @@ namespace RakbnyMa_aak.Features.Payments
                         Amount = booking.TotalPrice,
                         PaymentMethod = request.PaymentMethod,
                         PaymentType = PaymentType.BookingPayment,
-                        PaymentStatus = PaymentStatus.Pending
+                        PaymentStatus = PaymentStatus.قيد_المعالجة
                     };
 
                     _context.Payments.Add(payment);
@@ -90,21 +90,21 @@ namespace RakbnyMa_aak.Features.Payments
                     // Use the interface's PaymentResult consistently
                     Services.Interfaces.PaymentResult paymentResult = request.PaymentMethod switch
                     {
-                        PaymentMethod.Wallet => await ProcessWalletPayment(
+                        PaymentMethod.محفظة_إلكترونية => await ProcessWalletPayment(
                             booking.Wallet,
                             booking.TotalPrice,
                             $"Booking #{request.BookingId}"),
 
-                        PaymentMethod.CreditCard => await _paymentService.ProcessCardPayment(
+                        PaymentMethod.بطاقة_ائتمان => await _paymentService.ProcessCardPayment(
                             booking.TotalPrice,
                             request.CardToken),
 
-                        PaymentMethod.VodafoneCash => await _paymentService.ProcessVodafoneCashPayment(
+                        PaymentMethod.فودافون_كاش => await _paymentService.ProcessVodafoneCashPayment(
                             booking.TotalPrice,
                             request.PhoneNumber ?? booking.PhoneNumber),
 
                         _ => new Services.Interfaces.PaymentResult(
-                            PaymentStatus.Completed,
+                            PaymentStatus.مكتمل,
                             TransactionId: "CASH_PAYMENT")
                     };
 
@@ -115,7 +115,7 @@ namespace RakbnyMa_aak.Features.Payments
 
                     if (paymentResult.Success)
                     {
-                        booking.Booking.RequestStatus = RequestStatus.Confirmed;
+                        booking.Booking.RequestStatus = RequestStatus.مؤكدة;
                     }
 
                     await _context.SaveChangesAsync(cancellationToken);
@@ -132,7 +132,7 @@ namespace RakbnyMa_aak.Features.Payments
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    _logger.LogError(ex, "Payment failed for booking {BookingId}", request.BookingId);
+                    _logger.LogError(ex, "فشل الدفع للحجز {BookingId}", request.BookingId);
                     throw;
                 }
             }
@@ -143,13 +143,13 @@ namespace RakbnyMa_aak.Features.Payments
                 string description)
             {
                 if (wallet == null)
-                    throw new Exception("User wallet not configured");
+                    throw new Exception("محفظة المستخدم غير مفعلة");
 
                 if (wallet.Balance < amount)
                 {
                     return new Services.Interfaces.PaymentResult(
-                        PaymentStatus.Failed,
-                        FailureReason: "Insufficient funds");
+                        PaymentStatus.فشل,
+                        FailureReason: "الرصيد غير كافٍ");
                 }
 
                 wallet.Balance -= amount;
@@ -158,13 +158,13 @@ namespace RakbnyMa_aak.Features.Payments
                 wallet.Transactions.Add(new WalletTransaction
                 {
                     Amount = amount,
-                    TransactionType = TransactionType.Debit,
+                    TransactionType = TransactionType.خصم,
                     Description = description,
-                    Status = TransactionStatus.Completed
+                    Status = TransactionStatus.مكتمل
                 });
 
                 return new Services.Interfaces.PaymentResult(
-                    PaymentStatus.Completed,
+                    PaymentStatus.مكتمل,
                     TransactionId: "WALLET_PAYMENT");
             }
         }

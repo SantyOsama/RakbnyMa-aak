@@ -35,7 +35,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.ApproveBookingRequ
                 new UpdateBookingStatusCommand(
                     result.BookingId,
                     result.TripId,
-                    RequestStatus.مؤكدة));
+                    RequestStatus.Confirmed));
             if (!approveResult.IsSucceeded)
                 return Response<bool>.Fail(approveResult.Message);
 
@@ -48,7 +48,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.ApproveBookingRequ
                       Picture = result.DriverPicture
                   },
                   message: "تمت الموافقة على طلب الحجز الخاص بك.",
-                  type: NotificationType.تمت_الموافقة_على_الحجز,
+                  type: NotificationType.BookingApproved,
                   relatedEntityId: result.BookingId.ToString()
               );
 

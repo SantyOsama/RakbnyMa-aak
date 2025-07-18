@@ -27,7 +27,7 @@ namespace RakbnyMa_aak.Models
         [Required(ErrorMessage = "حالة الدفع مطلوبة.")]
         [Display(Name = "حالة الدفع")]
         [EnumDataType(typeof(PaymentStatus))]
-        public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.قيد_المعالجة;
+        public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.Pending;
 
         [Required(ErrorMessage = "نوع الدفع مطلوب.")]
         [Display(Name = "نوع الدفع")]

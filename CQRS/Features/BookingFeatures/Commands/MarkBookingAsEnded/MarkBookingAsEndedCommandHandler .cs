@@ -17,7 +17,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.MarkBookingAsEnded
         public async Task<Response<bool>> Handle(MarkBookingAsEndedCommand request, CancellationToken cancellationToken)
         {
             var booking = await _unitOfWork.BookingRepository.GetByIdAsync(request.BookingId);
-            if (booking == null || booking.IsDeleted || booking.RequestStatus == RequestStatus.ملغاة)
+            if (booking == null || booking.IsDeleted || booking.RequestStatus == RequestStatus.Cancelled)
                 return Response<bool>.Fail("لم يتم العثور على الحجز أو تم إلغاؤه أو حذفه.");
 
             booking.HasEnded = true;

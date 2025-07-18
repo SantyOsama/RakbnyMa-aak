@@ -44,7 +44,7 @@ namespace RakbnyMa_aak.Services.Implementations
                 if (!response.IsSuccessStatusCode)
                 {
                     return new PaymentResult(
-                        PaymentStatus.فشل,
+                        PaymentStatus.Failed,
                         FailureReason: $"HTTP {response.StatusCode}",
                         Message: $"فشل الدفع: {content}");
                 }
@@ -54,15 +54,15 @@ namespace RakbnyMa_aak.Services.Implementations
 
                 return new PaymentResult(
                     root.GetProperty("success").GetBoolean()
-                        ? PaymentStatus.مكتمل
-                        : PaymentStatus.فشل,
+                        ? PaymentStatus.Completed
+                        : PaymentStatus.Failed,
                     TransactionId: root.GetProperty("id").GetString(),
                     Message: root.GetProperty("message").GetString());
             }
             catch (Exception ex)
             {
                 return new PaymentResult(
-                    PaymentStatus.فشل,
+                    PaymentStatus.Failed,
                     FailureReason: "خطأ في بوابة الدفع",
                     Message: $"خطأ في معالجة الدفع: {ex.Message}");
             }
@@ -91,7 +91,7 @@ namespace RakbnyMa_aak.Services.Implementations
                 if (!response.IsSuccessStatusCode)
                 {
                     return new PaymentResult(
-                        PaymentStatus.فشل,
+                        PaymentStatus.Failed,
                         FailureReason: $"HTTP {response.StatusCode}",
                         Message: $"فشل الدفع: {content}");
                 }
@@ -101,15 +101,15 @@ namespace RakbnyMa_aak.Services.Implementations
 
                 return new PaymentResult(
                     root.GetProperty("success").GetBoolean()
-                        ? PaymentStatus.مكتمل
-                        : PaymentStatus.فشل,
+                        ? PaymentStatus.Completed
+                        : PaymentStatus.Failed,
                     TransactionId: root.GetProperty("transaction_id").GetString(),
                     Message: root.GetProperty("message").GetString());
             }
             catch (Exception ex)
             {
                 return new PaymentResult(
-                    PaymentStatus.فشل,
+                    PaymentStatus.Failed,
                     FailureReason: "خطأ في بوابة الدفع",
                     Message: $"خطأ في معالجة الدفع: {ex.Message}");
             }

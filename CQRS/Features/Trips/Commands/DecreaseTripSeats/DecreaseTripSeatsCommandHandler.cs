@@ -20,7 +20,7 @@ namespace RakbnyMa_aak.CQRS.Features.Trip.Commands.DecreaseTripSeats
 
             var trip = await _unitOfWork.TripRepository.GetByIdAsync(dto.TripId);
 
-            if (trip == null || trip.IsDeleted || trip.TripStatus != TripStatus.مجدولة)
+            if (trip == null || trip.IsDeleted || trip.TripStatus != TripStatus.Scheduled)
                 return Response<string>.Fail("الرحلة غير صالحة.");
 
             if (trip.AvailableSeats < dto.NumberOfSeats)

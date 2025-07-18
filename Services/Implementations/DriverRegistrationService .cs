@@ -100,7 +100,7 @@ namespace RakbnyMa_aak.Services.Implementations
                     recipientUserId: admin.Id,
                     sender: user,
                     message: $"السائق {user.FullName} قدم طلب تسجيل.",
-                    type: NotificationType.تسجيل_السائق,
+                    type: NotificationType.DriverRegistration,
                     relatedEntityId: user.Id
                 );
             }

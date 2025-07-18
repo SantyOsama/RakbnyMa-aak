@@ -41,7 +41,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.CancelBooking
                 BookingId = request.BookingId,
                 TripId = booking.TripId,
                 NumberOfSeats = booking.NumberOfSeats,
-                WasConfirmed = booking.RequestStatus == RequestStatus.مؤكدة,
+                WasConfirmed = booking.RequestStatus == RequestStatus.Confirmed,
             });
         }
     }

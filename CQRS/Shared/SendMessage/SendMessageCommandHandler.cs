@@ -24,13 +24,13 @@ namespace RakbnyMa_aak.CQRS.Shared.SendMessage
         {
             var trip = await _unitOfWork.TripRepository.GetByIdAsync(request.Dto.TripId);
 
-            if (trip == null || trip.TripStatus != TripStatus.قيد_التنفيذ)
+            if (trip == null || trip.TripStatus != TripStatus.Ongoing)
                 return Response<string>.Fail("الرحلة غير موجودة أو لم تبدأ بعد.");
 
             var isPassengerConfirmed = await _unitOfWork.BookingRepository.AnyAsync(
                 b => b.TripId == trip.Id &&
                      b.UserId == request.SenderId &&
-                     b.RequestStatus == RequestStatus.مؤكدة);
+                     b.RequestStatus == RequestStatus.Confirmed);
 
             var isDriver = trip.DriverId == request.SenderId;
 

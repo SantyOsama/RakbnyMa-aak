@@ -35,7 +35,7 @@ namespace RakbnyMa_aak.CQRS.Trips.Delete_Trip
 
             var hasConfirmedBookings = await _unitOfWork.BookingRepository
                 .GetAllQueryable()
-                .AnyAsync(b => b.TripId == trip.TripId && b.RequestStatus == RequestStatus.مؤكدة, cancellationToken);
+                .AnyAsync(b => b.TripId == trip.TripId && b.RequestStatus == RequestStatus.Confirmed, cancellationToken);
 
             if (hasConfirmedBookings)
             {

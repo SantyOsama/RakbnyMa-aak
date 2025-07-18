@@ -57,9 +57,9 @@ namespace RakbnyMa_aak.Services.Implementations
                 {
                     WalletUserId = userId,
                     Amount = amount,
-                    TransactionType = TransactionType.ائتمان,
+                    TransactionType = TransactionType.Credit,
                     Description = description,
-                    Status = TransactionStatus.مكتمل
+                    Status = TransactionStatus.Completed
                 };
 
                 wallet.Transactions.Add(transactionRecord);
@@ -100,9 +100,9 @@ namespace RakbnyMa_aak.Services.Implementations
                 {
                     WalletUserId = userId,
                     Amount = amount,
-                    TransactionType = TransactionType.خصم,
+                    TransactionType = TransactionType.Debit,
                     Description = description,
-                    Status = TransactionStatus.مكتمل
+                    Status = TransactionStatus.Completed
                 };
 
                 wallet.Transactions.Add(transactionRecord);

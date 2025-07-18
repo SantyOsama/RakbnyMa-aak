@@ -25,7 +25,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.RejectBookingReque
 
             var result = validation.Data;
 
-            if (result.requestStatus == RequestStatus.مؤكدة)
+            if (result.requestStatus == RequestStatus.Confirmed)
                 return Response<bool>.Fail("تمت الموافقة على هذا الحجز بالفعل ولا يمكن رفضه.");
 
             //Step 2: Update status to Rejected
@@ -33,7 +33,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.RejectBookingReque
                 new UpdateBookingStatusCommand(
                     result.BookingId,
                     result.TripId,
-                    RequestStatus.مرفوضة));
+                    RequestStatus.Rejected));
 
             if (!rejectResult.IsSucceeded)
                 return Response<bool>.Fail(rejectResult.Message);

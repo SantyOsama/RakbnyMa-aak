@@ -28,7 +28,7 @@ namespace RakbnyMa_aak.Hubs
             }
 
             var trip = await _unitOfWork.TripRepository.GetByIdAsync(int.Parse(tripId));
-            if (trip == null || trip.TripStatus != TripStatus.قيد_التنفيذ)
+            if (trip == null || trip.TripStatus != TripStatus.Ongoing)
             {
                 await base.OnConnectedAsync();
                 return;
@@ -38,7 +38,7 @@ namespace RakbnyMa_aak.Hubs
             var isPassengerConfirmed = await _unitOfWork.BookingRepository.AnyAsync(
                 b => b.TripId == trip.Id &&
                      b.UserId == userId &&
-                     b.RequestStatus == RequestStatus.مؤكدة);
+                     b.RequestStatus == RequestStatus.Confirmed);
 
             if (isDriver || isPassengerConfirmed)
             {
@@ -69,7 +69,7 @@ namespace RakbnyMa_aak.Hubs
             var isPassengerConfirmed = await _unitOfWork.BookingRepository.AnyAsync(
                 b => b.TripId == trip.Id &&
                      b.UserId == userId &&
-                     b.RequestStatus == RequestStatus.مؤكدة);
+                     b.RequestStatus == RequestStatus.Confirmed);
 
             if (isDriver || isPassengerConfirmed)
             {

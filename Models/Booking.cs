@@ -16,7 +16,7 @@ namespace RakbnyMa_aak.Models
 
         [Required]
         [Display(Name = "حالة الطلب")]
-        public RequestStatus RequestStatus { get; set; } = RequestStatus.قيد_الانتظار;
+        public RequestStatus RequestStatus { get; set; } = RequestStatus.Pending;
 
         [Required(ErrorMessage = "يرجى إدخال عدد المقاعد.")]
         [Range(1, 150, ErrorMessage = "يجب أن يكون عدد المقاعد على الأقل 1.")]
@@ -35,7 +35,7 @@ namespace RakbnyMa_aak.Models
 
         [Required]
         [Display(Name = "حالة الدفع")]
-        public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.قيد_المعالجة;
+        public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.Pending;
 
         // Update TotalPrice to be stored in DB
         [Display(Name = "السعر الإجمالي")]

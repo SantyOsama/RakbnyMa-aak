@@ -30,7 +30,7 @@ namespace RakbnyMa_aak.CQRS.Users.BookingTrip
 
             var booking = _mapper.Map<Booking>(dto);
             booking.CreatedAt = DateTime.UtcNow;
-            booking.RequestStatus = RequestStatus.قيد_الانتظار;
+            booking.RequestStatus = RequestStatus.Pending;
             // booking.IsPaid = dto.PaymentMethod.ToLower() == "online" ? false : true;
 
             await _unitOfWork.BookingRepository.AddAsync(booking);

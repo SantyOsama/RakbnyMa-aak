@@ -37,7 +37,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.UpdateBooking
             if (difference == 0)
                 return Response<UpdateBookingSeatsResponseDto>.Fail("لم يتم تعديل عدد المقاعد");
 
-            if (bookingInfo.RequestStatus == RequestStatus.مؤكدة)
+            if (bookingInfo.RequestStatus == RequestStatus.Confirmed)
             {
                 return await _mediator.Send(new UpdateConfirmedBookingCommand(dto, bookingInfo.OldSeats, request.userId));
             }

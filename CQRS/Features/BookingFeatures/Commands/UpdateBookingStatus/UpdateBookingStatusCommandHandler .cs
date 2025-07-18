@@ -28,7 +28,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.UpdateBookingStatu
             var booking = bookingResult.Data!; // Now booking is tracked in DbContext
 
             // Step 2: If confirming, validate trip and available seats
-            if (request.NewStatus == RequestStatus.مؤكدة)
+            if (request.NewStatus == RequestStatus.Confirmed)
             {
                 //Decrease Trip Seats
                 var seatsDto = new DecreaseTripSeatsDto

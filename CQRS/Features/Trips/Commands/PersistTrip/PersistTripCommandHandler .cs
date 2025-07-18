@@ -23,7 +23,7 @@ namespace RakbnyMa_aak.CQRS.Features.Trips.Commands.PersistTrip
         public async Task<Response<int>> Handle(PersistTripCommand request, CancellationToken cancellationToken)
         {
             var trip = _mapper.Map<TripModel>(request.TripDto);
-            trip.TripStatus = TripStatus.مجدولة;
+            trip.TripStatus = TripStatus.Scheduled;
             await _unitOfWork.TripRepository.AddAsync(trip);
             await _unitOfWork.CompleteAsync();
 

@@ -25,7 +25,7 @@ namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripIsUpdatable
             if (trip.IsDeleted)
                 return Response<Trip>.Fail("تم حذف الرحلة.");
 
-            if (trip.TripStatus != TripStatus.مجدولة)
+            if (trip.TripStatus != TripStatus.Scheduled)
                 return Response<Trip>.Fail("يمكن فقط تعديل الرحلات المجدولة.");
 
             ///لو فه بوكينج كونفيرميد ممنوع التعديل

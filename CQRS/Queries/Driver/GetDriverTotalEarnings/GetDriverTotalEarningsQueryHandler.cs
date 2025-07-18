@@ -30,7 +30,7 @@ namespace RakbnyMa_aak.CQRS.Queries.Driver.GetDriverTotalEarnings
             var fromDate = now.AddMonths(-5);
 
             var bookings = await _unitOfWork.BookingRepository.GetAllQueryable()
-                .Where(b => b.Trip.DriverId == userId && b.RequestStatus == RequestStatus.مؤكدة && b.PaymentStatus == PaymentStatus.مكتمل && b.CreatedAt >= fromDate)
+                .Where(b => b.Trip.DriverId == userId && b.RequestStatus == RequestStatus.Confirmed && b.PaymentStatus == PaymentStatus.Completed && b.CreatedAt >= fromDate)
                 .ToListAsync(cancellationToken);
 
             var result = bookings

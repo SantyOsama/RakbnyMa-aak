@@ -46,7 +46,7 @@ namespace RakbnyMa_aak.CQRS.Queries.Driver.GetPendingBooking
 
             Expression<Func<Booking, bool>> filter = b =>
                 b.TripId == request.TripId &&
-                b.RequestStatus == Utilities.Enums.RequestStatus.قيد_الانتظار;
+                b.RequestStatus == Utilities.Enums.RequestStatus.Pending;
 
 
             var result = await _unitOfWork.BookingRepository.GetProjectedPaginatedAsync<BookingStatusResponseDto>(

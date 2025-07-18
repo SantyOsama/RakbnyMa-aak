@@ -46,7 +46,7 @@ namespace RakbnyMa_aak.CQRS.Queries.Driver.GetTripConfirmedBookings
 
             Expression<Func<Booking, bool>> filter = b =>
                 b.TripId == request.TripId &&
-                b.RequestStatus == Utilities.Enums.RequestStatus.مؤكدة;
+                b.RequestStatus == Utilities.Enums.RequestStatus.Confirmed;
 
             var result = await _unitOfWork.BookingRepository.GetProjectedPaginatedAsync<BookingStatusResponseDto>(
                 predicate: filter,

@@ -21,7 +21,7 @@ namespace RakbnyMa_aak.CQRS.Features.Trip.Commands.CompleteTrip
             if (trip == null || trip.IsDeleted)
                 return Response<bool>.Fail("لم يتم العثور على الرحلة أو تم حذفها.");
 
-            trip.TripStatus = TripStatus.مكتملة;
+            trip.TripStatus = TripStatus.Completed;
             trip.UpdatedAt = DateTime.UtcNow;
 
             _unitOfWork.TripRepository.Update(trip);

@@ -23,7 +23,7 @@ namespace RakbnyMa_aak.Models
 
         [Required]
         [EnumDataType(typeof(TransactionStatus))]
-        public TransactionStatus Status { get; set; } = TransactionStatus.مكتمل;
+        public TransactionStatus Status { get; set; } = TransactionStatus.Completed;
 
         [MaxLength(500)]
         public string Description { get; set; }

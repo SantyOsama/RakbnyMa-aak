@@ -21,149 +21,155 @@ namespace RakbnyMa_aak.Utilities
             Female
         }
 
+
         public enum CarType
         {
-            [Display(Name = "سيدان")]
-            سيدان,
+            [Display(Name = "Sedan")]
+            Sedan,
 
-            [Display(Name = "دفع رباعي")]
-            دفع_رباعي,
+            [Display(Name = "SUV")]
+            SUV,
 
-            [Display(Name = "فان")]
-            فان,
+            [Display(Name = "Van")]
+            Van,
 
-            [Display(Name = "حافلة")]
-            حافلة,
+            [Display(Name = "Bus")]
+            Bus,
 
-            [Display(Name = "تاكسي")]
-            تاكسي,
+            [Display(Name = "Taxi")]
+            Taxi,
 
-            [Display(Name = "دراجة نارية")]
-            دراجة_نارية,
+            [Display(Name = "Motorcycle")]
+            Motorcycle,
 
-            [Display(Name = "شاحنة بيك أب")]
-            شاحنة_بيك_أب,
+            [Display(Name = "Pickup Truck")]
+            PickupTruck,
 
-            [Display(Name = "حافلة صغيرة")]
-            حافلة_صغيرة
+            [Display(Name = "Minibus")]
+            Minibus
         }
+
 
 
         public enum CarColor
         {
-            [Display(Name = "أسود")]
-            أسود,
+            [Display(Name = "Black")]
+            Black,
 
-            [Display(Name = "أبيض")]
-            أبيض,
+            [Display(Name = "White")]
+            White,
 
-            [Display(Name = "أحمر")]
-            أحمر,
+            [Display(Name = "Red")]
+            Red,
 
-            [Display(Name = "أزرق")]
-            أزرق,
+            [Display(Name = "Blue")]
+            Blue,
 
-            [Display(Name = "أخضر")]
-            أخضر,
+            [Display(Name = "Green")]
+            Green,
 
-            [Display(Name = "أصفر")]
-            أصفر,
+            [Display(Name = "Yellow")]
+            Yellow,
 
-            [Display(Name = "فضي")]
-            فضي,
+            [Display(Name = "Silver")]
+            Silver,
 
-            [Display(Name = "رمادي")]
-            رمادي,
+            [Display(Name = "Gray")]
+            Gray,
 
-            [Display(Name = "بني")]
-            بني,
+            [Display(Name = "Brown")]
+            Brown,
 
-            [Display(Name = "برتقالي")]
-            برتقالي,
+            [Display(Name = "Orange")]
+            Orange,
 
-            [Display(Name = "ذهبي")]
-            ذهبي,
+            [Display(Name = "Gold")]
+            Gold,
 
-            [Display(Name = "بنفسجي")]
-            بنفسجي,
+            [Display(Name = "Purple")]
+            Purple,
 
-            [Display(Name = "وردي")]
-            وردي,
+            [Display(Name = "Pink")]
+            Pink,
 
-            [Display(Name = "بيج")]
-            بيج,
+            [Display(Name = "Beige")]
+            Beige,
 
-            [Display(Name = "نبيتي")]
-            نبيتي,
+            [Display(Name = "Maroon")]
+            Maroon,
 
-            [Display(Name = "كحلي")]
-            كحلي
+            [Display(Name = "Navy")]
+            Navy
         }
 
 
 
         public enum TripStatus
         {
-            [Display(Name = "مجدولة")]
-            مجدولة,
+            [Display(Name = "Scheduled")]
+            Scheduled,
 
-            [Display(Name = "قيد التنفيذ")]
-            قيد_التنفيذ,
+            [Display(Name = "Ongoing")]
+            Ongoing,
 
-            [Display(Name = "مكتملة")]
-            مكتملة,
+            [Display(Name = "Completed")]
+            Completed,
 
-            [Display(Name = "ملغاة")]
-            ملغاة
+            [Display(Name = "Cancelled")]
+            Cancelled
         }
+
 
 
         public enum RequestStatus
         {
-            [Display(Name = "قيد الانتظار")]
-            قيد_الانتظار,
+            [Display(Name = "Pending")]
+            Pending,
 
-            [Display(Name = "مؤكدة")]
-            مؤكدة,
+            [Display(Name = "Confirmed")]
+            Confirmed,
 
-            [Display(Name = "ملغاة")]
-            ملغاة,
+            [Display(Name = "Cancelled")]
+            Cancelled,
 
-            [Display(Name = "مرفوضة")]
-            مرفوضة
+            [Display(Name = "Rejected")]
+            Rejected
         }
+
 
 
         public enum PaymentMethod
         {
-            [Display(Name = "نقداً")]
-            نقداً,
+            [Display(Name = "Cash")]
+            Cash,
 
-            [Display(Name = "فودافون كاش")]
-            فودافون_كاش,
+            [Display(Name = "Vodafone Cash")]
+            VodafoneCash,
 
-            [Display(Name = "بطاقة ائتمان")]
-            بطاقة_ائتمان,
+            [Display(Name = "Credit Card")]
+            CreditCard,
 
-            [Display(Name = "محفظة إلكترونية")]
-            محفظة_إلكترونية
+            [Display(Name = "Wallet")]
+            Wallet
         }
+
 
 
         public enum PaymentStatus
         {
-            [Display(Name = "قيد المعالجة")]
-            قيد_المعالجة,
+            [Display(Name = "Pending")]
+            Pending,
 
-            [Display(Name = "مكتمل")]
-            مكتمل,
+            [Display(Name = "Completed")]
+            Completed,
 
-            [Display(Name = "فشل")]
-            فشل,
+            [Display(Name = "Failed")]
+            Failed,
 
-            [Display(Name = "تم الاسترداد")]
-            تم_الاسترداد
+            [Display(Name = "Refunded")]
+            Refunded
         }
+
 
 
         public enum PaymentType
@@ -174,30 +180,54 @@ namespace RakbnyMa_aak.Utilities
         }
         public enum TransactionType
         {
-            ائتمان,
-            خصم
+            [Display(Name = "Credit")]
+            Credit,
+
+            [Display(Name = "Debit")]
+            Debit
         }
+
 
 
         public enum TransactionStatus
         {
-            قيد_الانتظار,
-            مكتمل,
-            فشل
+            [Display(Name = "Pending")]
+            Pending,
+
+            [Display(Name = "Completed")]
+            Completed,
+
+            [Display(Name = "Failed")]
+            Failed
         }
+
 
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public enum NotificationType
         {
-            تسجيل_السائق,
-            تم_حجز_الرحلة,
-            تمت_الموافقة_على_الحجز,
-            تم_إلغاء_الرحلة,
-            الدفع,
-            رسالة_محادثة,
-            إشعار_مخصص
+            [Display(Name = "تسجيل السائق")]
+            DriverRegistration,
+
+            [Display(Name = "تم حجز الرحلة")]
+            TripBooked,
+
+            [Display(Name = "تمت الموافقة على الحجز")]
+            BookingApproved,
+
+            [Display(Name = "تم إلغاء الرحلة")]
+            TripCancelled,
+
+            [Display(Name = "الدفع")]
+            Payment,
+
+            [Display(Name = "رسالة محادثة")]
+            ChatMessage,
+
+            [Display(Name = "إشعار مخصص")]
+            Custom
         }
+
 
     }
 }

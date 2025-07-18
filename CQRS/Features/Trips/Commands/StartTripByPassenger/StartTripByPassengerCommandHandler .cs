@@ -34,7 +34,7 @@ namespace RakbnyMa_aak.CQRS.Features.Trip.Commands.StartTripByPassenger
             if (trip == null || trip.IsDeleted)
                 return Response<bool>.Fail("لم يتم العثور على الرحلة.");
 
-            if (trip.TripStatus != TripStatus.قيد_التنفيذ)
+            if (trip.TripStatus != TripStatus.Ongoing)
                 return Response<bool>.Fail("يمكنك بدء رحلتك فقط عندما تكون الرحلة في حالة جارية.");
 
             booking.HasStarted = true;

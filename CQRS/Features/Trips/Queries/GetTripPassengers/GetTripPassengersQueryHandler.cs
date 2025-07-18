@@ -24,13 +24,13 @@ namespace RakbnyMa_aak.CQRS.Features.Trips.Queries.GetTripPassengers
             var trip = await _unitOfWork.TripRepository
                 .GetAllQueryable()
                 .Include(t => t.Driver)
-                .Include(t => t.Bookings.Where(b => b.RequestStatus == RequestStatus.مؤكدة))
+                .Include(t => t.Bookings.Where(b => b.RequestStatus == RequestStatus.Confirmed))
                     .ThenInclude(b => b.User)
                         .ThenInclude(u => u.RatingsGiven)
                 .FirstOrDefaultAsync(t =>
                     t.Id == request.TripId &&
                     !t.IsDeleted &&
-                    (t.TripStatus == TripStatus.قيد_التنفيذ || t.TripStatus == TripStatus.مكتملة)
+                    (t.TripStatus == TripStatus.Ongoing || t.TripStatus == TripStatus.Completed)
                 );
 
             if (trip == null)

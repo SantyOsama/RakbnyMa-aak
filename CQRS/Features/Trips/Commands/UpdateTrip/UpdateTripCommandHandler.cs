@@ -27,7 +27,7 @@ namespace RakbnyMa_aak.CQRS.Features.Trip.Commands.UpdateTrip
 
             var hasConfirmedBookings = await _unitOfWork.BookingRepository
                 .GetAllQueryable()
-                .AnyAsync(b => b.TripId == request.TripId && b.RequestStatus == RequestStatus.مؤكدة, cancellationToken);
+                .AnyAsync(b => b.TripId == request.TripId && b.RequestStatus == RequestStatus.Confirmed, cancellationToken);
 
             if (hasConfirmedBookings)
             {

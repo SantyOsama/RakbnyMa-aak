@@ -18,7 +18,7 @@ namespace RakbnyMa_aak.Models
         [Display(Name = "تمت قراءتها")]
         public bool IsRead { get; set; } = false;
 
-        public NotificationType Type { get; set; } = NotificationType.إشعار_مخصص;
+        public NotificationType Type { get; set; } = NotificationType.Custom;
 
         public string? RelatedEntityId { get; set; }
 

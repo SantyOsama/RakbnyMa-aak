@@ -32,7 +32,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.CancelBookingByPas
             if (booking is null)
                 return Response<bool>.Fail("لم يتم العثور على الحجز.");
 
-            booking.RequestStatus = RequestStatus.ملغاة;
+            booking.RequestStatus = RequestStatus.Cancelled;
             booking.HasEnded = true;
             booking.UpdatedAt = DateTime.UtcNow;
 

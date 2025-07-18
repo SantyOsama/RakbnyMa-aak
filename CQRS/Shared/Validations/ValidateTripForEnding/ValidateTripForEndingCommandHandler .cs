@@ -33,7 +33,7 @@ namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripForEnding
             if (tripProjection == null || tripProjection.IsDeleted || tripProjection.DriverId != request.DriverId)
                 return Response<Trip>.Fail("غير مصرح أو لم يتم العثور على الرحلة.");
 
-            if (tripProjection.TripStatus != TripStatus.قيد_التنفيذ)
+            if (tripProjection.TripStatus != TripStatus.Ongoing)
                 return Response<Trip>.Fail("الرحلة لم تبدأ بعد.");
 
             return Response<Trip>.Success(tripProjection, "رحلة صالحة");

@@ -81,7 +81,7 @@ namespace RakbnyMa_aak.Features.Payments
                         Amount = booking.TotalPrice,
                         PaymentMethod = request.PaymentMethod,
                         PaymentType = PaymentType.BookingPayment,
-                        PaymentStatus = PaymentStatus.قيد_المعالجة
+                        PaymentStatus = PaymentStatus.Pending
                     };
 
                     _context.Payments.Add(payment);
@@ -90,21 +90,21 @@ namespace RakbnyMa_aak.Features.Payments
                     // Use the interface's PaymentResult consistently
                     Services.Interfaces.PaymentResult paymentResult = request.PaymentMethod switch
                     {
-                        PaymentMethod.محفظة_إلكترونية => await ProcessWalletPayment(
+                        PaymentMethod.Wallet => await ProcessWalletPayment(
                             booking.Wallet,
                             booking.TotalPrice,
                             $"Booking #{request.BookingId}"),
 
-                        PaymentMethod.بطاقة_ائتمان => await _paymentService.ProcessCardPayment(
+                        PaymentMethod.CreditCard => await _paymentService.ProcessCardPayment(
                             booking.TotalPrice,
                             request.CardToken),
 
-                        PaymentMethod.فودافون_كاش => await _paymentService.ProcessVodafoneCashPayment(
+                        PaymentMethod.VodafoneCash => await _paymentService.ProcessVodafoneCashPayment(
                             booking.TotalPrice,
                             request.PhoneNumber ?? booking.PhoneNumber),
 
                         _ => new Services.Interfaces.PaymentResult(
-                            PaymentStatus.مكتمل,
+                            PaymentStatus.Completed,
                             TransactionId: "CASH_PAYMENT")
                     };
 
@@ -115,7 +115,7 @@ namespace RakbnyMa_aak.Features.Payments
 
                     if (paymentResult.Success)
                     {
-                        booking.Booking.RequestStatus = RequestStatus.مؤكدة;
+                        booking.Booking.RequestStatus = RequestStatus.Confirmed;
                     }
 
                     await _context.SaveChangesAsync(cancellationToken);
@@ -148,7 +148,7 @@ namespace RakbnyMa_aak.Features.Payments
                 if (wallet.Balance < amount)
                 {
                     return new Services.Interfaces.PaymentResult(
-                        PaymentStatus.فشل,
+                        PaymentStatus.Failed,
                         FailureReason: "الرصيد غير كافٍ");
                 }
 
@@ -158,13 +158,13 @@ namespace RakbnyMa_aak.Features.Payments
                 wallet.Transactions.Add(new WalletTransaction
                 {
                     Amount = amount,
-                    TransactionType = TransactionType.خصم,
+                    TransactionType = TransactionType.Debit,
                     Description = description,
-                    Status = TransactionStatus.مكتمل
+                    Status = TransactionStatus.Completed
                 });
 
                 return new Services.Interfaces.PaymentResult(
-                    PaymentStatus.مكتمل,
+                    PaymentStatus.Completed,
                     TransactionId: "WALLET_PAYMENT");
             }
         }

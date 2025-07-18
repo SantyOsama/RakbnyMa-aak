@@ -18,33 +18,33 @@ namespace RakbnyMa_aak.Services.Implementations
 
             if (string.IsNullOrWhiteSpace(cardToken))
                 return new PaymentResult(
-                    PaymentStatus.Failed,
-                    FailureReason: "Invalid card token",
-                    Message: "Card token is required");
+                    PaymentStatus.فشل,
+                    FailureReason: "رمز البطاقة غير صالح",
+                    Message: "رمز البطاقة مطلوب");
 
             if (amount <= 0)
                 return new PaymentResult(
-                    PaymentStatus.Failed,
-                    FailureReason: "Invalid amount",
-                    Message: "Amount must be positive");
+                    PaymentStatus.فشل,
+                    FailureReason: "المبلغ غير صالح",
+                    Message: "يجب أن يكون المبلغ موجباً");
 
             if (amount > MAX_CARD_AMOUNT)
                 return new PaymentResult(
-                    PaymentStatus.Failed,
-                    FailureReason: "Amount limit exceeded",
-                    Message: $"Maximum card payment is {MAX_CARD_AMOUNT} EGP");
+                    PaymentStatus.فشل,
+                    FailureReason: "تم تجاوز حد المبلغ",
+                    Message: $"الحد الأقصى للدفع بالبطاقة هو {MAX_CARD_AMOUNT} جنيه");
 
             // Simulate random failures (10% chance)
             if (new Random().Next(0, 10) == 0)
                 return new PaymentResult(
-                    PaymentStatus.Failed,
-                    FailureReason: "Payment gateway timeout",
-                    Message: "Payment processing timed out");
+                    PaymentStatus.فشل,
+                    FailureReason: "انتهت مهلة بوابة الدفع",
+                    Message: "انتهت مهلة معالجة الدفع");
 
             return new PaymentResult(
-                PaymentStatus.Completed,
+                PaymentStatus.مكتمل,
                 TransactionId: $"CARD_{DateTime.UtcNow.Ticks}_{Guid.NewGuid().ToString().Substring(0, 8)}",
-                Message: "Payment processed successfully");
+                Message: "تمت معالجة الدفع بنجاح");
         }
 
         public async Task<PaymentResult> ProcessVodafoneCashPayment(decimal amount, string phoneNumber)
@@ -54,33 +54,33 @@ namespace RakbnyMa_aak.Services.Implementations
 
             if (string.IsNullOrWhiteSpace(phoneNumber) || !phoneNumber.StartsWith("01"))
                 return new PaymentResult(
-                    PaymentStatus.Failed,
-                    FailureReason: "Invalid phone number",
-                    Message: "Valid Egyptian phone number required");
+                    PaymentStatus.فشل,
+                    FailureReason: "رقم الهاتف غير صالح",
+                    Message: "رقم هاتف مصري صالح مطلوب");
 
             if (amount <= 0)
                 return new PaymentResult(
-                    PaymentStatus.Failed,
-                    FailureReason: "Invalid amount",
-                    Message: "Amount must be positive");
+                    PaymentStatus.فشل,
+                    FailureReason: "المبلغ غير صالح",
+                    Message: "يجب أن يكون المبلغ موجباً");
 
             if (amount > MAX_VODAFONE_AMOUNT)
                 return new PaymentResult(
-                    PaymentStatus.Failed,
-                    FailureReason: "Amount limit exceeded",
-                    Message: $"Maximum Vodafone Cash payment is {MAX_VODAFONE_AMOUNT} EGP");
+                    PaymentStatus.فشل,
+                    FailureReason: "تم تجاوز حد المبلغ",
+                    Message: $"الحد الأقصى للدفع عبر فودافون كاش هو {MAX_VODAFONE_AMOUNT} جنيه");
 
             // Simulate random failures (15% chance)
             if (new Random().Next(0, 7) == 0)
                 return new PaymentResult(
-                    PaymentStatus.Failed,
-                    FailureReason: "Insufficient wallet balance",
-                    Message: "User doesn't have enough balance in Vodafone Cash");
+                    PaymentStatus.فشل,
+                    FailureReason: "رصيد المحفظة غير كافٍ",
+                    Message: "ليس لدى المستخدم رصيد كافٍ في فودافون كاش");
 
             return new PaymentResult(
-                PaymentStatus.Completed,
+                PaymentStatus.مكتمل,
                 TransactionId: $"VODA_{DateTime.UtcNow.Ticks}",
-                Message: "Vodafone Cash payment successful");
+                Message: "تم الدفع عبر فودافون كاش بنجاح");
         }
     }
 }

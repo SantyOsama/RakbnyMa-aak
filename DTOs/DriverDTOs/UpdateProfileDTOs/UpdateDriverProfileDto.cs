@@ -4,30 +4,30 @@ namespace RakbnyMa_aak.DTOs.DriverDTOs.UpdateProfileDTOs
 {
     public class UpdateDriverProfileDto
     {
-        [Display(Name = "Full Name")]
-        [Required(ErrorMessage = "Please enter your full name.")]
-        [MinLength(3, ErrorMessage = "Full name must be at least 3 characters long.")]
-        [MaxLength(100, ErrorMessage = "Full name must not exceed 100 characters.")]
+        [Display(Name = "الاسم الكامل")]
+        [Required(ErrorMessage = "يرجى إدخال الاسم الكامل.")]
+        [MinLength(3, ErrorMessage = "يجب ألا يقل الاسم الكامل عن 3 أحرف.")]
+        [MaxLength(100, ErrorMessage = "يجب ألا يزيد الاسم الكامل عن 100 حرف.")]
         public string FullName { get; set; }
 
-        [Required]
-        [EmailAddress]
+        [Required(ErrorMessage = "يرجى إدخال البريد الإلكتروني.")]
+        [EmailAddress(ErrorMessage = "يرجى إدخال بريد إلكتروني صالح.")]
         public string Email { get; set; }
 
-        [Display(Name = "Phone Number")]
-        [Required(ErrorMessage = "Please enter your phone number.")]
-        [RegularExpression(@"^(010|011|012|015)\d{8}$", ErrorMessage = "Phone number must be 11 digits and start with 010, 011, 012, or 015.")]
+        [Display(Name = "رقم الهاتف")]
+        [Required(ErrorMessage = "يرجى إدخال رقم الهاتف.")]
+        [RegularExpression(@"^(010|011|012|015)\d{8}$", ErrorMessage = "يجب أن يكون رقم الهاتف 11 رقمًا ويبدأ بـ 010 أو 011 أو 012 أو 015.")]
         public string PhoneNumber { get; set; }
 
-        [Display(Name = "Profile Picture")]
+        [Display(Name = "صورة الملف الشخصي")]
         public IFormFile? Picture { get; set; }
 
-        [Display(Name = "Selfie Image")]
-        [Required(ErrorMessage = "Selfie image is required.")]
+        [Display(Name = "صورة السيلفي")]
+        [Required(ErrorMessage = "صورة السيلفي مطلوبة.")]
         public IFormFile SelfieImage { get; set; }
 
-        [Display(Name = "National ID Image")]
-        [Required(ErrorMessage = "National ID image is required.")]
+        [Display(Name = "صورة بطاقة الرقم القومي")]
+        [Required(ErrorMessage = "صورة بطاقة الرقم القومي مطلوبة.")]
         public IFormFile NationalIdImage { get; set; }
     }
 }

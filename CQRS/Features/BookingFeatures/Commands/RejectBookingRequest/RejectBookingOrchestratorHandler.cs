@@ -25,15 +25,15 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.RejectBookingReque
 
             var result = validation.Data;
 
-            if (result.requestStatus == RequestStatus.Confirmed)
-                return Response<bool>.Fail("This booking has already been approved and cannot be rejected.");
+            if (result.requestStatus == RequestStatus.مؤكدة)
+                return Response<bool>.Fail("تمت الموافقة على هذا الحجز بالفعل ولا يمكن رفضه.");
 
             //Step 2: Update status to Rejected
             var rejectResult = await _mediator.Send(
                 new UpdateBookingStatusCommand(
                     result.BookingId,
                     result.TripId,
-                    RequestStatus.Rejected));
+                    RequestStatus.مرفوضة));
 
             if (!rejectResult.IsSucceeded)
                 return Response<bool>.Fail(rejectResult.Message);
@@ -43,10 +43,10 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.RejectBookingReque
             {
                 ReceiverId = result.PassengerId,
                 SenderUserId = result.DriverId,
-                Message = "Your booking request has been rejected."
+                Message = "تم رفض طلب الحجز الخاص بك."
             }));
 
-            return Response<bool>.Success(true, "Booking rejected and passenger notified.");
+            return Response<bool>.Success(true, "تم رفض الحجز وإخطار الراكب.");
         }
     }
 }

@@ -30,7 +30,7 @@ namespace RakbnyMa_aak.Services.Implementations
             if (await _userManager.FindByEmailAsync(dto.Email) != null ||
                 await _userManager.FindByNameAsync(dto.FullName) != null)
             {
-                return Response<RegisterResponseDto>.Fail("Email already exists");
+                return Response<RegisterResponseDto>.Fail("البريد الإلكتروني مستخدم من قبل.");
             }
 
             string pictureUrl = null;
@@ -61,11 +61,11 @@ namespace RakbnyMa_aak.Services.Implementations
             if (!roleResult.Succeeded)
             {
                 var errors = string.Join(", ", roleResult.Errors.Select(e => e.Description));
-                return Response<RegisterResponseDto>.Fail("User created but role assignment failed: " + errors);
+                return Response<RegisterResponseDto>.Fail("تم إنشاء المستخدم ولكن فشلت إضافة الدور: " + errors);
             }
 
             return Response<RegisterResponseDto>.Success(new RegisterResponseDto { Id = user.Id },
-                "User registered successfully");
+                "تم تسجيل المستخدم بنجاح.");
         }
     }
 }

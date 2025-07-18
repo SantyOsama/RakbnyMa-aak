@@ -20,11 +20,11 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.UpdatePendingBooki
             var difference = dto.NewNumberOfSeats - request.OldSeats;
 
             if (difference < 0)
-                return Response<UpdateBookingSeatsResponseDto>.Fail("Cannot decrease seats before approval");
+                return Response<UpdateBookingSeatsResponseDto>.Fail("لا يمكن تقليل عدد المقاعد قبل الموافقة");
 
             var booking = await _unitOfWork.BookingRepository.GetByIdAsync(dto.BookingId);
             if (booking is null || booking.UserId != request.userId)
-                return Response<UpdateBookingSeatsResponseDto>.Fail("Booking not found or access denied");
+                return Response<UpdateBookingSeatsResponseDto>.Fail("لم يتم العثور على الحجز أو لا تملك صلاحية الوصول");
 
             booking.NumberOfSeats = dto.NewNumberOfSeats;
             booking.UpdatedAt = DateTime.UtcNow;
@@ -38,7 +38,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.UpdatePendingBooki
                 OldSeats = request.OldSeats,
                 NewSeats = dto.NewNumberOfSeats,
                 UpdatedAt = DateTime.UtcNow
-            }, "Booking updated successfully");
+            }, "تم تحديث الحجز بنجاح");
         }
     }
 }

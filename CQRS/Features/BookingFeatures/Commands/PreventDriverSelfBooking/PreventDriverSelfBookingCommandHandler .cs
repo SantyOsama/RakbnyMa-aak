@@ -16,9 +16,9 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.PreventDriverSelfB
         public async Task<Response<string>> Handle(PreventDriverSelfBookingCommand request, CancellationToken cancellationToken)
         {
             if (request.DriverId == request.UserId)
-                return Response<string>.Fail("Drivers cannot book their own trips.");
+                return Response<string>.Fail("لا يجوز للسائقين حجز رحلاتهم الخاصة.");
 
-            return Response<string>.Success("User is not the driver. Booking allowed.");
+            return Response<string>.Success("المستخدم ليس هو السائق. الحجز مسموح.");
         }
     }
 }

@@ -32,7 +32,7 @@ namespace RakbnyMa_aak.MiddleWares
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Transaction failed. Rolling back...");
+                _logger.LogError(ex, "فشلت العملية. سيتم التراجع...");
 
                 await transaction.RollbackAsync();
 

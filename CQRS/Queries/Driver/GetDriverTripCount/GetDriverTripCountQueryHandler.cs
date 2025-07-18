@@ -21,7 +21,7 @@ namespace RakbnyMa_aak.CQRS.Queries.Driver.GetDriverTripCount
         public async Task<Response<List<MonthlyTripCountDto>>> Handle(GetDriverTripCountQuery request, CancellationToken cancellationToken)
         {
             var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userId)) return Response<List<MonthlyTripCountDto>>.Fail("Unauthorized");
+            if (string.IsNullOrEmpty(userId)) return Response<List<MonthlyTripCountDto>>.Fail("غير مصرح");
 
             var fromDate = DateTime.UtcNow.AddMonths(-5);
 

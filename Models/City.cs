@@ -5,13 +5,13 @@ namespace RakbnyMa_aak.Models
 {
     public class City : BaseEntity
     {
-        [Required(ErrorMessage = "City name is required.")]
-        [MaxLength(100, ErrorMessage = "City name must not exceed 100 characters.")]
-        [Display(Name = "City Name")]
+        [Required(ErrorMessage = "اسم المدينة مطلوب.")]
+        [MaxLength(100, ErrorMessage = "يجب ألا يتجاوز اسم المدينة 100 حرف.")]
+        [Display(Name = "اسم المدينة")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Governorate is required.")]
-        [Display(Name = "Governorate")]
+        [Required(ErrorMessage = "المحافظة مطلوبة.")]
+        [Display(Name = "المحافظة")]
         public int GovernorateId { get; set; }
 
         [ForeignKey("GovernorateId")]

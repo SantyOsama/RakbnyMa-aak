@@ -18,10 +18,10 @@ namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripExists
         {
             var tripDto = await _unitOfWork.TripRepository.GetTripValidationDtoAsync(request.TripId);
             if (tripDto == null)
-                return Response<TripValidationResultDto>.Fail("Trip not found.");
+                return Response<TripValidationResultDto>.Fail("لم يتم العثور على الرحلة.");
 
             if (tripDto.IsDeleted)
-                return Response<TripValidationResultDto>.Fail("Trip is deleted.");
+                return Response<TripValidationResultDto>.Fail("تم حذف الرحلة.");
 
             return Response<TripValidationResultDto>.Success(tripDto);
         }

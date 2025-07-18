@@ -31,7 +31,7 @@ namespace RakbnyMa_aak.CQRS.Reports.TripReport
 
             var fileBytes = _excelService.ExportToExcel(trips, "Trip Report");
 
-            return Response<byte[]>.Success(fileBytes, "Excel file generated successfully");
+            return Response<byte[]>.Success(fileBytes, "تم إنشاء ملف الإكسل بنجاح");
         }
     }
 }

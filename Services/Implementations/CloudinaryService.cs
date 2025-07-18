@@ -21,12 +21,12 @@ namespace RakbnyMa_aak.Services.Implementations
         public async Task<string> UploadImageAsync(IFormFile file, string folder)
         {
             if (file == null || file.Length == 0)
-                throw new ArgumentException("File is empty.");
+                throw new ArgumentException("الملف فارغ.");
 
             var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
             var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
             if (!allowedExtensions.Contains(extension))
-                throw new ArgumentException("Only image files (.jpg, .jpeg, .png, .gif) are allowed.");
+                throw new ArgumentException("مسموح فقط بملفات الصور (.jpg، .jpeg، .png، .gif).");
 
             using var stream = file.OpenReadStream();
             var uploadParams = new ImageUploadParams
@@ -40,10 +40,10 @@ namespace RakbnyMa_aak.Services.Implementations
             var result = await _cloudinary.UploadAsync(uploadParams);
 
             if (result.StatusCode != System.Net.HttpStatusCode.OK)
-                throw new Exception("Image upload failed. Please try again.");
+                throw new Exception("فشل رفع الصورة. يرجى المحاولة مرة أخرى.");
             // Validate file size
             //if (file.Length > 5 * 1024 * 1024) // 5MB
-            //    throw new ArgumentException("Image size must not exceed 5MB.");
+            //    throw new ArgumentException("يجب ألا يتجاوز حجم الصورة 5 ميجابايت.");
 
             return result.SecureUrl.ToString();
         }

@@ -25,7 +25,7 @@ namespace RakbnyMa_aak.CQRS.Features.Cities.CreateCity
 
             if (isExist)
             {
-                return Response<CityResponseDTO>.Fail("This city already exists in the selected governorate", null);
+                return Response<CityResponseDTO>.Fail("هذه المدينة موجودة بالفعل في المحافظة المحددة", null);
             }
 
             var entity = _mapper.Map<City>(request.Dto);
@@ -37,7 +37,7 @@ namespace RakbnyMa_aak.CQRS.Features.Cities.CreateCity
 
             var responseDto = _mapper.Map<CityResponseDTO>(savedCity);
 
-            return Response<CityResponseDTO>.Success(responseDto, "City created");
+            return Response<CityResponseDTO>.Success(responseDto, "تم إنشاء المدينة بنجاح");
         }
 
     }

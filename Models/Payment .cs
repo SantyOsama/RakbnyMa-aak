@@ -6,43 +6,43 @@ namespace RakbnyMa_aak.Models
 {
     public class Payment : BaseEntity
     {
-        [Required(ErrorMessage = "User is required.")]
-        [Display(Name = "User")]
+        [Required(ErrorMessage = "المستخدم مطلوب.")]
+        [Display(Name = "المستخدم")]
         public string UserId { get; set; }
 
-        [Display(Name = "Booking")]
+        [Display(Name = "الحجز")]
         public int? BookingId { get; set; }
 
-        [Required(ErrorMessage = "Amount is required.")]
-        [Range(0.01, double.MaxValue, ErrorMessage = "Amount must be greater than 0.")]
-        [Display(Name = "Amount")]
+        [Required(ErrorMessage = "المبلغ مطلوب.")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "يجب أن يكون المبلغ أكبر من 0.")]
+        [Display(Name = "المبلغ")]
         [Column(TypeName = "decimal(18,2)")]
         public decimal Amount { get; set; }
 
-        [Required(ErrorMessage = "Payment method is required.")]
-        [Display(Name = "Payment Method")]
+        [Required(ErrorMessage = "طريقة الدفع مطلوبة.")]
+        [Display(Name = "طريقة الدفع")]
         [EnumDataType(typeof(PaymentMethod))]
         public PaymentMethod PaymentMethod { get; set; }
 
-        [Required(ErrorMessage = "Payment status is required.")]
-        [Display(Name = "Payment Status")]
+        [Required(ErrorMessage = "حالة الدفع مطلوبة.")]
+        [Display(Name = "حالة الدفع")]
         [EnumDataType(typeof(PaymentStatus))]
-        public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.Pending;
+        public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.قيد_المعالجة;
 
-        [Required(ErrorMessage = "Payment type is required.")]
-        [Display(Name = "Payment Type")]
+        [Required(ErrorMessage = "نوع الدفع مطلوب.")]
+        [Display(Name = "نوع الدفع")]
         [EnumDataType(typeof(PaymentType))]
         public PaymentType PaymentType { get; set; }
 
-        [Display(Name = "Transaction ID")]
-        [MaxLength(100, ErrorMessage = "Transaction ID must not exceed 100 characters.")]
+        [Display(Name = "رقم المعاملة")]
+        [MaxLength(100, ErrorMessage = "يجب ألا يتجاوز رقم المعاملة 100 حرف.")]
         public string? TransactionId { get; set; }
 
-        [Display(Name = "Payment Date")]
+        [Display(Name = "تاريخ الدفع")]
         public DateTime? PaymentDate { get; set; }
 
-        [Display(Name = "Failure Reason")]
-        [MaxLength(500, ErrorMessage = "Failure reason must not exceed 500 characters.")]
+        [Display(Name = "سبب الفشل")]
+        [MaxLength(500, ErrorMessage = "يجب ألا يتجاوز سبب الفشل 500 حرف.")]
         public string? FailureReason { get; set; }
 
         // Navigation properties

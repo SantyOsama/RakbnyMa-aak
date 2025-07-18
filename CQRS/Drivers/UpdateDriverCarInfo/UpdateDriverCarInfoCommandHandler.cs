@@ -20,7 +20,7 @@ namespace RakbnyMa_aak.CQRS.Drivers.UpdateDriverCarInfo
         {
             var driver = await _unitOfWork.DriverRepository.GetByUserIdAsync(request.DriverUserId);
             if (driver == null)
-                return Response<string>.Fail("Driver not found", statusCode: 404);
+                return Response<string>.Fail("لم يتم العثور على السائق.", statusCode: 404);
 
             driver.CarModel = request.Dto.CarModel;
             driver.CarColor = request.Dto.CarColor;
@@ -28,28 +28,26 @@ namespace RakbnyMa_aak.CQRS.Drivers.UpdateDriverCarInfo
             driver.CarCapacity = request.Dto.CarCapacity;
             driver.CarPlateNumber = request.Dto.CarPlateNumber;
 
-            // Upload car license
+            // رفع صورة رخصة السيارة
             if (request.Dto.CarLicenseImage != null)
             {
                 var url = await _cloudinary.UploadImageAsync(request.Dto.CarLicenseImage, "drivers/carlicense");
                 driver.CarLicenseImagePath = url;
             }
 
-            // Upload driver license
+            // رفع صورة رخصة القيادة
             if (request.Dto.DriverLicenseImage != null)
             {
                 var url = await _cloudinary.UploadImageAsync(request.Dto.DriverLicenseImage, "drivers/license");
                 driver.DriverLicenseImagePath = url;
             }
 
-
             driver.IsApproved = false;
 
             _unitOfWork.DriverRepository.Update(driver);
             await _unitOfWork.CompleteAsync();
 
-            return Response<string>.Success("Car info updated successfully. Awaiting admin approval.");
+            return Response<string>.Success("تم تحديث معلومات السيارة بنجاح. جارٍ انتظار موافقة المسؤول.");
         }
     }
-
 }

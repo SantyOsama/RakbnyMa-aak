@@ -22,7 +22,7 @@ public class GetDriverCompletionStatsHandler : IRequestHandler<GetDriverCompleti
     {
         var userId = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
         if (string.IsNullOrEmpty(userId))
-            return Response<DriverCompletionStatsDto>.Fail("Unauthorized");
+            return Response<DriverCompletionStatsDto>.Fail("غير مصرح");
 
         var today = DateTime.UtcNow;
         var fiveMonthsAgo = today.AddMonths(-4);

@@ -34,14 +34,14 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Orchestrators.CancelBooking
 
             // Step 3: Check that the trip is not starting within the next 3 hours
             if (trip.TripDate <= DateTime.UtcNow.AddHours(3))
-                return Response<CancelBookingValidationResultDto>.Fail("You can only cancel a booking at least 3 hours before the trip starts.");
+                return Response<CancelBookingValidationResultDto>.Fail("يمكنك إلغاء الحجز فقط قبل بدء الرحلة بثلاث ساعات على الأقل.");
 
             return Response<CancelBookingValidationResultDto>.Success(new CancelBookingValidationResultDto
             {
                 BookingId = request.BookingId,
                 TripId = booking.TripId,
                 NumberOfSeats = booking.NumberOfSeats,
-                WasConfirmed = booking.RequestStatus == RequestStatus.Confirmed,
+                WasConfirmed = booking.RequestStatus == RequestStatus.مؤكدة,
             });
         }
     }

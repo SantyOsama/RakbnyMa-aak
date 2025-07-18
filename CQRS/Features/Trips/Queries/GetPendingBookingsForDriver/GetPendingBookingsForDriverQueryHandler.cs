@@ -24,11 +24,11 @@ namespace RakbnyMa_aak.CQRS.Queries.Driver.GetPendingBookingsForDriver
         {
             var driverUserId = request.DriverId;
             if (string.IsNullOrEmpty(driverUserId))
-                return Response<List<PendingBookingForDriverDto>>.Fail("Unauthorized");
+                return Response<List<PendingBookingForDriverDto>>.Fail("غير مصرح");
 
             var bookings = await _unitOfWork.BookingRepository.GetAllQueryable()
                 .Where(b =>
-                    b.RequestStatus == RequestStatus.Pending &&
+                    b.RequestStatus == RequestStatus.قيد_الانتظار &&
                     b.Trip.DriverId == driverUserId)
                 .Include(b => b.User)
                 .Include(b => b.Trip)

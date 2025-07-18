@@ -7,50 +7,44 @@ namespace RakbnyMa_aak.DTOs.Auth.RequestDTOs
 {
     public class RegisterUserRequestDto
     {
-        [Required(ErrorMessage = "Full name is required.")]
-        [Display(Name = "Full Name")]
-        [MinLength(3, ErrorMessage = "Full name must be at least 3 characters.")]
-        [MaxLength(100, ErrorMessage = "Full name must not exceed 100 characters.")]
+        [Required(ErrorMessage = "الاسم الكامل مطلوب.")]
+        [Display(Name = "الاسم الكامل")]
+        [MinLength(3, ErrorMessage = "يجب ألا يقل الاسم الكامل عن 3 أحرف.")]
+        [MaxLength(100, ErrorMessage = "يجب ألا يتجاوز الاسم الكامل 100 حرف.")]
         public string FullName { get; set; }
 
-
-        [Required(ErrorMessage = "Email is required.")]
-        [EmailAddress(ErrorMessage = "Invalid email address.")]
-        [Display(Name = "Email")]
+        [Required(ErrorMessage = "البريد الإلكتروني مطلوب.")]
+        [EmailAddress(ErrorMessage = "عنوان البريد الإلكتروني غير صالح.")]
+        [Display(Name = "البريد الإلكتروني")]
         public string Email { get; set; }
 
-
-        [Required(ErrorMessage = "Password is required.")]
-        [MinLength(6, ErrorMessage = "Password must be at least 6 characters long.")]
+        [Required(ErrorMessage = "كلمة المرور مطلوبة.")]
+        [MinLength(6, ErrorMessage = "يجب ألا تقل كلمة المرور عن 6 أحرف.")]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$",
-            ErrorMessage = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.")]
+            ErrorMessage = "يجب أن تحتوي كلمة المرور على حرف كبير، وحرف صغير، ورقم، وحرف خاص واحد على الأقل.")]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "كلمة المرور")]
         public string Password { get; set; }
 
-
-
-        [Required(ErrorMessage = "Confirm Password is required.")]
-        [Compare(nameof(Password), ErrorMessage = "Password and confirmation do not match.")]
+        [Required(ErrorMessage = "تأكيد كلمة المرور مطلوب.")]
+        [Compare(nameof(Password), ErrorMessage = "كلمة المرور وتأكيدها غير متطابقين.")]
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm Password")]
+        [Display(Name = "تأكيد كلمة المرور")]
         public string ConfirmPassword { get; set; }
 
-
-        [Required(ErrorMessage = "Phone number is required.")]
+        [Required(ErrorMessage = "رقم الهاتف مطلوب.")]
         [RegularExpression(@"^(010|011|012|015)[0-9]{8}$",
-            ErrorMessage = "Phone number must be 11 digits and start with 010, 011, 012, or 015.")]
-        [Display(Name = "Phone Number")]
+            ErrorMessage = "يجب أن يتكون رقم الهاتف من 11 رقماً ويبدأ بـ 010 أو 011 أو 012 أو 015.")]
+        [Display(Name = "رقم الهاتف")]
         public string PhoneNumber { get; set; }
 
-        [Display(Name = "Gender")]
-        [Required(ErrorMessage = "Please select a gender.")]
+        [Display(Name = "الجنس")]
+        [Required(ErrorMessage = "يرجى اختيار الجنس.")]
         [EnumDataType(typeof(Gender))]
         [Column(TypeName = "nvarchar(20)")]
         public Gender Gender { get; set; }
 
-
-        [Display(Name = "Profile Picture")]
+        [Display(Name = "صورة الملف الشخصي")]
         public IFormFile? Picture { get; set; }
     }
 }

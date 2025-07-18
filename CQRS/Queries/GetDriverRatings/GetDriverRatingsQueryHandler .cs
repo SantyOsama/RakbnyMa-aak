@@ -21,7 +21,7 @@ namespace RakbnyMa_aak.CQRS.Ratings.DriverGetRatings
                 .AnyAsync(u => u.Id == request.DriverId && u.UserType == UserType.Driver);
 
             if (!driverExists)
-                return Response<PaginatedResult<DriverRatingDto>>.Fail("Driver not found.");
+                return Response<PaginatedResult<DriverRatingDto>>.Fail("السائق غير موجود.");
 
             var query = _unitOfWork.RatingRepository
                 .GetAllQueryable()

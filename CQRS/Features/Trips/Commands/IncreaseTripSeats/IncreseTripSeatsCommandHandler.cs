@@ -20,19 +20,18 @@ namespace RakbnyMa_aak.CQRS.Features.Trip.Commands.IncreaseTripSeats
 
             var trip = await _unitOfWork.TripRepository.GetByIdAsync(dto.TripId);
 
-            if (trip == null || trip.IsDeleted || trip.TripStatus != TripStatus.Scheduled)
-                return Response<string>.Fail("Trip is not valid.");
+            if (trip == null || trip.IsDeleted || trip.TripStatus != TripStatus.مجدولة)
+                return Response<string>.Fail("الرحلة غير صالحة.");
 
             if (trip.AvailableSeats < dto.NumberOfSeats)
-                return Response<string>.Fail("Not enough seats available.");
+                return Response<string>.Fail("لا توجد مقاعد كافية متاحة.");
 
             trip.AvailableSeats += dto.NumberOfSeats;
             trip.UpdatedAt = DateTime.UtcNow;
             _unitOfWork.TripRepository.Update(trip);
             await _unitOfWork.CompleteAsync();
 
-            return Response<string>.Success("Seats updated.");
+            return Response<string>.Success("تم تحديث المقاعد.");
         }
     }
-
 }

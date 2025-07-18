@@ -8,7 +8,7 @@ namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateTripOwner
         public Task<Response<bool>> Handle(ValidateTripOwnerCommand request, CancellationToken cancellationToken)
         {
             if (request.CurrentUserId != request.DriverId)
-                return Task.FromResult(Response<bool>.Fail("You are not authorized to perform this action."));
+                return Task.FromResult(Response<bool>.Fail("أنت غير مخول للقيام بهذا الإجراء."));
 
             return Task.FromResult(Response<bool>.Success(true));
         }

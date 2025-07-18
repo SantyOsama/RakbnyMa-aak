@@ -5,27 +5,27 @@ namespace RakbnyMa_aak.DTOs.DriverDTOs.UpdateProfileDTOs
 {
     public class ChangePasswordDto
     {
-        [Required(ErrorMessage = "Old Password is required.")]
-        [MinLength(6, ErrorMessage = "Password must be at least 6 characters long.")]
+        [Required(ErrorMessage = "كلمة المرور القديمة مطلوبة.")]
+        [MinLength(6, ErrorMessage = "يجب أن تكون كلمة المرور مكونة من 6 أحرف على الأقل.")]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$",
-          ErrorMessage = "Incorrect Password")]
+          ErrorMessage = "كلمة المرور غير صحيحة.")]
         [DataType(DataType.Password)]
-        [Display(Name = "Old Password")]
+        [Display(Name = "كلمة المرور القديمة")]
         public string OldPassword { get; set; }
 
-        [Required(ErrorMessage = "Password is required.")]
-        [MinLength(6, ErrorMessage = "Password must be at least 6 characters long.")]
+        [Required(ErrorMessage = "كلمة المرور مطلوبة.")]
+        [MinLength(6, ErrorMessage = "يجب أن تكون كلمة المرور مكونة من 6 أحرف على الأقل.")]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$",
-          ErrorMessage = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.")]
+          ErrorMessage = "يجب أن تحتوي كلمة المرور على حرف كبير وحرف صغير ورقم وحرف خاص واحد على الأقل.")]
         [DataType(DataType.Password)]
-        [NotEqualTo("OldPassword", ErrorMessage = "New password must be different from old password.")]
-        [Display(Name = "New Password")]
+        [NotEqualTo("OldPassword", ErrorMessage = "يجب أن تكون كلمة المرور الجديدة مختلفة عن القديمة.")]
+        [Display(Name = "كلمة المرور الجديدة")]
         public string NewPassword { get; set; }
 
-        [Display(Name = "Confirm Password")]
-        [Required(ErrorMessage = "Confirmation password is required.")]
+        [Display(Name = "تأكيد كلمة المرور")]
+        [Required(ErrorMessage = "تأكيد كلمة المرور مطلوب.")]
         [DataType(DataType.Password)]
-        [Compare("NewPassword", ErrorMessage = "Passwords do not match.")]
+        [Compare("NewPassword", ErrorMessage = "كلمتا المرور غير متطابقتين.")]
         public string ConfirmPassword { get; set; }
     }
 }

@@ -24,20 +24,20 @@ namespace RakbnyMa_aak.CQRS.Features.Trips.Queries.GetTripPassengers
             var trip = await _unitOfWork.TripRepository
                 .GetAllQueryable()
                 .Include(t => t.Driver)
-                .Include(t => t.Bookings.Where(b => b.RequestStatus == RequestStatus.Confirmed))
+                .Include(t => t.Bookings.Where(b => b.RequestStatus == RequestStatus.مؤكدة))
                     .ThenInclude(b => b.User)
                         .ThenInclude(u => u.RatingsGiven)
                 .FirstOrDefaultAsync(t =>
                     t.Id == request.TripId &&
                     !t.IsDeleted &&
-                    (t.TripStatus == TripStatus.Ongoing || t.TripStatus == TripStatus.Completed)
+                    (t.TripStatus == TripStatus.قيد_التنفيذ || t.TripStatus == TripStatus.مكتملة)
                 );
 
             if (trip == null)
-                return Response<TripPassengersDto>.Fail("Trip not found or not in valid status", statusCode: 404);
+                return Response<TripPassengersDto>.Fail("لم يتم العثور على الرحلة أو أن حالتها غير صالحة", statusCode: 404);
 
             if (trip.DriverId != currentUserId)
-                return Response<TripPassengersDto>.Fail("You are not the owner of this trip", statusCode: 403);
+                return Response<TripPassengersDto>.Fail("أنت لست مالك هذه الرحلة", statusCode: 403);
 
             var approvedBookings = trip.Bookings.ToList();
 

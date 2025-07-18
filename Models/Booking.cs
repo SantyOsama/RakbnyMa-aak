@@ -6,52 +6,46 @@ namespace RakbnyMa_aak.Models
 {
     public class Booking: BaseEntity
     {
-        [Required(ErrorMessage = "User is required.")]
-        [Display(Name = "User")]
+        [Required(ErrorMessage = "المستخدم مطلوب.")]
+        [Display(Name = "المستخدم")]
         public string UserId { get; set; } 
 
-
-
-        [Required(ErrorMessage = "Trip is required.")]
-        [Display(Name = "Trip")]
+        [Required(ErrorMessage = "الرحلة مطلوبة.")]
+        [Display(Name = "الرحلة")]
         public int TripId { get; set; }
 
-
         [Required]
-        [Display(Name = "Request Status")]
-        public RequestStatus RequestStatus { get; set; } = RequestStatus.Pending;
+        [Display(Name = "حالة الطلب")]
+        public RequestStatus RequestStatus { get; set; } = RequestStatus.قيد_الانتظار;
 
-
-        [Required(ErrorMessage = "Please enter the number of seats.")]
-        [Range(1, 150, ErrorMessage = "Number of seats must be at least 1.")]
-        [Display(Name = "Number of Seats")]
+        [Required(ErrorMessage = "يرجى إدخال عدد المقاعد.")]
+        [Range(1, 150, ErrorMessage = "يجب أن يكون عدد المقاعد على الأقل 1.")]
+        [Display(Name = "عدد المقاعد")]
         public int NumberOfSeats { get; set; }
 
         //public bool IsPaid { get; set; } =false;
         //public string PaymentMethod { get; set; }
 
-        [Required(ErrorMessage = "Price per seat is required.")]
-        [Range(1, double.MaxValue, ErrorMessage = "Price must be greater than 0.")]
-        [Display(Name = "Price per Seat")]
+        [Required(ErrorMessage = "سعر المقعد مطلوب.")]
+        [Range(1, double.MaxValue, ErrorMessage = "يجب أن يكون السعر أكبر من 0.")]
+        [Display(Name = "سعر المقعد")]
         public decimal PricePerSeat { get; set; }
 
         public virtual Payment Payment { get; set; }
 
-
         [Required]
-        [Display(Name = "Payment Status")]
-        public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.Pending;
+        [Display(Name = "حالة الدفع")]
+        public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.قيد_المعالجة;
 
         // Update TotalPrice to be stored in DB
-        [Display(Name = "Total Price")]
+        [Display(Name = "السعر الإجمالي")]
         [Column(TypeName = "decimal(18,2)")]
         public decimal TotalPrice => PricePerSeat * NumberOfSeats;
 
-        [Display(Name = "Has the trip started?")]
+        [Display(Name = "هل بدأت الرحلة؟")]
         public bool HasStarted { get; set; } = false;
 
-
-        [Display(Name = "Has the trip ended?")]
+        [Display(Name = "هل انتهت الرحلة؟")]
         public bool HasEnded { get; set; } = false;
 
         // Navigation properties

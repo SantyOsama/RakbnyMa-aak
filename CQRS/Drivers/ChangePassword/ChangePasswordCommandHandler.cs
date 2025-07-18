@@ -18,14 +18,12 @@ namespace RakbnyMa_aak.CQRS.Drivers.ChangePassword
         {
             var user = await _userManager.FindByIdAsync(request.UserId);
             if (user == null)
-                return Response<string>.Fail("User not found");
+                return Response<string>.Fail("لم يتم العثور على المستخدم.");
 
             var result = await _userManager.ChangePasswordAsync(user, request.Dto.OldPassword, request.Dto.NewPassword);
             return result.Succeeded
-                ? Response<string>.Success("Password updated successfully")
-                : Response<string>.Fail("Error: " + string.Join(", ", result.Errors.Select(e => e.Description)));
+                ? Response<string>.Success("تم تحديث كلمة المرور بنجاح.")
+                : Response<string>.Fail("خطأ: " + string.Join(", ", result.Errors.Select(e => e.Description)));
         }
     }
-
-
 }

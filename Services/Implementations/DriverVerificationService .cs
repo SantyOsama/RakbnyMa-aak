@@ -25,7 +25,7 @@ namespace RakbnyMa_aak.Services.Implementations
             if (!response.IsSuccessStatusCode)
             {
                 var errorContent = await response.Content.ReadAsStringAsync();
-                throw new Exception($"Face verification API failed. Status: {response.StatusCode}, Response: {errorContent}");
+                throw new Exception($"فشل واجهة برمجة التطبيقات للتحقق من الوجه. الحالة: {response.StatusCode}, الرد: {errorContent}");
             }
 
             var result = await response.Content.ReadFromJsonAsync<FaceVerificationResponse>();

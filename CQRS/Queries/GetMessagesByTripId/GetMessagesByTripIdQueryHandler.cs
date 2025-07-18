@@ -34,7 +34,7 @@ namespace RakbnyMa_aak.CQRS.Queries.GetMessagesByTripId
                 return Response<List<MessageDto>>.Fail("لم يتم العثور على الرحلة.");
 
             var approvedPassengerIds = await _unitOfWork.BookingRepository
-                .FindAllAsync(b => b.TripId == request.TripId && b.RequestStatus == RequestStatus.Confirmed);
+                .FindAllAsync(b => b.TripId == request.TripId && b.RequestStatus == RequestStatus.مؤكدة);
             var passengerIds = approvedPassengerIds.Select(b => b.UserId).ToList();
 
             var isDriver = trip.DriverId == userId;

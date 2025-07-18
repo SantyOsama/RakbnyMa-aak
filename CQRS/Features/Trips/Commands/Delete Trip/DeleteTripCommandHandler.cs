@@ -35,18 +35,17 @@ namespace RakbnyMa_aak.CQRS.Trips.Delete_Trip
 
             var hasConfirmedBookings = await _unitOfWork.BookingRepository
                 .GetAllQueryable()
-                .AnyAsync(b => b.TripId == trip.TripId && b.RequestStatus == RequestStatus.Confirmed, cancellationToken);
+                .AnyAsync(b => b.TripId == trip.TripId && b.RequestStatus == RequestStatus.مؤكدة, cancellationToken);
 
             if (hasConfirmedBookings)
             {
-                return Response<string>.Fail("Cannot delete trip with confirmed bookings.");
+                return Response<string>.Fail("لا يمكن حذف الرحلة لوجود حجوزات مؤكدة.");
             }
 
-           
             trip.IsDeleted = true;
             await _unitOfWork.CompleteAsync();
 
-            return Response<string>.Success($"Trip with ID {trip.TripId} has been deleted successfully.");
+            return Response<string>.Success($"تم حذف الرحلة ذات المعرف {trip.TripId} بنجاح.");
         }
     }
 }

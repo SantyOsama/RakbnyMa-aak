@@ -14,15 +14,15 @@ namespace RakbnyMa_aak.CQRS.Features.Governorates.DeleteGovernorate
             var governorate = await _unitOfWork.GovernorateRepository.GetByIdAsync(request.Id);
 
             if (governorate == null || governorate.IsDeleted)
-                return Response<string>.Fail("Governorate not found.");
+                return Response<string>.Fail("لم يتم العثور على المحافظة.");
 
-            // Soft delete for Governorate
+            // حذف ناعم للمحافظة
             governorate.IsDeleted = true;
             governorate.UpdatedAt = DateTime.UtcNow;
 
             _unitOfWork.GovernorateRepository.Update(governorate);
 
-            // Get related cities
+            // جلب المدن المرتبطة
             var relatedCities = await _unitOfWork.CityRepository.GetAllAsync(c => c.GovernorateId == request.Id && !c.IsDeleted);
 
             foreach (var city in relatedCities)
@@ -33,7 +33,7 @@ namespace RakbnyMa_aak.CQRS.Features.Governorates.DeleteGovernorate
             }
 
             await _unitOfWork.CompleteAsync();
-            return Response<string>.Success("Governorate and its cities soft-deleted successfully.");
+            return Response<string>.Success("تم حذف المحافظة والمدن التابعة لها حذفًا ناعمًا بنجاح.");
         }
     }
 }

@@ -27,7 +27,7 @@ namespace RakbnyMa_aak.CQRS.Features.Trip.Queries.GetMyTrips
 
             if (string.IsNullOrEmpty(userId))
             {
-                return Response<PaginatedResult<TripResponseDto>>.Fail("Unauthorized");
+                return Response<PaginatedResult<TripResponseDto>>.Fail("غير مصرح");
             }
 
             var result = await _unitOfWork.TripRepository.GetProjectedPaginatedAsync<TripResponseDto>(
@@ -42,5 +42,3 @@ namespace RakbnyMa_aak.CQRS.Features.Trip.Queries.GetMyTrips
         }
     }
 }
-
-

@@ -22,7 +22,7 @@ namespace RakbnyMa_aak.CQRS.Features.Ratings.UserAddRating
             // Step 1: Check trip
             var trip = await _unitOfWork.TripRepository.GetByIdAsync(dto.TripId);
             if (trip == null || trip.IsDeleted)
-                return Response<bool>.Fail("Trip not found.");
+                return Response<bool>.Fail("الرحلة غير موجودة.");
 
             // Step 2: Check booking for this user and trip
             var booking = await _unitOfWork.BookingRepository
@@ -30,8 +30,7 @@ namespace RakbnyMa_aak.CQRS.Features.Ratings.UserAddRating
                 .FirstOrDefaultAsync();
 
             if (booking == null)
-                return Response<bool>.Fail("You can only rate this trip after completing it.");
-
+                return Response<bool>.Fail("لا يمكنك تقييم هذه الرحلة إلا بعد الانتهاء منها.");
 
             // Step 3: Check if already rated
             bool alreadyRated = await _unitOfWork.RatingRepository
@@ -40,7 +39,7 @@ namespace RakbnyMa_aak.CQRS.Features.Ratings.UserAddRating
                                r.RatedId == trip.DriverId);
 
             if (alreadyRated)
-                return Response<bool>.Fail("You have already rated this driver for this trip.");
+                return Response<bool>.Fail("لقد قمت بتقييم هذا السائق لهذه الرحلة مسبقاً.");
 
             // Step 4: Add rating
             var rating = new Rating
@@ -55,7 +54,7 @@ namespace RakbnyMa_aak.CQRS.Features.Ratings.UserAddRating
             await _unitOfWork.RatingRepository.AddAsync(rating);
             await _unitOfWork.CompleteAsync();
 
-            return Response<bool>.Success(true, "Driver rated successfully.");
+            return Response<bool>.Success(true, "تم تقييم السائق بنجاح.");
         }
     }
 }

@@ -6,13 +6,13 @@ namespace RakbnyMa_aak.DTOs.BookingsDTOs.Requests
     {
         public string? UserId { get; set; }
 
-        [Required(ErrorMessage = "Trip ID is required.")]
-        [Display(Name = "Trip ID")]
+        [Required(ErrorMessage = "معرّف الرحلة مطلوب.")]
+        [Display(Name = "معرّف الرحلة")]
         public int TripId { get; set; }
 
-        [Required(ErrorMessage = "Number of seats is required.")]
-        [Range(1, 150, ErrorMessage = "Number of seats must be between 1 and 150.")]
-        [Display(Name = "Number of Seats")]
+        [Required(ErrorMessage = "عدد المقاعد مطلوب.")]
+        [Range(1, 150, ErrorMessage = "يجب أن يكون عدد المقاعد بين 1 و150.")]
+        [Display(Name = "عدد المقاعد")]
         public int NumberOfSeats { get; set; }
 
     }

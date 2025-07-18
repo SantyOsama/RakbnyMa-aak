@@ -9,89 +9,73 @@ namespace RakbnyMa_aak.Models
         [Required]
         public int Id { get; set; }
 
-        [Display(Name = "Is Deleted")]
+        [Display(Name = "تم الحذف")]
         [Required]
         public bool IsDeleted { get; set; } = false;
 
         [Timestamp]
-        [Display(Name = "Row Version")]
+        [Display(Name = "إصدار الصف")]
         public byte[]? RowVersion { get; set; }
+
         [Key]
         [ForeignKey("ApplicationUser")] // UserId is PK and FK to ApplicationUser
         public string UserId { get; set; }
 
-
-        [Required(ErrorMessage = "National ID is required.")]
-        [RegularExpression(@"^[2-3]\d{13}$", ErrorMessage = "National ID must be 14 digits and start with 2 or 3.")]
-        [Display(Name = "National ID")]
+        [Required(ErrorMessage = "رقم البطاقة مطلوب.")]
+        [RegularExpression(@"^[2-3]\d{13}$", ErrorMessage = "يجب أن يتكون رقم البطاقة من 14 رقمًا ويبدأ بـ 2 أو 3.")]
+        [Display(Name = "الرقم القومي")]
         public string NationalId { get; set; }
 
-
-        // Changed Enum CarModel to CarType based on previous ERD and common practice
-        [Required(ErrorMessage = "Car type is required.")]
-        [Display(Name = "Car Type")]
+        [Required(ErrorMessage = "نوع السيارة مطلوب.")]
+        [Display(Name = "نوع السيارة")]
         public CarType CarType { get; set; }
 
-        [Required(ErrorMessage = "Car model is required. ex(Kia Cerato 2023)")]
-        [StringLength(50, ErrorMessage = "Car model must not exceed 50 characters. ex(Kia Cerato 2023)")]
-        [Display(Name = "Car Model")]
+        [Required(ErrorMessage = "موديل السيارة مطلوب. مثل (Kia Cerato 2023)")]
+        [StringLength(50, ErrorMessage = "يجب ألا يتجاوز موديل السيارة 50 حرفًا. مثل (Kia Cerato 2023)")]
+        [Display(Name = "موديل السيارة")]
         public string CarModel { get; set; }
 
-
-
-        [Required(ErrorMessage = "Car color is required.")]
-        [Display(Name = "Car Color")]
+        [Required(ErrorMessage = "لون السيارة مطلوب.")]
+        [Display(Name = "لون السيارة")]
         public CarColor CarColor { get; set; }
 
+        [Required(ErrorMessage = "سعة السيارة مطلوبة.")]
+        [Range(2, 150, ErrorMessage = "يجب أن تكون سعة السيارة على الأقل 2.")]
+        [Display(Name = "سعة السيارة")]
+        public int CarCapacity { get; set; }
 
-
-        [Required(ErrorMessage = "Car capacity is required.")]
-        [Range(2, 150, ErrorMessage = "Car capacity must be at least 2.")]
-        [Display(Name = "Car Capacity")]
-        public int CarCapacity { get; set; } // Added based on ERD discussion
-
-
-        [Required(ErrorMessage = "Car plate number is required.")]
-        [StringLength(10, MinimumLength = 2, ErrorMessage = "Car plate number must be between 2 and 10 characters.")]
+        [Required(ErrorMessage = "رقم لوحة السيارة مطلوب.")]
+        [StringLength(10, MinimumLength = 2, ErrorMessage = "يجب أن يتراوح رقم لوحة السيارة بين 2 و10 أحرف.")]
         public string CarPlateNumber { get; set; }
 
-
-
-        [Required(ErrorMessage = "National ID image is required.")]
-        [Display(Name = "National ID Image")]
+        [Required(ErrorMessage = "صورة البطاقة مطلوبة.")]
+        [Display(Name = "صورة الرقم القومي")]
         public string DriverNationalIdImagePath { get; set; }
 
-
-
-        [Required(ErrorMessage = "Driver license image is required.")]
-        [Display(Name = "Driver License Image")]
+        [Required(ErrorMessage = "صورة رخصة القيادة مطلوبة.")]
+        [Display(Name = "صورة رخصة القيادة")]
         public string DriverLicenseImagePath { get; set; }
 
-
-        [Required(ErrorMessage = "Car license image is required.")]
-        [Display(Name = "Car License Image")]
+        [Required(ErrorMessage = "صورة رخصة السيارة مطلوبة.")]
+        [Display(Name = "صورة رخصة السيارة")]
         public string CarLicenseImagePath { get; set; }
 
-
-        [Required(ErrorMessage = "Selfie image is required.")]
-        [Display(Name = "Selfie Image")]
+        [Required(ErrorMessage = "الصورة الشخصية مطلوبة.")]
+        [Display(Name = "صورة شخصية")]
         public string SelfieImagePath { get; set; }
 
-
-        [Display(Name = "Face Verified")]
+        [Display(Name = "تم التحقق من الوجه")]
         public bool IsFaceVerified { get; set; } = false;
 
-
-        [Display(Name = "Phone Verified")]
+        [Display(Name = "تم التحقق من الهاتف")]
         public bool IsPhoneVerified { get; set; } = false;
 
-
-        [Display(Name = "Approved")]
+        [Display(Name = "تمت الموافقة")]
         public bool IsApproved { get; set; } = false; // For admin approval
 
         public DateTime? ApprovedAt { get; set; }
 
-        [Display(Name = "Phone Verification Code")]
+        [Display(Name = "رمز التحقق من الهاتف")]
         public string? PhoneVerificationCode { get; set; }
 
         // Navigation property back to ApplicationUser
@@ -104,6 +88,5 @@ namespace RakbnyMa_aak.Models
         {
             Trips = new HashSet<Trip>();
         }
-
     }
 }

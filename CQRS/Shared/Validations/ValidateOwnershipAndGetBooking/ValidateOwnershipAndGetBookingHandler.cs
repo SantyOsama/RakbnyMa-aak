@@ -30,7 +30,7 @@ namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateOwnershipAndGetBooking
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (result == null)
-                return Response<ValidateBookingOwnerShipResultDto>.Fail("Booking not found or unauthorized.");
+                return Response<ValidateBookingOwnerShipResultDto>.Fail("لم يتم العثور على الحجز أو لا تملك صلاحية الوصول إليه.");
 
             return Response<ValidateBookingOwnerShipResultDto>.Success(result);
         }

@@ -18,12 +18,12 @@ namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateCityInGovernorate
             var city = await _unitOfWork.CityRepository.GetByIdAsync(request.CityId);
 
             if (city == null)
-                return Response<bool>.Fail("City not found");
+                return Response<bool>.Fail("لم يتم العثور على المدينة.");
 
             if (city.GovernorateId != request.GovernorateId)
-                return Response<bool>.Fail("City does not belong to the selected governorate");
+                return Response<bool>.Fail("المدينة لا تنتمي إلى المحافظة المحددة.");
 
-            return Response<bool>.Success(true);
+            return Response<bool>.Success(true, "المدينة تنتمي إلى المحافظة بنجاح.");
         }
     }
 }

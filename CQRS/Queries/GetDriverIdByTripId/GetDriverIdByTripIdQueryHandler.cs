@@ -18,7 +18,7 @@ namespace RakbnyMa_aak.CQRS.Queries.GetDriverIdByTripId
         {
             var driverId = await _unitOfWork.TripRepository.GetDriverIdByTripIdAsync(request.TripId);
             if (driverId == null)
-                return Response<string?>.Fail("Driver not found for this trip.");
+                return Response<string?>.Fail("السائق غير موجود لهذه الرحلة.");
 
             return Response<string?>.Success(driverId);
         }

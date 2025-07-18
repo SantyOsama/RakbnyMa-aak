@@ -23,7 +23,7 @@ namespace RakbnyMa_aak.CQRS.Features.Trips.Queries.GetTripByBookingId
         {
             var userId = request.userId;
             if (string.IsNullOrEmpty(userId))
-                return Response<TripResponseDto>.Fail("Unauthorized");
+                return Response<TripResponseDto>.Fail("غير مصرح");
 
             var booking = await _unitOfWork.BookingRepository
                 .GetAllQueryable()
@@ -38,7 +38,7 @@ namespace RakbnyMa_aak.CQRS.Features.Trips.Queries.GetTripByBookingId
                 .FirstOrDefaultAsync(b => b.Id == request.BookingId && !b.IsDeleted, cancellationToken);
 
             if (booking is null)
-                return Response<TripResponseDto>.Fail("Booking not found or access denied");
+                return Response<TripResponseDto>.Fail("لم يتم العثور على الحجز أو لا يسمح بالوصول");
 
             var dto = _mapper.Map<TripResponseDto>(booking.Trip);
             return Response<TripResponseDto>.Success(dto);

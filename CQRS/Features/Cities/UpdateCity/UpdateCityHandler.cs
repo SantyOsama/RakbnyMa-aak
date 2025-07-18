@@ -21,7 +21,7 @@ public class UpdateCityHandler : IRequestHandler<UpdateCityCommand, Response<Cit
         var city = await _unitOfWork.CityRepository.GetByIdAsync(request.Dto.Id);
 
         if (city is null || city.IsDeleted)
-            return Response<CityResponseDTO>.Fail("City not found.");
+            return Response<CityResponseDTO>.Fail("لم يتم العثور على المدينة.");
 
         var isDuplicate = await _unitOfWork.CityRepository.AnyAsync(
             c => c.Id != request.Dto.Id &&
@@ -29,7 +29,7 @@ public class UpdateCityHandler : IRequestHandler<UpdateCityCommand, Response<Cit
                  c.GovernorateId == request.Dto.GovernorateId);
 
         if (isDuplicate)
-            return Response<CityResponseDTO>.Fail("Another city with the same name already exists in the selected governorate.");
+            return Response<CityResponseDTO>.Fail("مدينة أخرى بنفس الاسم موجودة بالفعل في نفس المحافظة.");
 
         city.Name = request.Dto.Name;
         city.GovernorateId = request.Dto.GovernorateId;
@@ -39,6 +39,6 @@ public class UpdateCityHandler : IRequestHandler<UpdateCityCommand, Response<Cit
         await _unitOfWork.CompleteAsync();
         var responseDto = _mapper.Map<CityResponseDTO>(city);
 
-        return Response<CityResponseDTO>.Success(responseDto,"City updated successfully.");
+        return Response<CityResponseDTO>.Success(responseDto, "تم تحديث المدينة بنجاح.");
     }
 }

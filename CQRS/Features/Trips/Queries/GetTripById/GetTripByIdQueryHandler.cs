@@ -25,7 +25,7 @@ namespace RakbnyMa_aak.CQRS.Features.Trips.Queries.GetTripById
                 cancellationToken: cancellationToken);
 
             if (tripDto == null)
-                return Response<TripResponseDto>.Fail("Trip not found", statusCode:404);
+                return Response<TripResponseDto>.Fail("لم يتم العثور على الرحلة", statusCode: 404);
 
             return Response<TripResponseDto>.Success(tripDto);
         }

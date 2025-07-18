@@ -9,7 +9,7 @@ namespace RakbnyMa_aak.Services.Interfaces
             string recipientUserId,
             ApplicationUser sender,
             string message,
-            NotificationType type = NotificationType.Custom,
+            NotificationType type = NotificationType.إشعار_مخصص,
             string? relatedEntityId = null);
     }
 }

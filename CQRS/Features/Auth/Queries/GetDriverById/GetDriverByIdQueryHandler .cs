@@ -30,7 +30,7 @@ namespace RakbnyMa_aak.CQRS.Features.Drivers.Queries
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (driverDto is null)
-                return Response<DriverResponseDto>.Fail("Driver not found");
+                return Response<DriverResponseDto>.Fail("لم يتم العثور على السائق");
 
             return Response<DriverResponseDto>.Success(driverDto);
         }

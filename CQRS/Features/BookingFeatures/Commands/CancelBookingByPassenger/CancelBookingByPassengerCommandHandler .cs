@@ -20,25 +20,25 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.CancelBookingByPas
 
         public async Task<Response<bool>> Handle(CancelBookingByPassengerCommand request, CancellationToken cancellationToken)
         {
-            //Step 1: Validate and get info
+            // Step 1: Validate and get info
             var validationResult = await _mediator.Send(new CancelBookingValidationOrchestrator(request.bookingId, request.userId));
             if (!validationResult.IsSucceeded)
                 return Response<bool>.Fail(validationResult.Message);
 
             var dto = validationResult.Data;
 
-            //Step 2: Load the booking directly (we only need to update status)
+            // Step 2: Load the booking directly (we only need to update status)
             var booking = await _unitOfWork.BookingRepository.GetByIdAsync(dto.BookingId);
             if (booking is null)
-                return Response<bool>.Fail("Booking not found.");
+                return Response<bool>.Fail("لم يتم العثور على الحجز.");
 
-            booking.RequestStatus = RequestStatus.Cancelled;
+            booking.RequestStatus = RequestStatus.ملغاة;
             booking.HasEnded = true;
             booking.UpdatedAt = DateTime.UtcNow;
 
             _unitOfWork.BookingRepository.Update(booking);
 
-            //Step 3: Restore seats if booking was confirmed // Because only confirmed bookings affect trip seats
+            // Step 3: Restore seats if booking was confirmed // Because only confirmed bookings affect trip seats
             if (dto.WasConfirmed)
             {
                 var increaseTripDto = new IncreaseTripSeatsDto
@@ -51,7 +51,7 @@ namespace RakbnyMa_aak.CQRS.Features.BookingFeatures.Commands.CancelBookingByPas
 
             await _unitOfWork.CompleteAsync();
 
-            return Response<bool>.Success(true, "Booking canceled successfully.");
+            return Response<bool>.Success(true, "تم إلغاء الحجز بنجاح.");
         }
 
     }

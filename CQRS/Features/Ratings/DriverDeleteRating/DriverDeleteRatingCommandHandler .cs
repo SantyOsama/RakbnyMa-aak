@@ -18,15 +18,15 @@ namespace RakbnyMa_aak.CQRS.Features.Ratings.DriverDeleteRating
             var rating = await _unitOfWork.RatingRepository.GetByIdAsync(request.RatingId);
 
             if (rating == null)
-                return Response<bool>.Fail("Rating not found.");
+                return Response<bool>.Fail("لم يتم العثور على التقييم.");
 
             if (rating.RaterId != request.RaterId)
-                return Response<bool>.Fail("Unauthorized: You can only delete your own ratings.");
+                return Response<bool>.Fail("غير مصرح لك: يمكنك حذف تقييماتك فقط.");
 
             _unitOfWork.RatingRepository.Delete(rating);
             await _unitOfWork.CompleteAsync();
 
-            return Response<bool>.Success(true, "Rating deleted successfully.");
+            return Response<bool>.Success(true, "تم حذف التقييم بنجاح.");
         }
     }
 }

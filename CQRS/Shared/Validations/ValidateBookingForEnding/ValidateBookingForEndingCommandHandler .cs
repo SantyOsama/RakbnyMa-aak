@@ -29,12 +29,12 @@ namespace RakbnyMa_aak.CQRS.Commands.Validations.ValidateBookingForEnding
                  .FirstOrDefaultAsync(cancellationToken);
 
             if (booking == null || booking.IsDeleted || booking.UserId != request.CurrentUserId)
-                return Response<ValidateBookingDto>.Fail("Unauthorized or booking not found.");
+                return Response<ValidateBookingDto>.Fail("غير مصرح أو لم يتم العثور على الحجز.");
 
             if (!booking.HasStarted)
-                return Response<ValidateBookingDto>.Fail("Trip must be started first.");
+                return Response<ValidateBookingDto>.Fail("يجب بدء الرحلة أولاً.");
 
-            return Response<ValidateBookingDto>.Success(booking, "Valid booking for ending");
+            return Response<ValidateBookingDto>.Success(booking, "الحجز صالح لإنهاء الرحلة.");
         }
     }
 }

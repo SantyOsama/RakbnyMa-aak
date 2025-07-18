@@ -4,15 +4,15 @@ namespace RakbnyMa_aak.CQRS.Features.Ratings.UserUpdateRating
 {
     public class UserUpdateRatingDto
     {
-        [Required(ErrorMessage = "Rating ID is required.")]
+        [Required(ErrorMessage = "معرّف التقييم مطلوب.")]
         public int RatingId { get; set; }
 
         public string? RaterId { get; set; }
 
-        [Range(1, 5, ErrorMessage = "Rating value must be between 1 and 5.")]
+        [Range(1, 5, ErrorMessage = "قيمة التقييم يجب أن تكون بين 1 و 5.")]
         public int? RatingValue { get; set; }
 
-        [MaxLength(500, ErrorMessage = "Comment must not exceed 500 characters.")]
+        [MaxLength(500, ErrorMessage = "يجب ألا يتجاوز التعليق 500 حرف.")]
         public string? Comment { get; set; }
     }
 }

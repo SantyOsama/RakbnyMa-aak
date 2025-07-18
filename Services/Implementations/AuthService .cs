@@ -31,10 +31,10 @@ namespace RakbnyMa_aak.Services.Implementations
                        ?? await _userManager.FindByNameAsync(dto.EmailOrUsername);
 
             if (user == null)
-                return Response<AuthResponseDto>.Fail("User not found");
+                return Response<AuthResponseDto>.Fail("المستخدم غير موجود");
 
             if (user.UserType != expectedType)
-                return Response<AuthResponseDto>.Fail("Unauthorized login for this role");
+                return Response<AuthResponseDto>.Fail("تسجيل دخول غير مصرح به لهذا الدور");
 
             // Check driver approval status
             if (expectedType == UserType.Driver)
@@ -45,12 +45,12 @@ namespace RakbnyMa_aak.Services.Implementations
                     .FirstOrDefaultAsync();
 
                 if (!isApproved)
-                    return Response<AuthResponseDto>.Fail("Driver not approved yet.");
+                    return Response<AuthResponseDto>.Fail("السائق لم يتم الموافقة عليه بعد.");
             }
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, false);
             if (!result.Succeeded)
-                return Response<AuthResponseDto>.Fail("Invalid credentials");
+                return Response<AuthResponseDto>.Fail("بيانات الاعتماد غير صحيحة");
 
             var token = await _jwtService.GenerateToken(user);
 
@@ -60,7 +60,7 @@ namespace RakbnyMa_aak.Services.Implementations
                 Token = token,
                 FullName = user.FullName,
                 Role = user.UserType.ToString()
-            }, "Login successful");
+            }, "تم تسجيل الدخول بنجاح");
         }
     }
 

@@ -24,7 +24,7 @@ namespace RakbnyMa_aak.Repositories.Implementations
             return await _context.Trips
                 .Include(t => t.Driver)
                     .ThenInclude(d => d.User)
-                .Where(t => t.Id == tripId && !t.IsDeleted && t.TripStatus != TripStatus.Cancelled)
+                .Where(t => t.Id == tripId && !t.IsDeleted && t.TripStatus != TripStatus.ملغاة)
                 .Select(t => new TripValidationResultDto
                 {
                     TripId = t.Id,

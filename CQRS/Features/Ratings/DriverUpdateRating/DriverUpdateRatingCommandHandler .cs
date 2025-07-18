@@ -19,10 +19,10 @@ namespace RakbnyMa_aak.CQRS.Features.Ratings.DriverUpdateRating
 
             var rating = await _unitOfWork.RatingRepository.GetByIdAsync(dto.RatingId);
             if (rating == null)
-                return Response<bool>.Fail("Rating not found.");
+                return Response<bool>.Fail("لم يتم العثور على التقييم.");
 
             if (rating.RaterId != dto.RaterId)
-                return Response<bool>.Fail("Unauthorized: You can only update your own ratings.");
+                return Response<bool>.Fail("غير مصرح لك: يمكنك تعديل تقييماتك فقط.");
 
             if (dto.RatingValue.HasValue)
                 rating.RatingValue = dto.RatingValue.Value;
@@ -33,7 +33,7 @@ namespace RakbnyMa_aak.CQRS.Features.Ratings.DriverUpdateRating
             _unitOfWork.RatingRepository.Update(rating);
             await _unitOfWork.CompleteAsync();
 
-            return Response<bool>.Success(true, "Rating updated successfully.");
+            return Response<bool>.Success(true, "تم تعديل التقييم بنجاح.");
         }
     }
 }

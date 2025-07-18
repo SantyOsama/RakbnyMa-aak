@@ -4,23 +4,22 @@ namespace RakbnyMa_aak.DTOs.BookingsDTOs.Requests
 {
     public class CreateBookingRequestDto
     {
-        [Required(ErrorMessage = "Trip ID is required.")]
-        [Display(Name = "Trip ID")]
+        [Required(ErrorMessage = "معرّف الرحلة مطلوب.")]
+        [Display(Name = "معرّف الرحلة")]
         public int TripId { get; set; }
 
-        [Required(ErrorMessage = "User ID is required.")]
-        [Display(Name = "User ID")]
+        [Required(ErrorMessage = "معرّف المستخدم مطلوب.")]
+        [Display(Name = "معرّف المستخدم")]
         public string UserId { get; set; }
 
-        [Required(ErrorMessage = "Number of seats is required.")]
-        [Range(1, 150, ErrorMessage = "Number of seats must be between 1 and 150.")]
-        [Display(Name = "Number of Seats")]
+        [Required(ErrorMessage = "عدد المقاعد مطلوب.")]
+        [Range(1, 150, ErrorMessage = "يجب أن يكون عدد المقاعد بين 1 و150.")]
+        [Display(Name = "عدد المقاعد")]
         public int NumberOfSeats { get; set; }
 
-
-        [Required(ErrorMessage = "Price per seat is required.")]
-        [Range(1, double.MaxValue, ErrorMessage = "Price must be greater than 0.")]
-        [Display(Name = "Price per Seat")]
+        [Required(ErrorMessage = "سعر المقعد مطلوب.")]
+        [Range(1, double.MaxValue, ErrorMessage = "يجب أن يكون السعر أكبر من 0.")]
+        [Display(Name = "سعر المقعد")]
         public decimal PricePerSeat { get; set; }
     }
 }

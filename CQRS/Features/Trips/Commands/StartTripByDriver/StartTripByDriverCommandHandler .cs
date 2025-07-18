@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using RakbnyMa_aak.GeneralResponse;
+using RakbnyMa_aak.Hubs;
 using RakbnyMa_aak.UOW;
+using Microsoft.AspNetCore.SignalR;
 using static RakbnyMa_aak.Utilities.Enums;
 
 namespace RakbnyMa_aak.CQRS.Features.Trip.Commands.StartTripByDriver
@@ -8,10 +10,12 @@ namespace RakbnyMa_aak.CQRS.Features.Trip.Commands.StartTripByDriver
     public class StartTripByDriverCommandHandler : IRequestHandler<StartTripByDriverCommand, Response<bool>>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IHubContext<ChatHub> _chatHub;
 
-        public StartTripByDriverCommandHandler(IUnitOfWork unitOfWork)
+        public StartTripByDriverCommandHandler(IUnitOfWork unitOfWork, IHubContext<ChatHub> chatHub)
         {
             _unitOfWork = unitOfWork;
+            _chatHub = chatHub;
         }
 
         public async Task<Response<bool>> Handle(StartTripByDriverCommand request, CancellationToken cancellationToken)
@@ -32,6 +36,9 @@ namespace RakbnyMa_aak.CQRS.Features.Trip.Commands.StartTripByDriver
 
             _unitOfWork.TripRepository.Update(trip);
             await _unitOfWork.CompleteAsync();
+
+            await _chatHub.Clients.Group(request.TripId.ToString())
+                .SendAsync("TripStarted", request.TripId);
 
             return Response<bool>.Success(true, "Trip started successfully.");
         }

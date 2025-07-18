@@ -57,5 +57,22 @@ namespace RakbnyMa_aak.Hubs
 
             await base.OnDisconnectedAsync(exception);
         }
+        public async Task SendMessage(string tripId, string userName, string message)
+        {
+            var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var trip = await _unitOfWork.TripRepository.GetByIdAsync(int.Parse(tripId));
+            var isDriver = trip.DriverId == userId;
+
+            var isPassengerConfirmed = await _unitOfWork.BookingRepository.AnyAsync(
+                b => b.TripId == trip.Id &&
+                     b.UserId == userId &&
+                     b.RequestStatus == RequestStatus.Confirmed);
+
+            if (isDriver || isPassengerConfirmed)
+            {
+                await Clients.Group(tripId).SendAsync("ReceiveMessage", userName, message);
+            }
+        }
     }
 }

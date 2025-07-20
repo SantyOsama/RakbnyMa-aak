@@ -8,6 +8,7 @@ namespace RakbnyMa_aak.Models
 {
     public class ApplicationUser : IdentityUser
     {
+
         [Display(Name = "الاسم الكامل")]
         [Required(ErrorMessage = "يرجى إدخال الاسم الكامل.")]
         [MinLength(3, ErrorMessage = "يجب ألا يقل الاسم الكامل عن 3 أحرف.")]

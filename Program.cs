@@ -92,6 +92,10 @@ namespace RakbnyMa_aak
                 options.Password.RequireUppercase = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequiredLength = 6;
+
+                options.User.AllowedUserNameCharacters =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ " +
+        "ابتثجحخدذرزسشصضطظعغفقكلمنهويءئةؤإأآى ";
             })
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
